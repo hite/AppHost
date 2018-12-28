@@ -17,6 +17,7 @@
 #import "AHScriptMessageDelegate.h"
 #import "AHURLChecker.h"
 
+
 @interface AppHostViewController () <UIScrollViewDelegate, WKUIDelegate, WKScriptMessageHandler>
 
 @property (nonatomic, strong) NSTimer *timer;
@@ -49,7 +50,7 @@ static NSString *const kAHScriptHandlerName = @"kAHScriptHandlerName";
 // 是否将客户端的 cookie 同步到 WKWebview 的 cookie 当中
 // 作为写 cookie 的假地址
 NSString *_Nonnull kFakeCookieWebPageURLWithQueryString;
-
+UIColor *_Nonnull kWebViewProgressTintColor;
 /**
  * 代理类，管理所有 AppHostViewController 自身和 AppHostViewController 子类。
  * 使更具模块化，在保持灵活的同时，也保留了可读性。
@@ -155,11 +156,10 @@ NSString *_Nonnull kFakeCookieWebPageURLWithQueryString;
 - (void)addWebviewProgressor
 {
     // 仿微信进度条
-    self.progressorView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, AH_SCREEN_WIDTH, 20.0f)];
+    self.progressorView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, AH_NAVIGATION_BAR_HEIGHT, AH_SCREEN_WIDTH, 20.0f)];
     //    self.progressorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
 
-    self.progressorView.progressTintColor = [UIColor grayColor];
-
+    self.progressorView.progressTintColor = kWebViewProgressTintColor?:[UIColor grayColor];
     self.progressorView.trackTintColor = [UIColor whiteColor];
     [self.view addSubview:self.progressorView];
 }
@@ -186,6 +186,8 @@ NSString *_Nonnull kFakeCookieWebPageURLWithQueryString;
     }];
     [self.responseClassObjs removeAllObjects];
     self.responseClassObjs = nil;
+    
+    AHLog(@"AppHostViewController dealloc");
 }
 
 - (void)loadLocalFile:(NSString *)path baseURL:(NSURL *)url

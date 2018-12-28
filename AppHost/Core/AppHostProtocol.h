@@ -15,7 +15,7 @@
 // 以下为 从AppHostViewController 里获得的 只读类属性
 @property (nonatomic, weak, readonly) UINavigationController *navigationController;
 
-@property (nonatomic, weak, readonly) WKWebView *webview;
+@property (nonatomic, weak, readonly) WKWebView *webView;
 
 @property (nonatomic, weak, readonly) AppHostViewController *appHost;
 

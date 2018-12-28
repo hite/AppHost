@@ -20,8 +20,6 @@
         [self showLoading:[paramDict objectForKey:@"text"]];
     } else if ([@"hideLoading" isEqualToString:action]) {
         [self hideHUD];
-    } else if ([@"call" isEqualToString:action]) {
-        [self call:[paramDict objectForKey:@"phoneNumber"]];
     } else if ([@"pageBounceEnabled" isEqualToString:action]) {
         BOOL bounce = [[paramDict objectForKey:@"enabled"] boolValue];
         [self enablePageBounce:bounce];
@@ -34,7 +32,6 @@
 {
     return @{
              @"toast" : @"1",
-             @"call" : @"1",
              @"showLoading" : @"1",
              @"hideLoading" : @"1",
              @"pageBounceEnabled" : @"1"
@@ -59,18 +56,7 @@
 
 - (void)enablePageBounce:(BOOL)bounce
 {
-    self.webview.scrollView.bounces = bounce;
-}
-
-#pragma mark - iphone ability
-- (void)call:(NSString *)number
-{
-    if (number.length > 0) {
-        NSURL *phoneURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel://%@", number]];
-        UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
-        [webView loadRequest:[NSURLRequest requestWithURL:phoneURL]];
-        [self.appHost.view addSubview:webView]; //使用这种方式拨打电话，将会弹出提示框，拨打完毕且返回原应用界面。
-    }
+    self.webView.scrollView.bounces = bounce;
 }
 
 

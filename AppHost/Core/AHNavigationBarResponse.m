@@ -45,8 +45,8 @@
 
 - (void)onMKCustomBackAction:(id)sender
 {
-    if ([self.webview canGoBack]) {
-        [self.webview goBack];
+    if ([self.webView canGoBack]) {
+        [self.webView goBack];
         //
         [self initNavigationBarButtons];
     }else{

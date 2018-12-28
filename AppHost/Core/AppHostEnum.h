@@ -34,6 +34,8 @@
 
 // 为了解决 webview Cookie 而需要提前加载的页面
 extern NSString * _Nonnull kFakeCookieWebPageURLWithQueryString;
+// 设置进度条的颜色，如 [UIColor redColor];
+extern UIColor * _Nonnull kWebViewProgressTintColor;
 
 static NSString *kAHLogoutNotification = @"kAHLogoutNotification";
 static NSString *kAHLoginSuccessNotification = @"kAHLoginSuccessNotification";
