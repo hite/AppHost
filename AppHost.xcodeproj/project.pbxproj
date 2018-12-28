@@ -7,13 +7,126 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4805C81121D4D4D000C058D1 /* AHNavigationBarResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */; };
+		48B00FF521D4DA6E0037FABF /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B00FF321D4DA6E0037FABF /* Reachability.m */; };
+		48B00FF621D4DA6E0037FABF /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 48B00FF421D4DA6E0037FABF /* Reachability.h */; };
+		48C8AEA721D5F3B800A6B426 /* AHURLChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C8AEA521D5F3B800A6B426 /* AHURLChecker.m */; };
+		48C8AEA821D5F3B800A6B426 /* AHURLChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 48C8AEA621D5F3B800A6B426 /* AHURLChecker.h */; };
+		48C8AEAC21D5F99E00A6B426 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 48C8AEAA21D5F99E00A6B426 /* index.html */; };
+		48C8AEAD21D5F99E00A6B426 /* appHost_version_1.5.0.js in Resources */ = {isa = PBXBuildFile; fileRef = 48C8AEAB21D5F99E00A6B426 /* appHost_version_1.5.0.js */; };
 		48D888AF21D4CF08006E4279 /* AppHost.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888AD21D4CF08006E4279 /* AppHost.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		48D888D721D4D031006E4279 /* AHAppWhiteListParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888B621D4D030006E4279 /* AHAppWhiteListParser.h */; };
+		48D888D921D4D031006E4279 /* AHAppLoggerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888B821D4D030006E4279 /* AHAppLoggerResponse.m */; };
+		48D888DA21D4D031006E4279 /* AppHostResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888B921D4D030006E4279 /* AppHostResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		48D888DB21D4D031006E4279 /* AHNavigationResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888BA21D4D030006E4279 /* AHNavigationResponse.h */; };
+		48D888DD21D4D031006E4279 /* AHAppLoggerResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888BC21D4D030006E4279 /* AHAppLoggerResponse.h */; };
+		48D888DF21D4D031006E4279 /* app-access.txt in Resources */ = {isa = PBXBuildFile; fileRef = 48D888BE21D4D030006E4279 /* app-access.txt */; };
+		48D888E121D4D031006E4279 /* AHNavigationResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888C021D4D030006E4279 /* AHNavigationResponse.m */; };
+		48D888E321D4D031006E4279 /* AHBuiltInResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888C221D4D031006E4279 /* AHBuiltInResponse.m */; };
+		48D888E421D4D031006E4279 /* AHNavigationBarResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888C321D4D031006E4279 /* AHNavigationBarResponse.h */; };
+		48D888E621D4D031006E4279 /* AppHostViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888C521D4D031006E4279 /* AppHostViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		48D888EA21D4D031006E4279 /* AHBuiltInResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888C921D4D031006E4279 /* AHBuiltInResponse.h */; };
+		48D888EB21D4D031006E4279 /* AHAppWhiteListParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888CA21D4D031006E4279 /* AHAppWhiteListParser.m */; };
+		48D888ED21D4D031006E4279 /* AHScriptMessageDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888CD21D4D031006E4279 /* AHScriptMessageDelegate.m */; };
+		48D888EE21D4D031006E4279 /* AppHostCookie.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888CE21D4D031006E4279 /* AppHostCookie.m */; };
+		48D888EF21D4D031006E4279 /* AHWebViewScrollPositionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888CF21D4D031006E4279 /* AHWebViewScrollPositionManager.h */; };
+		48D888F021D4D031006E4279 /* AHWebViewScrollPositionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888D021D4D031006E4279 /* AHWebViewScrollPositionManager.m */; };
+		48D888F121D4D031006E4279 /* AHScriptMessageDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888D121D4D031006E4279 /* AHScriptMessageDelegate.h */; };
+		48D888F221D4D031006E4279 /* AppHostCookie.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888D221D4D031006E4279 /* AppHostCookie.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		48D888F421D4D031006E4279 /* AppHostProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888D421D4D031006E4279 /* AppHostProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		48D888F521D4D031006E4279 /* AppHostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888D521D4D031006E4279 /* AppHostViewController.m */; };
+		48D888F621D4D031006E4279 /* AppHostResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888D621D4D031006E4279 /* AppHostResponse.m */; };
+		48D8891921D4D0AD006E4279 /* GCDWebServerFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888FB21D4D0AD006E4279 /* GCDWebServerFunctions.h */; };
+		48D8891A21D4D0AD006E4279 /* GCDWebServerPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888FC21D4D0AD006E4279 /* GCDWebServerPrivate.h */; };
+		48D8891B21D4D0AD006E4279 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888FD21D4D0AD006E4279 /* GCDWebServerResponse.m */; };
+		48D8891C21D4D0AD006E4279 /* GCDWebServerConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888FE21D4D0AD006E4279 /* GCDWebServerConnection.h */; };
+		48D8891D21D4D0AD006E4279 /* GCDWebServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888FF21D4D0AD006E4279 /* GCDWebServer.h */; };
+		48D8891E21D4D0AD006E4279 /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8890021D4D0AD006E4279 /* GCDWebServerRequest.m */; };
+		48D8891F21D4D0AD006E4279 /* GCDWebServerHTTPStatusCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8890121D4D0AD006E4279 /* GCDWebServerHTTPStatusCodes.h */; };
+		48D8892021D4D0AD006E4279 /* GCDWebServerResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8890221D4D0AD006E4279 /* GCDWebServerResponse.h */; };
+		48D8892121D4D0AD006E4279 /* GCDWebServerFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8890321D4D0AD006E4279 /* GCDWebServerFunctions.m */; };
+		48D8892221D4D0AD006E4279 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8890421D4D0AD006E4279 /* GCDWebServer.m */; };
+		48D8892321D4D0AD006E4279 /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8890521D4D0AD006E4279 /* GCDWebServerConnection.m */; };
+		48D8892421D4D0AD006E4279 /* GCDWebServerRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8890621D4D0AD006E4279 /* GCDWebServerRequest.h */; };
+		48D8892521D4D0AD006E4279 /* GCDWebServerFileResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8890821D4D0AD006E4279 /* GCDWebServerFileResponse.h */; };
+		48D8892621D4D0AD006E4279 /* GCDWebServerStreamedResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8890921D4D0AD006E4279 /* GCDWebServerStreamedResponse.h */; };
+		48D8892721D4D0AD006E4279 /* GCDWebServerErrorResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8890A21D4D0AD006E4279 /* GCDWebServerErrorResponse.m */; };
+		48D8892821D4D0AD006E4279 /* GCDWebServerDataResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8890B21D4D0AD006E4279 /* GCDWebServerDataResponse.h */; };
+		48D8892921D4D0AD006E4279 /* GCDWebServerFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8890C21D4D0AD006E4279 /* GCDWebServerFileResponse.m */; };
+		48D8892A21D4D0AD006E4279 /* GCDWebServerDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8890D21D4D0AD006E4279 /* GCDWebServerDataResponse.m */; };
+		48D8892B21D4D0AD006E4279 /* GCDWebServerErrorResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8890E21D4D0AD006E4279 /* GCDWebServerErrorResponse.h */; };
+		48D8892C21D4D0AD006E4279 /* GCDWebServerStreamedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8890F21D4D0AD006E4279 /* GCDWebServerStreamedResponse.m */; };
+		48D8892D21D4D0AD006E4279 /* GCDWebServerDataRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8891121D4D0AD006E4279 /* GCDWebServerDataRequest.h */; };
+		48D8892E21D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8891221D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.h */; };
+		48D8892F21D4D0AD006E4279 /* GCDWebServerFileRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8891321D4D0AD006E4279 /* GCDWebServerFileRequest.h */; };
+		48D8893021D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8891421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.m */; };
+		48D8893121D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8891521D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.m */; };
+		48D8893221D4D0AD006E4279 /* GCDWebServerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8891621D4D0AD006E4279 /* GCDWebServerDataRequest.m */; };
+		48D8893321D4D0AD006E4279 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8891721D4D0AD006E4279 /* GCDWebServerFileRequest.m */; };
+		48D8893421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8891821D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHNavigationBarResponse.m; sourceTree = "<group>"; };
+		48B00FF321D4DA6E0037FABF /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		48B00FF421D4DA6E0037FABF /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		48C8AEA421D5EFCC00A6B426 /* AppHostEnum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppHostEnum.h; sourceTree = "<group>"; };
+		48C8AEA521D5F3B800A6B426 /* AHURLChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHURLChecker.m; sourceTree = "<group>"; };
+		48C8AEA621D5F3B800A6B426 /* AHURLChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHURLChecker.h; sourceTree = "<group>"; };
+		48C8AEAA21D5F99E00A6B426 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		48C8AEAB21D5F99E00A6B426 /* appHost_version_1.5.0.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = appHost_version_1.5.0.js; sourceTree = "<group>"; };
 		48D888AA21D4CF08006E4279 /* AppHost.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AppHost.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48D888AD21D4CF08006E4279 /* AppHost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppHost.h; sourceTree = "<group>"; };
 		48D888AE21D4CF08006E4279 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48D888B621D4D030006E4279 /* AHAppWhiteListParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHAppWhiteListParser.h; sourceTree = "<group>"; };
+		48D888B821D4D030006E4279 /* AHAppLoggerResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHAppLoggerResponse.m; sourceTree = "<group>"; };
+		48D888B921D4D030006E4279 /* AppHostResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHostResponse.h; sourceTree = "<group>"; };
+		48D888BA21D4D030006E4279 /* AHNavigationResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHNavigationResponse.h; sourceTree = "<group>"; };
+		48D888BC21D4D030006E4279 /* AHAppLoggerResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHAppLoggerResponse.h; sourceTree = "<group>"; };
+		48D888BE21D4D030006E4279 /* app-access.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "app-access.txt"; sourceTree = "<group>"; };
+		48D888C021D4D030006E4279 /* AHNavigationResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHNavigationResponse.m; sourceTree = "<group>"; };
+		48D888C221D4D031006E4279 /* AHBuiltInResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHBuiltInResponse.m; sourceTree = "<group>"; };
+		48D888C321D4D031006E4279 /* AHNavigationBarResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHNavigationBarResponse.h; sourceTree = "<group>"; };
+		48D888C521D4D031006E4279 /* AppHostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHostViewController.h; sourceTree = "<group>"; };
+		48D888C921D4D031006E4279 /* AHBuiltInResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHBuiltInResponse.h; sourceTree = "<group>"; };
+		48D888CA21D4D031006E4279 /* AHAppWhiteListParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHAppWhiteListParser.m; sourceTree = "<group>"; };
+		48D888CD21D4D031006E4279 /* AHScriptMessageDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHScriptMessageDelegate.m; sourceTree = "<group>"; };
+		48D888CE21D4D031006E4279 /* AppHostCookie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHostCookie.m; sourceTree = "<group>"; };
+		48D888CF21D4D031006E4279 /* AHWebViewScrollPositionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHWebViewScrollPositionManager.h; sourceTree = "<group>"; };
+		48D888D021D4D031006E4279 /* AHWebViewScrollPositionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHWebViewScrollPositionManager.m; sourceTree = "<group>"; };
+		48D888D121D4D031006E4279 /* AHScriptMessageDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHScriptMessageDelegate.h; sourceTree = "<group>"; };
+		48D888D221D4D031006E4279 /* AppHostCookie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHostCookie.h; sourceTree = "<group>"; };
+		48D888D421D4D031006E4279 /* AppHostProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHostProtocol.h; sourceTree = "<group>"; };
+		48D888D521D4D031006E4279 /* AppHostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHostViewController.m; sourceTree = "<group>"; };
+		48D888D621D4D031006E4279 /* AppHostResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHostResponse.m; sourceTree = "<group>"; };
+		48D888FB21D4D0AD006E4279 /* GCDWebServerFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFunctions.h; sourceTree = "<group>"; };
+		48D888FC21D4D0AD006E4279 /* GCDWebServerPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerPrivate.h; sourceTree = "<group>"; };
+		48D888FD21D4D0AD006E4279 /* GCDWebServerResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerResponse.m; sourceTree = "<group>"; };
+		48D888FE21D4D0AD006E4279 /* GCDWebServerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerConnection.h; sourceTree = "<group>"; };
+		48D888FF21D4D0AD006E4279 /* GCDWebServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServer.h; sourceTree = "<group>"; };
+		48D8890021D4D0AD006E4279 /* GCDWebServerRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerRequest.m; sourceTree = "<group>"; };
+		48D8890121D4D0AD006E4279 /* GCDWebServerHTTPStatusCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerHTTPStatusCodes.h; sourceTree = "<group>"; };
+		48D8890221D4D0AD006E4279 /* GCDWebServerResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerResponse.h; sourceTree = "<group>"; };
+		48D8890321D4D0AD006E4279 /* GCDWebServerFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFunctions.m; sourceTree = "<group>"; };
+		48D8890421D4D0AD006E4279 /* GCDWebServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServer.m; sourceTree = "<group>"; };
+		48D8890521D4D0AD006E4279 /* GCDWebServerConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerConnection.m; sourceTree = "<group>"; };
+		48D8890621D4D0AD006E4279 /* GCDWebServerRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerRequest.h; sourceTree = "<group>"; };
+		48D8890821D4D0AD006E4279 /* GCDWebServerFileResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFileResponse.h; sourceTree = "<group>"; };
+		48D8890921D4D0AD006E4279 /* GCDWebServerStreamedResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerStreamedResponse.h; sourceTree = "<group>"; };
+		48D8890A21D4D0AD006E4279 /* GCDWebServerErrorResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerErrorResponse.m; sourceTree = "<group>"; };
+		48D8890B21D4D0AD006E4279 /* GCDWebServerDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerDataResponse.h; sourceTree = "<group>"; };
+		48D8890C21D4D0AD006E4279 /* GCDWebServerFileResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileResponse.m; sourceTree = "<group>"; };
+		48D8890D21D4D0AD006E4279 /* GCDWebServerDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataResponse.m; sourceTree = "<group>"; };
+		48D8890E21D4D0AD006E4279 /* GCDWebServerErrorResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerErrorResponse.h; sourceTree = "<group>"; };
+		48D8890F21D4D0AD006E4279 /* GCDWebServerStreamedResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerStreamedResponse.m; sourceTree = "<group>"; };
+		48D8891121D4D0AD006E4279 /* GCDWebServerDataRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerDataRequest.h; sourceTree = "<group>"; };
+		48D8891221D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerMultiPartFormRequest.h; sourceTree = "<group>"; };
+		48D8891321D4D0AD006E4279 /* GCDWebServerFileRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFileRequest.h; sourceTree = "<group>"; };
+		48D8891421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerURLEncodedFormRequest.m; sourceTree = "<group>"; };
+		48D8891521D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerMultiPartFormRequest.m; sourceTree = "<group>"; };
+		48D8891621D4D0AD006E4279 /* GCDWebServerDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataRequest.m; sourceTree = "<group>"; };
+		48D8891721D4D0AD006E4279 /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileRequest.m; sourceTree = "<group>"; };
+		48D8891821D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +140,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		482CD47D21D5CEE8006C1120 /* URLChecker */ = {
+			isa = PBXGroup;
+			children = (
+				48C8AEA621D5F3B800A6B426 /* AHURLChecker.h */,
+				48C8AEA521D5F3B800A6B426 /* AHURLChecker.m */,
+				48D888B621D4D030006E4279 /* AHAppWhiteListParser.h */,
+				48D888CA21D4D031006E4279 /* AHAppWhiteListParser.m */,
+				48D888BE21D4D030006E4279 /* app-access.txt */,
+			);
+			path = URLChecker;
+			sourceTree = "<group>";
+		};
+		48B00FF121D4DA380037FABF /* ThirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				48B00FF221D4DA6E0037FABF /* Reachability */,
+				48D888F921D4D0AD006E4279 /* GCDWebServer */,
+			);
+			path = ThirdParty;
+			sourceTree = "<group>";
+		};
+		48B00FF221D4DA6E0037FABF /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				48B00FF321D4DA6E0037FABF /* Reachability.m */,
+				48B00FF421D4DA6E0037FABF /* Reachability.h */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
+		48C8AEA921D5F96A00A6B426 /* html */ = {
+			isa = PBXGroup;
+			children = (
+				48C8AEAB21D5F99E00A6B426 /* appHost_version_1.5.0.js */,
+				48C8AEAA21D5F99E00A6B426 /* index.html */,
+			);
+			path = html;
+			sourceTree = "<group>";
+		};
 		48D888A021D4CF08006E4279 = {
 			isa = PBXGroup;
 			children = (
@@ -48,8 +200,106 @@
 			children = (
 				48D888AD21D4CF08006E4279 /* AppHost.h */,
 				48D888AE21D4CF08006E4279 /* Info.plist */,
+				48D888B521D4CF80006E4279 /* Core */,
+				48B00FF121D4DA380037FABF /* ThirdParty */,
 			);
 			path = AppHost;
+			sourceTree = "<group>";
+		};
+		48D888B521D4CF80006E4279 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				48C8AEA421D5EFCC00A6B426 /* AppHostEnum.h */,
+				48D888D421D4D031006E4279 /* AppHostProtocol.h */,
+				48D888B921D4D030006E4279 /* AppHostResponse.h */,
+				48D888D621D4D031006E4279 /* AppHostResponse.m */,
+				48D888C521D4D031006E4279 /* AppHostViewController.h */,
+				48D888D521D4D031006E4279 /* AppHostViewController.m */,
+				48D888BC21D4D030006E4279 /* AHAppLoggerResponse.h */,
+				48D888B821D4D030006E4279 /* AHAppLoggerResponse.m */,
+				48D888C921D4D031006E4279 /* AHBuiltInResponse.h */,
+				48D888C221D4D031006E4279 /* AHBuiltInResponse.m */,
+				48D888C321D4D031006E4279 /* AHNavigationBarResponse.h */,
+				4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */,
+				48D888BA21D4D030006E4279 /* AHNavigationResponse.h */,
+				48D888C021D4D030006E4279 /* AHNavigationResponse.m */,
+				482CD47D21D5CEE8006C1120 /* URLChecker */,
+				48D888CC21D4D031006E4279 /* Helper */,
+				48C8AEA921D5F96A00A6B426 /* html */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		48D888CC21D4D031006E4279 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				48D888D121D4D031006E4279 /* AHScriptMessageDelegate.h */,
+				48D888D221D4D031006E4279 /* AppHostCookie.h */,
+				48D888CE21D4D031006E4279 /* AppHostCookie.m */,
+				48D888CD21D4D031006E4279 /* AHScriptMessageDelegate.m */,
+				48D888CF21D4D031006E4279 /* AHWebViewScrollPositionManager.h */,
+				48D888D021D4D031006E4279 /* AHWebViewScrollPositionManager.m */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		48D888F921D4D0AD006E4279 /* GCDWebServer */ = {
+			isa = PBXGroup;
+			children = (
+				48D888FA21D4D0AD006E4279 /* Core */,
+				48D8890721D4D0AD006E4279 /* Responses */,
+				48D8891021D4D0AD006E4279 /* Requests */,
+			);
+			path = GCDWebServer;
+			sourceTree = "<group>";
+		};
+		48D888FA21D4D0AD006E4279 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				48D888FB21D4D0AD006E4279 /* GCDWebServerFunctions.h */,
+				48D888FC21D4D0AD006E4279 /* GCDWebServerPrivate.h */,
+				48D888FD21D4D0AD006E4279 /* GCDWebServerResponse.m */,
+				48D888FE21D4D0AD006E4279 /* GCDWebServerConnection.h */,
+				48D888FF21D4D0AD006E4279 /* GCDWebServer.h */,
+				48D8890021D4D0AD006E4279 /* GCDWebServerRequest.m */,
+				48D8890121D4D0AD006E4279 /* GCDWebServerHTTPStatusCodes.h */,
+				48D8890221D4D0AD006E4279 /* GCDWebServerResponse.h */,
+				48D8890321D4D0AD006E4279 /* GCDWebServerFunctions.m */,
+				48D8890421D4D0AD006E4279 /* GCDWebServer.m */,
+				48D8890521D4D0AD006E4279 /* GCDWebServerConnection.m */,
+				48D8890621D4D0AD006E4279 /* GCDWebServerRequest.h */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		48D8890721D4D0AD006E4279 /* Responses */ = {
+			isa = PBXGroup;
+			children = (
+				48D8890821D4D0AD006E4279 /* GCDWebServerFileResponse.h */,
+				48D8890921D4D0AD006E4279 /* GCDWebServerStreamedResponse.h */,
+				48D8890A21D4D0AD006E4279 /* GCDWebServerErrorResponse.m */,
+				48D8890B21D4D0AD006E4279 /* GCDWebServerDataResponse.h */,
+				48D8890C21D4D0AD006E4279 /* GCDWebServerFileResponse.m */,
+				48D8890D21D4D0AD006E4279 /* GCDWebServerDataResponse.m */,
+				48D8890E21D4D0AD006E4279 /* GCDWebServerErrorResponse.h */,
+				48D8890F21D4D0AD006E4279 /* GCDWebServerStreamedResponse.m */,
+			);
+			path = Responses;
+			sourceTree = "<group>";
+		};
+		48D8891021D4D0AD006E4279 /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				48D8891121D4D0AD006E4279 /* GCDWebServerDataRequest.h */,
+				48D8891221D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.h */,
+				48D8891321D4D0AD006E4279 /* GCDWebServerFileRequest.h */,
+				48D8891421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.m */,
+				48D8891521D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.m */,
+				48D8891621D4D0AD006E4279 /* GCDWebServerDataRequest.m */,
+				48D8891721D4D0AD006E4279 /* GCDWebServerFileRequest.m */,
+				48D8891821D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h */,
+			);
+			path = Requests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -59,7 +309,35 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48D888F421D4D031006E4279 /* AppHostProtocol.h in Headers */,
+				48D8892821D4D0AD006E4279 /* GCDWebServerDataResponse.h in Headers */,
+				48D888E621D4D031006E4279 /* AppHostViewController.h in Headers */,
+				48D888DA21D4D031006E4279 /* AppHostResponse.h in Headers */,
+				48D888F221D4D031006E4279 /* AppHostCookie.h in Headers */,
+				48D888F121D4D031006E4279 /* AHScriptMessageDelegate.h in Headers */,
+				48D888E421D4D031006E4279 /* AHNavigationBarResponse.h in Headers */,
 				48D888AF21D4CF08006E4279 /* AppHost.h in Headers */,
+				48D8891A21D4D0AD006E4279 /* GCDWebServerPrivate.h in Headers */,
+				48D8892421D4D0AD006E4279 /* GCDWebServerRequest.h in Headers */,
+				48D8892521D4D0AD006E4279 /* GCDWebServerFileResponse.h in Headers */,
+				48D888EF21D4D031006E4279 /* AHWebViewScrollPositionManager.h in Headers */,
+				48D888EA21D4D031006E4279 /* AHBuiltInResponse.h in Headers */,
+				48D8892B21D4D0AD006E4279 /* GCDWebServerErrorResponse.h in Headers */,
+				48D8893421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h in Headers */,
+				48D8891D21D4D0AD006E4279 /* GCDWebServer.h in Headers */,
+				48C8AEA821D5F3B800A6B426 /* AHURLChecker.h in Headers */,
+				48D8892021D4D0AD006E4279 /* GCDWebServerResponse.h in Headers */,
+				48D8891921D4D0AD006E4279 /* GCDWebServerFunctions.h in Headers */,
+				48D888DD21D4D031006E4279 /* AHAppLoggerResponse.h in Headers */,
+				48D8891F21D4D0AD006E4279 /* GCDWebServerHTTPStatusCodes.h in Headers */,
+				48D8892621D4D0AD006E4279 /* GCDWebServerStreamedResponse.h in Headers */,
+				48D8892F21D4D0AD006E4279 /* GCDWebServerFileRequest.h in Headers */,
+				48D8892E21D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.h in Headers */,
+				48B00FF621D4DA6E0037FABF /* Reachability.h in Headers */,
+				48D8891C21D4D0AD006E4279 /* GCDWebServerConnection.h in Headers */,
+				48D8892D21D4D0AD006E4279 /* GCDWebServerDataRequest.h in Headers */,
+				48D888D721D4D031006E4279 /* AHAppWhiteListParser.h in Headers */,
+				48D888DB21D4D031006E4279 /* AHNavigationResponse.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +398,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48D888DF21D4D031006E4279 /* app-access.txt in Resources */,
+				48C8AEAD21D5F99E00A6B426 /* appHost_version_1.5.0.js in Resources */,
+				48C8AEAC21D5F99E00A6B426 /* index.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,6 +411,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48D8892C21D4D0AD006E4279 /* GCDWebServerStreamedResponse.m in Sources */,
+				48D888F021D4D031006E4279 /* AHWebViewScrollPositionManager.m in Sources */,
+				48D8893021D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
+				48D888F621D4D031006E4279 /* AppHostResponse.m in Sources */,
+				48B00FF521D4DA6E0037FABF /* Reachability.m in Sources */,
+				48D8892321D4D0AD006E4279 /* GCDWebServerConnection.m in Sources */,
+				48C8AEA721D5F3B800A6B426 /* AHURLChecker.m in Sources */,
+				48D8891B21D4D0AD006E4279 /* GCDWebServerResponse.m in Sources */,
+				48D8892921D4D0AD006E4279 /* GCDWebServerFileResponse.m in Sources */,
+				48D8893221D4D0AD006E4279 /* GCDWebServerDataRequest.m in Sources */,
+				48D8892221D4D0AD006E4279 /* GCDWebServer.m in Sources */,
+				48D888E121D4D031006E4279 /* AHNavigationResponse.m in Sources */,
+				48D888E321D4D031006E4279 /* AHBuiltInResponse.m in Sources */,
+				4805C81121D4D4D000C058D1 /* AHNavigationBarResponse.m in Sources */,
+				48D8892721D4D0AD006E4279 /* GCDWebServerErrorResponse.m in Sources */,
+				48D888ED21D4D031006E4279 /* AHScriptMessageDelegate.m in Sources */,
+				48D8893121D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.m in Sources */,
+				48D8891E21D4D0AD006E4279 /* GCDWebServerRequest.m in Sources */,
+				48D888D921D4D031006E4279 /* AHAppLoggerResponse.m in Sources */,
+				48D8892A21D4D0AD006E4279 /* GCDWebServerDataResponse.m in Sources */,
+				48D888F521D4D031006E4279 /* AppHostViewController.m in Sources */,
+				48D8892121D4D0AD006E4279 /* GCDWebServerFunctions.m in Sources */,
+				48D8893321D4D0AD006E4279 /* GCDWebServerFileRequest.m in Sources */,
+				48D888EE21D4D031006E4279 /* AppHostCookie.m in Sources */,
+				48D888EB21D4D031006E4279 /* AHAppWhiteListParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

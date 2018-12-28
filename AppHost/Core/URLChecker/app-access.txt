@@ -1,0 +1,10 @@
+#协议和h5接口权限开放白名单
+schema-open-url:
+qian.163.com
+*.mail.163.com
+
+
+apphost:
+qian.163.com
+*.mail.163.com
+
