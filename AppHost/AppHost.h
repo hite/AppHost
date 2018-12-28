@@ -16,4 +16,8 @@ FOUNDATION_EXPORT const unsigned char AppHostVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <AppHost/PublicHeader.h>
 
-
+#import <AppHost/AppHostEnum.h>
+#import <AppHost/AppHostProtocol.h>
+#import <AppHost/AppHostResponse.h>
+#import <AppHost/AppHostViewController.h>
+#import <AppHost/AppHostCookie.h>

@@ -33,7 +33,7 @@
 #endif /* AppHostEnum_h */
 
 // 为了解决 webview Cookie 而需要提前加载的页面
-extern NSString * _Nonnull kFakeCookieWebPageURLString;
+extern NSString * _Nonnull kFakeCookieWebPageURLWithQueryString;
 
 static NSString *kAHLogoutNotification = @"kAHLogoutNotification";
 static NSString *kAHLoginSuccessNotification = @"kAHLoginSuccessNotification";

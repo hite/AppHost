@@ -48,7 +48,7 @@ static NSString *const kAHScriptHandlerName = @"kAHScriptHandlerName";
 
 // 是否将客户端的 cookie 同步到 WKWebview 的 cookie 当中
 // 作为写 cookie 的假地址
-NSString *_Nonnull kFakeCookieWebPageURLString;
+NSString *_Nonnull kFakeCookieWebPageURLWithQueryString;
 
 /**
  * 代理类，管理所有 AppHostViewController 自身和 AppHostViewController 子类。
@@ -65,7 +65,11 @@ NSString *_Nonnull kFakeCookieWebPageURLString;
     self = [super init];
     if (self) {
         // 静态注册 可响应的类
-        self.responseClassNames = @[ @"AHNavigationResponse", @"AHNavigationBarResponse", @"AHBuiltInResponse", @"AHAppLoggerResponse" ];
+        self.responseClassNames = @[
+                                    @"AHNavigationResponse",
+                                    @"AHNavigationBarResponse",
+                                    @"AHBuiltInResponse",
+                                    @"AHAppLoggerResponse" ];
         self.responseClassObjs = [NSMutableDictionary dictionaryWithCapacity:10];
         // 注意：此时还没有 navigationController。
     }
@@ -135,9 +139,9 @@ NSString *_Nonnull kFakeCookieWebPageURLString;
     // 添加url加载进度条。
     [self addWebviewProgressor];
 
-    if ([AppHostCookie loginCookieHasBeenSynced] == NO) {
+    if (kFakeCookieWebPageURLWithQueryString.length > 0 && [AppHostCookie loginCookieHasBeenSynced] == NO) { // 此时需要同步 Cookie，走同步 Cookie 的流程
         //
-        NSURL *cookieURL = [NSURL URLWithString:kFakeCookieWebPageURLString];
+        NSURL *cookieURL = [NSURL URLWithString:kFakeCookieWebPageURLWithQueryString];
         NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:cookieURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:120];
         WKWebView *cookieWebview = [self getCookieWebview];
         [self.view addSubview:cookieWebview];
@@ -391,7 +395,8 @@ NSString *_Nonnull kFakeCookieWebPageURLString;
     }
 
     NSURL *targetURL = webView.URL;
-    if ([AppHostCookie loginCookieHasBeenSynced] == NO && targetURL.query.length > 0 && [kFakeCookieWebPageURLString containsString:targetURL.query]) {
+    // 如果是知名了 kFakeCookieWebPageURLWithQueryString 说明，需要同步此域下 Cookie；
+    if (kFakeCookieWebPageURLWithQueryString.length > 0 && [AppHostCookie loginCookieHasBeenSynced] == NO && targetURL.query.length > 0 && [kFakeCookieWebPageURLWithQueryString containsString:targetURL.query]) {
         [AppHostCookie setLoginCookieHasBeenSynced:YES];
         // 加载真正的页面；此时已经有 App 的 cookie 存在了。
         [webView removeFromSuperview];
@@ -400,7 +405,7 @@ NSString *_Nonnull kFakeCookieWebPageURLString;
     }
 
     //如果是全新加载页面，而不是从历史里弹出的情况下，需要渲染导航
-    if (![self.webview canGoForward]) {
+    if (![self.webview canGoForward] && self.rightActionBarTitle.length > 0) {
         [self callNative:@"setNavRight" parameter:@{
                                                     @"text":self.rightActionBarTitle
                                                     }];
@@ -629,6 +634,10 @@ NSString *_Nonnull kFakeCookieWebPageURLString;
 
 - (WKWebView *)getCookieWebview
 {
+    if (![kFakeCookieWebPageURLWithQueryString containsString:@"?"]) {
+        NSAssert(NO, @"请配置 kFakeCookieWebPageURLString 参数，如在调用 AppHostViewController 的 .m 文件里定义，NSString *_Nonnull kFakeCookieWebPageURLWithQueryString = @\"https://www.163.com?028-983cnhd8-2\"");
+        return nil;
+    }
     // 设置加载页面完毕后，里面的后续请求，如 xhr 请求使用的cookie
     WKUserContentController *userContentController = [WKUserContentController new];
 
@@ -644,9 +653,7 @@ NSString *_Nonnull kFakeCookieWebPageURLString;
     }];
 
     WKWebView *webview = [[WKWebView alloc] initWithFrame:CGRectMake(0, -1, AH_SCREEN_WIDTH, 0.1f) configuration:webViewConfig];
-
     webview.navigationDelegate = self;
-    webview.UIDelegate = self;
 
     return webview;
 }
@@ -663,7 +670,9 @@ NSString *_Nonnull kFakeCookieWebPageURLString;
     webViewConfig.processPool = [AppHostCookie sharedPoolManager];
 
     // 注入关键 js 文件
-    NSURL *jsLibURL = [[[NSBundle mainBundle] bundleURL] URLByAppendingPathComponent:@"appHost_version_1.5.0.js"];
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSURL *jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"appHost_version_1.5.0.js"];
+
     NSString *jsLib = [NSString stringWithContentsOfURL:jsLibURL encoding:NSUTF8StringEncoding error:nil];
     if (jsLib.length > 0) {
         WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:jsLib injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
@@ -673,7 +682,7 @@ NSString *_Nonnull kFakeCookieWebPageURLString;
         AHLog(@"Fatal Error: appHost.js is not loaded.");
     }
     
-    WKWebView *webview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, AH_SCREEN_WIDTH, AH_SCREEN_HEIGHT - AH_NAVIGATION_BAR_HEIGHT) configuration:webViewConfig];
+    WKWebView *webview = [[WKWebView alloc] initWithFrame:CGRectMake(0, AH_NAVIGATION_BAR_HEIGHT, AH_SCREEN_WIDTH, AH_SCREEN_HEIGHT - AH_NAVIGATION_BAR_HEIGHT) configuration:webViewConfig];
     webview.scrollView.contentSize = CGSizeMake(CGRectGetWidth(webview.frame), CGRectGetHeight(webview.frame));
     webview.navigationDelegate = self;
     webview.UIDelegate = self;

@@ -14,6 +14,7 @@
 		48C8AEA821D5F3B800A6B426 /* AHURLChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 48C8AEA621D5F3B800A6B426 /* AHURLChecker.h */; };
 		48C8AEAC21D5F99E00A6B426 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 48C8AEAA21D5F99E00A6B426 /* index.html */; };
 		48C8AEAD21D5F99E00A6B426 /* appHost_version_1.5.0.js in Resources */ = {isa = PBXBuildFile; fileRef = 48C8AEAB21D5F99E00A6B426 /* appHost_version_1.5.0.js */; };
+		48C8AEDE21D6293500A6B426 /* AppHostEnum.h in Headers */ = {isa = PBXBuildFile; fileRef = 48C8AEA421D5EFCC00A6B426 /* AppHostEnum.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48D888AF21D4CF08006E4279 /* AppHost.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888AD21D4CF08006E4279 /* AppHost.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48D888D721D4D031006E4279 /* AHAppWhiteListParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888B621D4D030006E4279 /* AHAppWhiteListParser.h */; };
 		48D888D921D4D031006E4279 /* AHAppLoggerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888B821D4D030006E4279 /* AHAppLoggerResponse.m */; };
@@ -233,9 +234,9 @@
 		48D888CC21D4D031006E4279 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
-				48D888D121D4D031006E4279 /* AHScriptMessageDelegate.h */,
 				48D888D221D4D031006E4279 /* AppHostCookie.h */,
 				48D888CE21D4D031006E4279 /* AppHostCookie.m */,
+				48D888D121D4D031006E4279 /* AHScriptMessageDelegate.h */,
 				48D888CD21D4D031006E4279 /* AHScriptMessageDelegate.m */,
 				48D888CF21D4D031006E4279 /* AHWebViewScrollPositionManager.h */,
 				48D888D021D4D031006E4279 /* AHWebViewScrollPositionManager.m */,
@@ -314,6 +315,7 @@
 				48D888E621D4D031006E4279 /* AppHostViewController.h in Headers */,
 				48D888DA21D4D031006E4279 /* AppHostResponse.h in Headers */,
 				48D888F221D4D031006E4279 /* AppHostCookie.h in Headers */,
+				48C8AEDE21D6293500A6B426 /* AppHostEnum.h in Headers */,
 				48D888F121D4D031006E4279 /* AHScriptMessageDelegate.h in Headers */,
 				48D888E421D4D031006E4279 /* AHNavigationBarResponse.h in Headers */,
 				48D888AF21D4CF08006E4279 /* AppHost.h in Headers */,
