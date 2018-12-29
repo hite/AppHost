@@ -17,7 +17,6 @@
 #import "AHScriptMessageDelegate.h"
 #import "AHURLChecker.h"
 
-
 @interface AppHostViewController () <UIScrollViewDelegate, WKUIDelegate, WKScriptMessageHandler>
 
 @property (nonatomic, strong) NSTimer *timer;
@@ -41,16 +40,17 @@
  */
 @property (nonatomic, strong) NSMutableDictionary *responseClassObjs;
 
+@property (nonatomic, strong) AHSchemeTaskDelegate *taskDelegate;
 @end
 
-static NSString *const kAHRequestProtocal = @"apphost://request?param=";
 static NSString *const kAHRequestItmsApp = @"itms-apps://";
 static NSString *const kAHScriptHandlerName = @"kAHScriptHandlerName";
+static NSString *const kAppHostScheme = @"apphost";
 
 // 是否将客户端的 cookie 同步到 WKWebview 的 cookie 当中
 // 作为写 cookie 的假地址
 NSString *_Nonnull kFakeCookieWebPageURLWithQueryString;
-UIColor *_Nonnull kWebViewProgressTintColor;
+long long kWebViewProgressTintColorRGB;
 /**
  * 代理类，管理所有 AppHostViewController 自身和 AppHostViewController 子类。
  * 使更具模块化，在保持灵活的同时，也保留了可读性。
@@ -73,6 +73,8 @@ UIColor *_Nonnull kWebViewProgressTintColor;
                                     @"AHAppLoggerResponse" ];
         self.responseClassObjs = [NSMutableDictionary dictionaryWithCapacity:10];
         // 注意：此时还没有 navigationController。
+        
+        self.taskDelegate = [AHSchemeTaskDelegate new];
     }
 
     return self;
@@ -82,8 +84,8 @@ UIColor *_Nonnull kWebViewProgressTintColor;
 {
     [super viewDidAppear:animated];
     NSString *urlStr = nil;
-    if (self.webview && !self.webview.isLoading) {
-        urlStr = [[self.webview URL] absoluteString];
+    if (self.webView && !self.webView.isLoading) {
+        urlStr = [[self.webView URL] absoluteString];
     }
     if (urlStr.length == 0) {
         urlStr = self.url;
@@ -91,7 +93,7 @@ UIColor *_Nonnull kWebViewProgressTintColor;
 
     [self sendMessageToWebPage:@"pageshow" param:@{ @"url" : urlStr ?: @"null" }];
     // 检查是否有上次遗留下来的进度条,避免 webview 在 tabbar 第一屏时出现进度条残留
-    if (self.webview.estimatedProgress >= 1.f) {
+    if (self.webView.estimatedProgress >= 1.f) {
         self.isProgressorDone = YES;
         self.progressorView.hidden = YES;
     }
@@ -100,7 +102,7 @@ UIColor *_Nonnull kWebViewProgressTintColor;
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    NSString *urlStr = [[self.webview URL] absoluteString];
+    NSString *urlStr = [[self.webView URL] absoluteString];
     if (urlStr.length == 0) {
         urlStr = self.url;
     }
@@ -124,16 +126,12 @@ UIColor *_Nonnull kWebViewProgressTintColor;
 - (void)initViews
 {
     self.view.backgroundColor = [UIColor whiteColor];
-    if (self.webview == nil) {
-        self.webview = [self getWebView];
-        [self.view addSubview:self.webview];
-    }
+    [self.view addSubview:self.webView];
     //
     AHLog(@"load urltext: %@", self.url);
 
     NSURL *actualUrl = [NSURL URLWithString:self.url];
     if (actualUrl == nil) {
-        [self showTextTip:@"请求地址为空，加载失败。" hideAfterDelay:5];
         AHLog(@"loadUlr 异常 = %@", self.url);
         return;
     }
@@ -159,7 +157,7 @@ UIColor *_Nonnull kWebViewProgressTintColor;
     self.progressorView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, AH_NAVIGATION_BAR_HEIGHT, AH_SCREEN_WIDTH, 20.0f)];
     //    self.progressorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
 
-    self.progressorView.progressTintColor = kWebViewProgressTintColor?:[UIColor grayColor];
+    self.progressorView.progressTintColor = kWebViewProgressTintColorRGB > 0? AHColorFromRGB(kWebViewProgressTintColorRGB):[UIColor grayColor];
     self.progressorView.trackTintColor = [UIColor whiteColor];
     [self.view addSubview:self.progressorView];
 }
@@ -173,13 +171,13 @@ UIColor *_Nonnull kWebViewProgressTintColor;
 
 - (void)dealloc
 {
-    [self.webview.configuration.userContentController removeScriptMessageHandlerForName:kAHScriptHandlerName];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:kAHScriptHandlerName];
 
-    self.webview.navigationDelegate = nil;
-    self.webview.scrollView.delegate = nil;
-    [self.webview stopLoading];
-    [self.webview removeFromSuperview];
-    self.webview = nil;
+    self.webView.navigationDelegate = nil;
+    self.webView.scrollView.delegate = nil;
+    [self.webView stopLoading];
+    [self.webView removeFromSuperview];
+    self.webView = nil;
     // 清理 response
     [self.responseClassObjs enumerateKeysAndObjectsUsingBlock:^(NSString *key, id _Nonnull obj, BOOL *_Nonnull stop) {
         obj = nil;
@@ -190,8 +188,17 @@ UIColor *_Nonnull kWebViewProgressTintColor;
     AHLog(@"AppHostViewController dealloc");
 }
 
-- (void)loadLocalFile:(NSString *)path baseURL:(NSURL *)url
+- (void)loadLocalFile:(NSURL *)url domain:(NSString *)domain;
 {
+    NSError *err;
+    NSStringEncoding encoding = NSUTF8StringEncoding;
+    NSString *content = [NSString stringWithContentsOfURL:url usedEncoding:&encoding error:&err];
+    if (err == nil && content.length > 0 && domain.length > 0) {
+        [self.webView loadHTMLString:content baseURL:[NSURL URLWithString:domain]];
+    } else {
+        NSAssert(NO, @"加载本地文件出错，关键参数为空");
+        AHLog(@"加载本地文件出错，关键参数为空");
+    }
 }
 
 #pragma mark - UI相关
@@ -204,16 +211,13 @@ UIColor *_Nonnull kWebViewProgressTintColor;
         [self showTextTip:@"地址为空"];
         return;
     }
-
     //检查网络是否联网；
 
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     if ([reachability isReachable]) {
         //
         NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:120];
-
-        [self.webview loadRequest:mutableRequest];
-
+        [self.webView loadRequest:mutableRequest];
     } else {
         [self showTextTip:@"网络断开了，请检查网络。" hideAfterDelay:10.f];
     }
@@ -305,7 +309,7 @@ UIColor *_Nonnull kWebViewProgressTintColor;
     }
     CGFloat y = scrollView.contentOffset.y;
     NSLog(@"contentOffset.y = %.2f", y);
-    [[AHWebViewScrollPositionManager sharedInstance] cacheURL:self.webview.URL position:y];
+    [[AHWebViewScrollPositionManager sharedInstance] cacheURL:self.webView.URL position:y];
 }
 
 #pragma mark - wkwebview navigation delegate
@@ -320,25 +324,7 @@ UIColor *_Nonnull kWebViewProgressTintColor;
     [self logRequestAndResponse:rurl type:@"request"];
     WKNavigationActionPolicy policy = WKNavigationActionPolicyAllow;
 
-    if ([self isValidAppHostRequest:rurl]) {
-        NSURL *actualUrl = [NSURL URLWithString:self.url];
-        if (![[AHURLChecker sharedManager] checkURL:actualUrl forAuthorizationType:AHAuthorizationTypeAppHost]) {
-            NSLog(@"invalid url visited : %@", self.url);
-        } else {
-            NSString *param = [rurl stringByReplacingOccurrencesOfString:kAHRequestProtocal withString:@""];
-
-            NSDictionary *contentJSON = nil;
-            NSError *contentParseError;
-            if (param) {
-                param = [self stringDecodeURIComponent:param];
-                contentJSON = [NSJSONSerialization JSONObjectWithData:[param dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&contentParseError];
-            }
-
-            [self dispatchParsingParameter:contentJSON];
-        }
-        //        NSLog(@"web view called > %@", param);
-        policy = WKNavigationActionPolicyCancel;
-    } else if ([self isItmsAppsRequest:rurl]) {
+    if ([self isItmsAppsRequest:rurl]) {
         // 遇到 itms-apps://itunes.apple.com/cn/app/id992055304  主动 pop出去
         // URL Scheme and App Store links won't work https://github.com/ShingoFukuyama/WKWebViewTips#url-scheme-and-app-store-links-wont-work
         self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(popOutImmediately) userInfo:nil repeats:NO];
@@ -407,13 +393,13 @@ UIColor *_Nonnull kWebViewProgressTintColor;
     }
 
     //如果是全新加载页面，而不是从历史里弹出的情况下，需要渲染导航
-    if (![self.webview canGoForward] && self.rightActionBarTitle.length > 0) {
+    if (![self.webView canGoForward] && self.rightActionBarTitle.length > 0) {
         [self callNative:@"setNavRight" parameter:@{
                                                     @"text":self.rightActionBarTitle
                                                     }];
     }
     [self callNative:@"setNavTitle" parameter:@{
-                                                @"text":self.webview.title?:self.pageTitle
+                                                @"text":self.webView.title?:self.pageTitle
                                                 }];
     //设置发现的后台接口；
     NSDictionary *inserted = [self supportListByNow];
@@ -433,7 +419,6 @@ UIColor *_Nonnull kWebViewProgressTintColor;
     [self dealWithViewHistory];
 
     NSLog(@"%@", NSStringFromSelector(_cmd));
-
 }
 
 - (void)dealWithViewHistory
@@ -442,8 +427,8 @@ UIColor *_Nonnull kWebViewProgressTintColor;
         return;
     }
 
-    NSURL *url = self.webview.URL;
-    UIScrollView *sv = self.webview.scrollView;
+    NSURL *url = self.webView.URL;
+    UIScrollView *sv = self.webView.scrollView;
     CGFloat oldY = [[AHWebViewScrollPositionManager sharedInstance] positionForCacheURL:url];
     if (oldY != sv.contentOffset.y) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -457,8 +442,13 @@ UIColor *_Nonnull kWebViewProgressTintColor;
     if ([message.name isEqualToString:kAHScriptHandlerName]) {
         //
         NSLog(@"%@", message.body);
-        NSDictionary *contentJSON = message.body;
-        [self dispatchParsingParameter:contentJSON];
+        NSURL *actualUrl = [NSURL URLWithString:self.url];
+        if (![[AHURLChecker sharedManager] checkURL:actualUrl forAuthorizationType:AHAuthorizationTypeAppHost]) {
+            NSLog(@"invalid url visited : %@", self.url);
+        } else {
+            NSDictionary *contentJSON = message.body;
+            [self dispatchParsingParameter:contentJSON];
+        }
     } else {
 #ifdef DEBUG
         [self showTextTip:@"没有实现的接口"];
@@ -499,7 +489,7 @@ UIColor *_Nonnull kWebViewProgressTintColor;
         // 完成之后clear进度
         self.clearProgressorTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(clearProgressor) userInfo:nil repeats:NO];
     } else {
-        self.progressorView.progress = self.webview.estimatedProgress;
+        self.progressorView.progress = self.webView.estimatedProgress;
     }
 }
 
@@ -513,7 +503,7 @@ UIColor *_Nonnull kWebViewProgressTintColor;
 
 - (void)executeJavaScriptString:(NSString *)javaScriptString
 {
-    [self.webview evaluateJavaScript:javaScriptString completionHandler:nil];
+    [self.webView evaluateJavaScript:javaScriptString completionHandler:nil];
 }
 
 - (NSDictionary *)supportListByNow
@@ -579,11 +569,6 @@ UIColor *_Nonnull kWebViewProgressTintColor;
     }];
 
     return external;
-}
-
-- (BOOL)isValidAppHostRequest:(NSString *)url
-{
-    return [url hasPrefix:kAHRequestProtocal];
 }
 
 - (BOOL)isItmsAppsRequest:(NSString *)url
@@ -660,37 +645,43 @@ UIColor *_Nonnull kWebViewProgressTintColor;
     return webview;
 }
 
-- (WKWebView *)getWebView
+- (WKWebView *)webView
 {
-    // 设置加载页面完毕后，里面的后续请求，如 xhr 请求使用的cookie
-    WKUserContentController *userContentController = [WKUserContentController new];
-    __weak typeof(self) weakSelf = self;
-    [userContentController addScriptMessageHandler:[[AHScriptMessageDelegate alloc] initWithDelegate:weakSelf] name:kAHScriptHandlerName];
-    WKWebViewConfiguration *webViewConfig = [[WKWebViewConfiguration alloc] init];
-    webViewConfig.userContentController = userContentController;
-    webViewConfig.allowsInlineMediaPlayback = YES;
-    webViewConfig.processPool = [AppHostCookie sharedPoolManager];
-
-    // 注入关键 js 文件
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSURL *jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"appHost_version_1.5.0.js"];
-
-    NSString *jsLib = [NSString stringWithContentsOfURL:jsLibURL encoding:NSUTF8StringEncoding error:nil];
-    if (jsLib.length > 0) {
-        WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:jsLib injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-        [userContentController addUserScript:cookieScript];
-    } else {
-        NSAssert(NO, @"主 JS 文件加载失败");
-        AHLog(@"Fatal Error: appHost.js is not loaded.");
+    if (_webView == nil) {
+        // 设置加载页面完毕后，里面的后续请求，如 xhr 请求使用的cookie
+        WKUserContentController *userContentController = [WKUserContentController new];
+        __weak typeof(self) weakSelf = self;
+        [userContentController addScriptMessageHandler:[[AHScriptMessageDelegate alloc] initWithDelegate:weakSelf] name:kAHScriptHandlerName];
+        WKWebViewConfiguration *webViewConfig = [[WKWebViewConfiguration alloc] init];
+        webViewConfig.userContentController = userContentController;
+        webViewConfig.allowsInlineMediaPlayback = YES;
+        webViewConfig.processPool = [AppHostCookie sharedPoolManager];
+        [webViewConfig setURLSchemeHandler:self.taskDelegate forURLScheme:kAppHostScheme];
+        
+        // 注入关键 js 文件
+        NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+        NSURL *jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"appHost_version_1.5.0.js"];
+        
+        NSString *jsLib = [NSString stringWithContentsOfURL:jsLibURL encoding:NSUTF8StringEncoding error:nil];
+        if (jsLib.length > 0) {
+            WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:jsLib injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+            [userContentController addUserScript:cookieScript];
+        } else {
+            NSAssert(NO, @"主 JS 文件加载失败");
+            AHLog(@"Fatal Error: appHost.js is not loaded.");
+        }
+        
+        WKWebView *webview = [[WKWebView alloc] initWithFrame:CGRectMake(0, AH_NAVIGATION_BAR_HEIGHT, AH_SCREEN_WIDTH, AH_SCREEN_HEIGHT - AH_NAVIGATION_BAR_HEIGHT) configuration:webViewConfig];
+        webview.scrollView.contentSize = CGSizeMake(CGRectGetWidth(webview.frame), CGRectGetHeight(webview.frame));
+        webview.navigationDelegate = self;
+        webview.UIDelegate = self;
+        webview.scrollView.delegate = self;
+        
+        _webView = webview;
     }
     
-    WKWebView *webview = [[WKWebView alloc] initWithFrame:CGRectMake(0, AH_NAVIGATION_BAR_HEIGHT, AH_SCREEN_WIDTH, AH_SCREEN_HEIGHT - AH_NAVIGATION_BAR_HEIGHT) configuration:webViewConfig];
-    webview.scrollView.contentSize = CGSizeMake(CGRectGetWidth(webview.frame), CGRectGetHeight(webview.frame));
-    webview.navigationDelegate = self;
-    webview.UIDelegate = self;
-    webview.scrollView.delegate = self;
     
-    return webview;
+    return _webView;
 }
 
 #pragma mark - vc settings

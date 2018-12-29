@@ -1,0 +1,236 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<meta charset="utf-8">
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+	<style type="text/css">
+        fieldset {
+            border-width: 1px;
+            border-color: #7D5C5C;
+            border-style: dashed;
+        }
+
+        legend {
+            text-align: left;
+            color: #290B0B;
+        }
+
+        a {
+            width: 100%;
+            height: 25px;
+            text-decoration: none;
+            text-align: left;
+        }
+
+        ol {
+            margin: 0;
+            padding-left: 24px;
+        }
+
+        ol li {
+            text-align: left;
+        }
+
+        ol span {
+            font-size: 12px;
+            text-align: left;
+            display: block;
+        }
+
+        ol span:before {
+            content: "(";
+        }
+
+        ol span:after {
+            content: ")";
+        }
+
+        ol .propertyValue {
+            display: block;
+            width: 100%;
+        }
+
+        .err {
+            color: red;
+        }
+    </style>
+	<title>发现</title>
+	<script type="text/javascript">
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            var string = msg.toLowerCase();
+            var substring = "script error";
+            if (string.indexOf(substring) > -1) {
+                alert('Script Error: See Browser Console for Detail');
+            } else {
+                var message = [
+                    'Message: ' + msg,
+                    'URL: ' + url,
+                    'Line: ' + lineNo,
+                    'Column: ' + columnNo,
+                    'Error object: ' + JSON.stringify(error)
+                ].join(' - ');
+
+                alert(message);
+            }
+            return false;
+        };
+    </script>
+    <script src="http://localhost:9001/target/target-script-min.js#anonymous"></script>
+</head>
+
+<body style="background-color:#f3f3f3;text-align:center;">
+<div style="margin-top:10px;text-font:17px;color:#999999;">
+	发现频道接口测试
+	<hr/>
+    <img src="apphost://static_image/WechatIMG19.jpeg"/>
+    <img src="apphost://assets_image/phase-ico-popover"/>
+	<fieldset>
+		<legend>测试webview浏览器</legend>
+		<ol>
+			<li>
+				<input type="text" id="url" style="width:100%;" name="url" value="http://html5test.com" />
+				<br/>
+				<input type="button" id="testURL" name="go" value="Gooo">
+				<span>使用webview页面，加载以上链接</span>
+			</li>
+            <li>
+                <a href="http://www.163.com" onclick="window.appHost.invoke('openExternalUrl', {url: 'http://www.cnbeta.com'});return false;">打开cnbeta网站</a>
+                <span>iOS 专有，打开和APP不在同一主站的url，如其它公司的页面、做展示的，不需要h5接口的url等。</span>
+            </li>
+		</ol>
+	</fieldset>
+	<fieldset>
+		<legend>杂项</legend>
+		<ol>
+            <li>
+                <a href="https://itunes.apple.com/cn/app/id992055304">下载网易有钱</a></li>
+			<li>
+				<a href="pushstate_test.html">window.history API 测试</a>
+				<span>内部测试使用</span>
+			</li>
+			<li>
+				<a href="http://www.163.com" onclick="toggleBounce();return false;">切换 页面的bounce的状态</a>
+				<span>是否显示ios原生的bounce属性</span>
+			</li>
+		</ol>
+	</fieldset>
+	<fieldset>
+		<legend>导航栏相关</legend>
+		<ol>
+            <li>
+                <a href="http://www.163.com" onclick="window.appHost.invoke('setNavTitle',{'text': '古墓丽影'});return false;">只设置中间的标题</a>
+                <span>期望为，只有标题变化为 古墓丽影，其他左右按钮不变化</span>
+            </li>
+            <li>
+                <a href="http://www.163.com" onclick="window.appHost.invoke('setNavRight',{'text': '丽影'});return false;">只设置右侧的按钮</a>
+                <span>期望为，只有右侧多一个按钮，其他返回按钮、标题、左按钮不变化</span>
+            </li>
+		</ol>
+	</fieldset>
+	<fieldset>
+		<legend>appHostMeta相关</legend>
+		<ol>
+			<li>
+				<a href="http://www.163.com" onclick="showPlatform();return false;">看看appHost.ios/android 属性</a>
+				<span>查看目前h5运行的平台，iOS还是Android</span>
+			</li>
+			<li>
+				<a href="http://www.163.com" onclick="showFunctionType();return false;">看看appHost.supportFunctionType 属性</a>
+				<span>查看当前native提供给h5的接口 支持情况，如果存在并且不是0，表示支持，如果是‘1’表示此接口支持版本为1，如果是2，表示版本2，版本越高，支持的接口越多</span>
+			</li>
+		</ol>
+	</fieldset>
+	<fieldset>
+		<legend>Navigation相关</legend>
+		<ol>
+			<li>
+				<a href="http://www.163.com" onclick="window.appHost.invoke('openUrl', {'url': 'http://www.163.com', openInBrowser:true});return false;">用指定链接打开浏览器</a>
+				<span>使用浏览器打开网址.http://www.163.com/</span>
+			</li>
+
+			<li>
+				<a href="http://www.163.com" onclick="window.appHost.invoke('startNewPage', {'url': 'http://dashi.mail.163.com', 'title': 'title', 'type': 'push','actionTitle':'发布'});return false;">打开新页面</a>
+				<span>打开新页面，进入有钱官网，右上角有个发布的按钮</span>
+			</li>
+
+			<li>
+				<a href="http://www.163.com" onclick="window.appHost.invoke('startNewPage', {'url':'http://www.163.com', 'title': 'title', 'type': 'push','isTransparentTopBar':true,'isFullScreenWebview':true,'hideBottomBar':true});return false;">打开测试页面，透明导航，全屏显示页面</a>
+				<span>打开一个新页面，透明导航栏、状态栏，全屏显示页</span>
+			</li>
+			<li>
+				<a href="http://www.163.com" onclick="window.appHost.invoke('startNewPage', {'url': 'http://www.163.com', 'title': 'title', 'type': 'push','actionTitle':'发布'});return false;">时光隧道<script>document.writeln(new Date().getTime());</script></a>
+				<span>不停的打开新页面，为了测试backPageParameter的接口</span>
+			</li>
+			<li>
+				<a href="http://www.163.com" onclick="window.appHost.invoke('startNewPage', {'url': 'http://qian.mail.163.com', 'title': 'title', 'type': 'push','actionTitle':'发布','backPageParameter':{'url': 'http://dashi.mail.163.com', 'title': 'title', 'type': 'push','actionTitle':'发布'}});return false;">backPageParameter参数</a>
+				<span>backPageParameter的参数，目的是为了实现A页面带有参数backPageParameter,进入C页面(有钱官网)，当C页面点击返回B页面（邮箱大师页面），返回到backPageParameter指定的参数的功能。本测试用例里，是返回B页面</span>
+			</li>
+		</ol>
+	</fieldset>
+	<fieldset>
+		<legend>提示、跳转、选择菜单、分享</legend>
+		<ol>
+			<li>
+				<a href="http://www.163.com" onclick="window.appHost.invoke('toast', {'text': 'text'});return false;">toast</a>
+				<span>toast就是在屏幕中间显示的提示，持续0.5s后自动消失，web页面模态，但可以回退或者点击右上角按钮</span>
+			</li>
+			<li>
+				<a href="http://www.163.com" onclick="window.appHost.invoke('showLoading', { 'text': '加载中'});return false;">显示loading</a>
+				<span>位于屏幕中间的一个菊花转圈的动画，非模态，不主动隐藏是不会消失的</span>
+			</li>
+			<li>
+				<a href="http://www.163.com" onclick="window.appHost.invoke('hideLoading', { 'text': '加载中'});return false;">隐藏loading</a>
+				<span>隐藏loading动画</span>
+			</li>
+		</ol>
+	</fieldset>
+</div>
+<script type="text/javascript">
+        (function() {
+            if (window.appHost) {
+                //
+                var testURL = document.getElementById('testURL');
+                testURL.onclick = function() {
+                     var xhr = new XMLHttpRequest();
+                     xhr.open('GET', 'http://qian.163.com/xhr/user/getUid.do?26u-KQa-fKQ-3BD', true);
+                     xhr.onload = function () {
+                        console.log(xhr.responseURL); // http://example.com/test
+                     };
+                     xhr.send({});
+                }
+
+
+                window.appHost.on('onready', function() {
+                    console.log('dom ready');
+                });
+            } else {
+                alert('appHost 对象不存在');
+            }
+
+            window.showPlatform = function() {
+                window.appHost.invoke('alert', {
+                    'text': 'ios:' + appHost.platform.ios + ',android:' + appHost.platform.android
+                });
+            }
+
+            window.showFunctionType = function() {
+                window.appHost.invoke('alert', {
+                    'text': window.JSON.stringify(window.appHost.supportFunctionType)
+                });
+            };
+            //
+            var currentBounce = true;
+            window.toggleBounce = function() {
+                currentBounce = !currentBounce;
+                window.appHost.invoke('pageBounceEnabled', {
+                    'enabled': currentBounce
+                });
+            }
+
+        })();
+    </script>
+</body>
+</html>

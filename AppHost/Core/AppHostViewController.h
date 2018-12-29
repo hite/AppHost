@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AppHostProtocol.h"
+#import "AHSchemeTaskDelegate.h"
 
 @import WebKit;
 
@@ -33,7 +34,7 @@
 @property (nonatomic, copy) NSString *rightActionBarTitle;
 
 //
-@property (nonatomic, strong) WKWebView *webview;
+@property (nonatomic, strong) WKWebView *webView;
 
 /**
  定制状态栏的配色
@@ -62,6 +63,8 @@
  */
 @property (nonatomic, assign) BOOL fromPresented;
 
+@property (nonatomic, strong, readonly) AHSchemeTaskDelegate *taskDelegate;
+
 /**
  * 核心的h5调用native接口的分发器；
  */
@@ -80,9 +83,9 @@
 /**
  加载本地 html 资源，支持发送 xhr 请求
 
- @param path 打开的文件路径
- @param url 发送 xhr 请求的主域名地址，如 http://qian.163.com
+ @param url 打开的文件路径
+ @param baseDomain 发送 xhr 请求的主域名地址，如 http://qian.163.com
  */
-- (void)loadLocalFile:(NSString *)path baseURL:(NSURL *)url;
+- (void)loadLocalFile:(NSURL *)url domain:(NSString *)baseDomain;
 
 @end

@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		4805C81121D4D4D000C058D1 /* AHNavigationBarResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */; };
+		4839FE0121D746BE008EB0DF /* AHSchemeTaskDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */; };
+		4839FE0221D746BE008EB0DF /* AHSchemeTaskDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48B00FF521D4DA6E0037FABF /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B00FF321D4DA6E0037FABF /* Reachability.m */; };
 		48B00FF621D4DA6E0037FABF /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 48B00FF421D4DA6E0037FABF /* Reachability.h */; };
 		48C8AEA721D5F3B800A6B426 /* AHURLChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C8AEA521D5F3B800A6B426 /* AHURLChecker.m */; };
 		48C8AEA821D5F3B800A6B426 /* AHURLChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 48C8AEA621D5F3B800A6B426 /* AHURLChecker.h */; };
-		48C8AEAC21D5F99E00A6B426 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 48C8AEAA21D5F99E00A6B426 /* index.html */; };
 		48C8AEAD21D5F99E00A6B426 /* appHost_version_1.5.0.js in Resources */ = {isa = PBXBuildFile; fileRef = 48C8AEAB21D5F99E00A6B426 /* appHost_version_1.5.0.js */; };
 		48C8AEDE21D6293500A6B426 /* AppHostEnum.h in Headers */ = {isa = PBXBuildFile; fileRef = 48C8AEA421D5EFCC00A6B426 /* AppHostEnum.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48D888AF21D4CF08006E4279 /* AppHost.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888AD21D4CF08006E4279 /* AppHost.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -69,12 +70,13 @@
 
 /* Begin PBXFileReference section */
 		4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHNavigationBarResponse.m; sourceTree = "<group>"; };
+		4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHSchemeTaskDelegate.m; sourceTree = "<group>"; };
+		4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHSchemeTaskDelegate.h; sourceTree = "<group>"; };
 		48B00FF321D4DA6E0037FABF /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		48B00FF421D4DA6E0037FABF /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		48C8AEA421D5EFCC00A6B426 /* AppHostEnum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppHostEnum.h; sourceTree = "<group>"; };
 		48C8AEA521D5F3B800A6B426 /* AHURLChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHURLChecker.m; sourceTree = "<group>"; };
 		48C8AEA621D5F3B800A6B426 /* AHURLChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHURLChecker.h; sourceTree = "<group>"; };
-		48C8AEAA21D5F99E00A6B426 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		48C8AEAB21D5F99E00A6B426 /* appHost_version_1.5.0.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = appHost_version_1.5.0.js; sourceTree = "<group>"; };
 		48D888AA21D4CF08006E4279 /* AppHost.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AppHost.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48D888AD21D4CF08006E4279 /* AppHost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppHost.h; sourceTree = "<group>"; };
@@ -175,7 +177,6 @@
 			isa = PBXGroup;
 			children = (
 				48C8AEAB21D5F99E00A6B426 /* appHost_version_1.5.0.js */,
-				48C8AEAA21D5F99E00A6B426 /* index.html */,
 			);
 			path = html;
 			sourceTree = "<group>";
@@ -224,6 +225,8 @@
 				4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */,
 				48D888BA21D4D030006E4279 /* AHNavigationResponse.h */,
 				48D888C021D4D030006E4279 /* AHNavigationResponse.m */,
+				4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */,
+				4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */,
 				482CD47D21D5CEE8006C1120 /* URLChecker */,
 				48D888CC21D4D031006E4279 /* Helper */,
 				48C8AEA921D5F96A00A6B426 /* html */,
@@ -316,6 +319,7 @@
 				48D888DA21D4D031006E4279 /* AppHostResponse.h in Headers */,
 				48D888F221D4D031006E4279 /* AppHostCookie.h in Headers */,
 				48C8AEDE21D6293500A6B426 /* AppHostEnum.h in Headers */,
+				4839FE0221D746BE008EB0DF /* AHSchemeTaskDelegate.h in Headers */,
 				48D888F121D4D031006E4279 /* AHScriptMessageDelegate.h in Headers */,
 				48D888E421D4D031006E4279 /* AHNavigationBarResponse.h in Headers */,
 				48D888AF21D4CF08006E4279 /* AppHost.h in Headers */,
@@ -402,7 +406,6 @@
 			files = (
 				48D888DF21D4D031006E4279 /* app-access.txt in Resources */,
 				48C8AEAD21D5F99E00A6B426 /* appHost_version_1.5.0.js in Resources */,
-				48C8AEAC21D5F99E00A6B426 /* index.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,6 +437,7 @@
 				48D888D921D4D031006E4279 /* AHAppLoggerResponse.m in Sources */,
 				48D8892A21D4D0AD006E4279 /* GCDWebServerDataResponse.m in Sources */,
 				48D888F521D4D031006E4279 /* AppHostViewController.m in Sources */,
+				4839FE0121D746BE008EB0DF /* AHSchemeTaskDelegate.m in Sources */,
 				48D8892121D4D0AD006E4279 /* GCDWebServerFunctions.m in Sources */,
 				48D8893321D4D0AD006E4279 /* GCDWebServerFileRequest.m in Sources */,
 				48D888EE21D4D031006E4279 /* AppHostCookie.m in Sources */,

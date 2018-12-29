@@ -11,7 +11,7 @@
 
 @interface AppHostResponse ()
 
-@property (nonatomic, weak, readwrite) WKWebView *webview;
+@property (nonatomic, weak, readwrite) WKWebView *webView;
 
 @property (nonatomic, weak, readwrite) UINavigationController *navigationController;
 
@@ -24,7 +24,7 @@
 - (instancetype)initWithAppHost:(AppHostViewController *)appHost
 {
     if (self = [self init]) {
-        self.webview = appHost.webview;
+        self.webView = appHost.webView;
         self.navigationController = appHost.navigationController;
         self.appHost = appHost;
     }
@@ -44,7 +44,7 @@
 
 - (void)dealloc
 {
-    self.webview = nil;
+    self.webView = nil;
     self.navigationController = nil;
     self.appHost = nil;
 }

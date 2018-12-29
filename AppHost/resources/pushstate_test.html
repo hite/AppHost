@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta charset="utf-8">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <style type="text/css">
+        fieldset {
+            border-width: 1px;
+            border-color: #7D5C5C;
+            border-style: dashed;
+        }
+
+        legend {
+            text-align: left;
+            color: #290B0B;
+        }
+
+        a {
+            width: 100%;
+            height: 25px;
+            text-decoration: none;
+            text-align: left;
+        }
+
+        ol {
+            margin: 0;
+            padding-left: 24px;
+        }
+
+        ol li {
+            text-align: left;
+        }
+
+        ol span {
+            font-size: 12px;
+            text-align: left;
+            display: block;
+        }
+
+        ol span:before {
+            content: "(";
+        }
+
+        ol span:after {
+            content: ")";
+        }
+
+        ol .propertyValue {
+            display: block;
+            width: 100%;
+        }
+
+        .err {
+            color: red;
+        }
+    </style>
+    <title>第三方接口</title>
+</head>
+
+<body style="background-color:#f3f3f3;text-align:center;">
+    <div style="margin-top:10px;text-font:17px;color:#999999;">
+        push state 接口道接口测试
+        <hr/>
+        <fieldset>
+            <legend>测试webview浏览器</legend>
+            <label id="display">original display text</label>
+            <ol>
+                <li>
+                    <button id="testPush">拨打10086</button>
+                    <span>点击之后，url改变，上面有个display部分会有page=1。</span>
+                </li>
+            </ol>
+        </fieldset>
+    </div>
+    <script type="text/javascript">
+        (function() {
+            var timestamp = function(){return new Date().getTime()};
+            window.onpopstate = function(event) {
+                alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
+            };
+            var display = document.getElementById('display');
+            var idxSeed = 1002;
+            document.getElementById('testPush').addEventListener('click', function() {
+                var timeId = 'id_' + timestamp();
+                history.pushState({
+                    timeId: timeId,
+                    idx: idxSeed++
+                }, '测试用例', '?page='+idxSeed);
+                display.innerHTML = timeId;
+            }, false);
+        })();
+    </script>
+</body>
+<!--    <iframe src="jsbridge://forMoneyKeeper?param=12"></iframe>-->
+
+</html>

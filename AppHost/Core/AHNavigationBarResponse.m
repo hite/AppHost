@@ -86,7 +86,10 @@
     if (self.rightActionBarTitle.length > 0) {
         UIButton *rightBtn = [UIButton new];
         [rightBtn setTitle:self.rightActionBarTitle forState:UIControlStateNormal];
+        [rightBtn setTitleColor:AHColorFromRGB(0x333333) forState:UIControlStateNormal];
         [rightBtn addTarget:self action:@selector(didTapMore:) forControlEvents:UIControlEventTouchUpInside];
+        [rightBtn sizeToFit];
+        
         rightBarButton = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
     }
     self.appHost.navigationItem.rightBarButtonItem = rightBarButton;
