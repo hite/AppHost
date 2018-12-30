@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AHDebugServerManager : NSObject
 
++ (instancetype)sharedInstance;
+
+- (void)start;
+
+- (void)stop;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -73,8 +73,9 @@ long long kWebViewProgressTintColorRGB;
                                     @"AHAppLoggerResponse" ];
         self.responseClassObjs = [NSMutableDictionary dictionaryWithCapacity:10];
         // 注意：此时还没有 navigationController。
-        
         self.taskDelegate = [AHSchemeTaskDelegate new];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(debugCommand:) name:kAppHostInvokeDebugEvent object:nil];
     }
 
     return self;
@@ -185,6 +186,8 @@ long long kWebViewProgressTintColorRGB;
     [self.responseClassObjs removeAllObjects];
     self.responseClassObjs = nil;
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAppHostInvokeDebugEvent object:nil];
+    
     AHLog(@"AppHostViewController dealloc");
 }
 
@@ -246,6 +249,8 @@ long long kWebViewProgressTintColorRGB;
     // 增加对异常参数的catch
     @try {
         [self callNative:[contentJSON objectForKey:@"action"] parameter:paramDict];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeRequestEvent object:contentJSON];
     } @catch (NSException *exception) {
         [self showTextTip:@"H5接口异常"];
         AHLog(@"h5接口解析异常，接口数据：%@", contentJSON);
@@ -254,7 +259,7 @@ long long kWebViewProgressTintColorRGB;
 }
 
 // 延迟初始化； 短路判断
-- (void)callNative:(NSString *)action parameter:(NSDictionary *)paramDict
+- (BOOL)callNative:(NSString *)action parameter:(NSDictionary *)paramDict
 {
     BOOL catched = NO;
 
@@ -278,8 +283,13 @@ long long kWebViewProgressTintColorRGB;
     }
     //
     if (catched == NO) {
+        NSString *errMsg = [NSString stringWithFormat:@"action (%@) not supported yet.", action];
         AHLog(@"action (%@) not supported yet.", action);
+        [self sendMessageToWebPage:@"NotSupported" param:@{
+                                                  @"error": errMsg
+                                                  }];
     }
+    return catched;
 }
 
 #pragma mark - wkwebview uidelegate
@@ -321,7 +331,6 @@ long long kWebViewProgressTintColorRGB;
     NSURLRequest *request = navigationAction.request;
     //此url解析规则自己定义
     NSString *rurl = [[request URL] absoluteString];
-    [self logRequestAndResponse:rurl type:@"request"];
     WKNavigationActionPolicy policy = WKNavigationActionPolicyAllow;
 
     if ([self isItmsAppsRequest:rurl]) {
@@ -336,6 +345,7 @@ long long kWebViewProgressTintColorRGB;
     }
     //
     decisionHandler(policy);
+    
 }
 
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation
@@ -534,13 +544,6 @@ long long kWebViewProgressTintColorRGB;
     return lst;
 }
 
-- (NSString *)stringDecodeURIComponent:(NSString *)encoded
-{
-    NSString *decoded = [encoded stringByRemovingPercentEncoding];
-    //    NSLog(@"decodedString %@", decoded);
-    return decoded;
-}
-
 #pragma mark -
 
 - (void)insertData:(NSDictionary *)json intoPageWithVarName:(NSString *)appProperty
@@ -556,6 +559,18 @@ long long kWebViewProgressTintColorRGB;
 }
 
 #pragma mark - innner
+- (void)debugCommand:(NSNotification *)notif
+{
+    NSString *action = [notif.object objectForKey:@"action"];
+    NSDictionary *param = [notif.object objectForKey:@"param"];
+    
+    if (action.length > 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self callNative:action parameter:param];
+        });
+    }
+}
+
 - (BOOL)isExternalSchemeRequest:(NSString *)url
 {
     NSArray<NSString *> *prefixs = @[ @"http://", @"https://"];
@@ -609,6 +624,11 @@ long long kWebViewProgressTintColorRGB;
     [self logRequestAndResponse:jsCode type:@"response"];
     jsCode = [jsCode stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     [self executeJavaScriptString:jsCode];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeResponseEvent object:@{
+                                                                                                    @"action": actionName,
+                                                                                                    @"param": paramDict
+                                                                                                    }];
 }
 
 - (void)logRequestAndResponse:(NSString *)str type:(NSString *)type

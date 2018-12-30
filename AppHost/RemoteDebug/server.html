@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="hairlines" style="font-size:37.5px">
+
+<head>
+    <meta charset="utf-8">
+    <title>AppHost Remote Debugger</title>
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="yes" name="apple-touch-fullscreen">
+    <meta content="telephone=no,email=no" name="format-detection">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <style>
+        html,body{
+			width: 100%;
+            height:100%;
+            padding: 0;
+            margin:0;
+		}
+
+		.m-output {
+			height: 100%;
+            width: 100%;
+            padding-bottom: 50px;
+            background-color: #29348a;
+            box-sizing: border-box;
+		}
+        .m-input{
+            height: 50px;
+            position: fixed;
+            background-color: white;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+        .m-input .w-command{
+            width: 100%;
+            height: 50px;
+            padding: 0;
+            margin: 0;
+            border: none;
+            /* border: 1px solid #ff00ff; */
+            border-right: 100px solid #fff;
+            overflow: hidden;
+            font-size: 24px;
+            font-weight: 200;
+            text-indent: 10px;
+            box-sizing: border-box;
+        }
+        .m-input .w-command-run{
+            color: #333333;
+            position: absolute;
+            width: 90px;
+            top: 5px;
+            right: 5px;
+            bottom: 5px;
+            font-size: 25px;
+            line-height: 38px;
+            text-align: center;
+        }
+        .w-logs-item{
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            border-bottom: 1px dotted #CCCCCC;
+            min-height: 40px;
+            color: white;
+            font-size: 16px;
+            line-height: 40px;
+            text-indent: 10px;
+        }
+        .w-em-seq{
+            font-size: 20px;
+            color: #777777;
+        }
+    </style>
+    <script type="text/javascript" charset="utf-8">
+        window.appHost = {
+            invoke: function (action, param) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/command.do', true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.onload = function () {
+                    console.log(xhr.responseURL); // http://example.com/test
+                };
+
+                xhr.send('action=' + action + '&param=' + encodeURI(window.JSON.stringify(param)));
+            }
+        }
+
+        window.kIndex = 1;
+
+        function appendLog(logs) {
+            var output = document.getElementById('output');
+            var e = '';
+            for (var i = 0; i < logs.length; i++) {
+                e += '<p class="w-logs-item"><span class="w-em-seq">&gt;&gt; ' + (window.kIndex + i) + ': </span>' +
+                    logs[i] + '</p>';
+            }
+            window.kIndex += logs.length;
+            output.insertAdjacentHTML('beforeend', e);
+        }
+
+        function loop() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/react_log.do', true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.responseType = 'json'
+            xhr.onload = function () {
+                console.log(xhr.response); // http://example.com/test
+                var json = xhr.response;
+                if (json.code == 'OK') {
+                    var data = json.data;
+                    if (data) {
+                        var logs = data.logs;
+                        if (logs.length > 0) {
+                            appendLog(logs);
+                        }
+                    }
+                }
+            };
+            xhr.send('');
+        }
+
+        document.addEventListener("DOMContentLoaded", function (event) {
+            console.log("DOM ready!");
+            // window.setInterval(loop, 1000);
+
+            // 执行命令 
+            var command = document.getElementById('command');
+            var run = document.getElementById('run');
+            run.onclick = function (e) {
+                var com = command.value;
+                if (com.length > 0) {
+                    eval(com);
+                } else {
+                    alert('请输入命令');
+                }
+            }
+
+
+        });
+
+
+        document.addEventListener("readystatechange", function (event) {
+            console.log("readystatechange!" + document.readyState);
+            if (document.readyState == 'complete') {
+                // jsdebugger
+                window.__bri = 1;
+
+                function blockLine(line) {
+                    var promise = new Promise(function (resolve, reject) {
+                        // do a thing, possibly async, then…
+                        window.setInterval(function () {
+                            if (window.__bri != line) {
+                                resolve("Stuff worked!" + line);
+                            }
+                        }, 2000);
+
+                    });
+                    return promise;
+                }
+                var command = document.getElementById('command');jdb(0);
+                var run = document.getElementById('run');jdb(1);
+                var a = 10;jdb(2)
+                var c = 9;jdb(3)
+                a = a + ~c + 1;jdb(4)
+                // console.log(a);jdb(5)
+
+                // run.onclick = function (e) {
+                //     var com = command.value;jdb(6);
+                //     if (com.length > 0) {
+                //         eval(com);jdb(7);
+                //     } else {
+                //         alert('请输入命令');jdb(8);
+                //     }
+                // }
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div class="m-output" id="output">
+    </div>
+    <div class="m-input">
+        <input id="command" class="w-command" type="text" name="command" placeholder="输入命令，如. :help" />
+        <a id="run" class="w-command-run" value="Run">Run</a>
+    </div>
+</body>
+
+</html>

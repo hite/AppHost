@@ -12,6 +12,10 @@
 
 @import WebKit;
 
+static NSString *kAppHostInvokeRequestEvent = @"kAppHostInvokeRequestEvent";
+static NSString *kAppHostInvokeResponseEvent = @"kAppHostInvokeResponseEvent";
+static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
+
 @class AppHostViewController;
 
 /**
@@ -67,8 +71,9 @@
 
 /**
  * 核心的h5调用native接口的分发器；
+ * @return 是否已经被处理，YES 表示可被处理；
  */
-- (void)callNative:(NSString *)action parameter:(NSDictionary *)paramDict;
+- (BOOL)callNative:(NSString *)action parameter:(NSDictionary *)paramDict;
 
 /**
  *  对应传入了匿名对象的接口的调用
