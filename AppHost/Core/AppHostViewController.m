@@ -697,6 +697,8 @@ long long kWebViewProgressTintColorRGB;
         webview.UIDelegate = self;
         webview.scrollView.delegate = self;
         
+//        [webview setValue:@(NO) forKey:@"allowsRemoteInspection"];
+        
         _webView = webview;
     }
     

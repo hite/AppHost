@@ -1,0 +1,11 @@
+.renderjson a              { text-decoration: none; }
+.renderjson .disclosure    { color: #555;
+                             font-size: 150%; }
+.renderjson .syntax        { color: grey; }
+.renderjson .string        { color: #af0404; }
+.renderjson .number        { color:  #af0404; }
+.renderjson .boolean       { color:  #af0404; }
+.renderjson .key           { color: lightblue; }
+.renderjson .keyword       { color: lightgoldenrodyellow; }
+.renderjson .object.syntax { color: lightseagreen; }
+.renderjson .array.syntax  { color:  #af0404; }

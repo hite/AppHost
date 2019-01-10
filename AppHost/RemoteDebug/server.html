@@ -11,29 +11,39 @@
     <meta name="x5-orientation" content="portrait">
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
     <style>
-        html,body{
-			width: 100%;
-            height:100%;
+        html,
+        body {
+            width: 100%;
+            height: 100%;
             padding: 0;
-            margin:0;
-		}
+            margin: 0;
+        }
 
-		.m-output {
-			height: 100%;
+        .m-output {
+            height: 100%;
             width: 100%;
             padding-bottom: 50px;
-            background-color: #29348a;
             box-sizing: border-box;
-		}
-        .m-input{
+            font-weight: 200
+        }
+
+        .m-output-result {
+            border-bottom: 1px solid #CCCCCC;
+            font-size: 12px;
+            text-indent: 10px;
+        }
+
+        .m-input {
             height: 50px;
             position: fixed;
             background-color: white;
             left: 0;
             bottom: 0;
             right: 0;
+            border-top: 1.5px solid #444;
         }
-        .m-input .w-command{
+
+        .m-input .w-command {
             width: 100%;
             height: 50px;
             padding: 0;
@@ -47,7 +57,8 @@
             text-indent: 10px;
             box-sizing: border-box;
         }
-        .m-input .w-command-run{
+
+        .m-input .w-command-run {
             color: #333333;
             position: absolute;
             width: 90px;
@@ -58,7 +69,8 @@
             line-height: 38px;
             text-align: center;
         }
-        .w-logs-item{
+
+        .w-logs-item {
             width: 100%;
             padding: 0;
             margin: 0;
@@ -69,11 +81,14 @@
             line-height: 40px;
             text-indent: 10px;
         }
-        .w-em-seq{
+
+        .w-em-seq {
             font-size: 20px;
             color: #777777;
         }
     </style>
+    <link href="./renderjson.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="./renderjson.js" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
         window.appHost = {
             invoke: function (action, param) {
@@ -90,15 +105,40 @@
 
         window.kIndex = 1;
 
+        var divEle = function (classname) {
+            var s = document.createElement("div");
+            if (classname) s.className = classname;
+            return s;
+        };
+
         function appendLog(logs) {
             var output = document.getElementById('output');
             var e = '';
             for (var i = 0; i < logs.length; i++) {
                 e += '<p class="w-logs-item"><span class="w-em-seq">&gt;&gt; ' + (window.kIndex + i) + ': </span>' +
                     logs[i] + '</p>';
+                var example = window.JSON.parse(logs[i]);
+                var result = divEle('m-output-result');
+                var row = result.appendChild(renderjson.set_icons('+', '-').set_show_to_level(2)(example));
+                output.appendChild(result);
             }
-            window.kIndex += logs.length;
-            output.insertAdjacentHTML('beforeend', e);
+            // window.kIndex += logs.length;
+            // output.insertAdjacentHTML('beforeend', e);
+
+        }
+        function appendCommand(command) {
+            var output = document.getElementById('output');
+            var e = '';
+            for (var i = 0; i < logs.length; i++) {
+                e += '<p class="w-logs-item"><span class="w-em-seq">&gt;&gt; ' + (window.kIndex + i) + ': </span>' +
+                    logs[i] + '</p>';
+                var example = window.JSON.parse(logs[i]);
+                var result = divEle('m-output-result');
+                var row = result.appendChild(renderjson.set_icons('+', '-').set_show_to_level(2)(example));
+                output.appendChild(result);
+            }
+            
+
         }
 
         function loop() {
@@ -124,7 +164,7 @@
 
         document.addEventListener("DOMContentLoaded", function (event) {
             console.log("DOM ready!");
-            // window.setInterval(loop, 1000);
+            window.setInterval(loop, 1000);
 
             // 执行命令 
             var command = document.getElementById('command');
@@ -132,6 +172,7 @@
             run.onclick = function (e) {
                 var com = command.value;
                 if (com.length > 0) {
+                    command.value = '';
                     eval(com);
                 } else {
                     alert('请输入命令');
@@ -146,33 +187,29 @@
             console.log("readystatechange!" + document.readyState);
             if (document.readyState == 'complete') {
                 // jsdebugger
-                window.__bri = 1;
+                window.__bri = -1;
 
-                function blockLine(line) {
-                    var promise = new Promise(function (resolve, reject) {
-                        // do a thing, possibly async, then…
-                        window.setInterval(function () {
-                            if (window.__bri != line) {
-                                resolve("Stuff worked!" + line);
-                            }
-                        }, 2000);
-
-                    });
-                    return promise;
+                function jdb(line) {
+                    // do a thing, possibly async, then…
+                    if (window.__bri == line) {
+                        window.alert('Stop at Debugger;');
+                    } else {
+                        console.log('Skip at line ' + line);
+                    }
                 }
-                var command = document.getElementById('command');jdb(0);
-                var run = document.getElementById('run');jdb(1);
-                var a = 10;jdb(2)
-                var c = 9;jdb(3)
-                a = a + ~c + 1;jdb(4)
-                // console.log(a);jdb(5)
+                var command = document.getElementById('command'); jdb(0);
+                var run = document.getElementById('run'); jdb(1);
+                var a = 10; jdb(2)
+                var c = 9; jdb(3)
+                a = a + ~c + 1; jdb(4)
+                console.log(a); jdb(5)
 
                 // run.onclick = function (e) {
-                //     var com = command.value;jdb(6);
+                //     var com = command.value; jdb(6);
                 //     if (com.length > 0) {
-                //         eval(com);jdb(7);
+                //         eval(com); jdb(7);
                 //     } else {
-                //         alert('请输入命令');jdb(8);
+                //         alert('请输入命令'); jdb(8);
                 //     }
                 // }
             }

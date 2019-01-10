@@ -93,6 +93,10 @@
 + (instancetype)responseWithJSONObject:(id)object contentType:(NSString*)type {
   return [[self alloc] initWithJSONObject:object contentType:type];
 }
+    
++ (instancetype)responseWithText:(NSString *)object contentType:(NSString*)type {
+    return [[self alloc] initWithText:object contentType:type];
+}
 
 - (instancetype)initWithText:(NSString*)text {
   NSData* data = [text dataUsingEncoding:NSUTF8StringEncoding];
@@ -101,6 +105,15 @@
     return nil;
   }
   return [self initWithData:data contentType:@"text/plain; charset=utf-8"];
+}
+    
+- (instancetype)initWithText:(NSString*)text contentType:(NSString*)type {
+    NSData* data = [text dataUsingEncoding:NSUTF8StringEncoding];
+    if (data == nil) {
+        GWS_DNOT_REACHED();
+        return nil;
+    }
+    return [self initWithData:data contentType:type];
 }
 
 - (instancetype)initWithHTML:(NSString*)html {

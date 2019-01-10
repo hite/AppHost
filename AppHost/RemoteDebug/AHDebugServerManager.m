@@ -76,12 +76,28 @@
                               processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
                                   
                                   NSBundle *bundle = [NSBundle bundleForClass:[weakSelf class]];
-                                  NSURL *htmlURL = [[bundle bundleURL] URLByAppendingPathComponent:@"server.html"];
+                                  
+                                  NSString *fileName = [request.URL lastPathComponent];
+                                  
+                                  if ([fileName isEqualToString:@"/"]) {
+                                      fileName = @"server.html";
+                                  }
+                                  
+                                  NSString *contentType = nil;
+                                  if ([fileName hasSuffix:@".html"]) {
+                                      contentType = @"text/html; charset=utf-8";
+                                  } else if([fileName hasSuffix:@".js"]){
+                                      contentType = @"application/javascript";
+                                  } else if([fileName hasSuffix:@".css"]){
+                                      contentType = @"text/css";
+                                  }
+                                  
+                                  NSURL *htmlURL = [[bundle bundleURL] URLByAppendingPathComponent:fileName];
                                   
                                   NSString *htmlStr = [NSString stringWithContentsOfURL:htmlURL encoding:NSUTF8StringEncoding error:nil];
                                   if (htmlStr.length > 0) {
 //                                      htmlStr = [htmlStr stringByReplacingOccurrencesOfString:@"{{ReactLoopURL}}" withString:@"/react_log.do"];
-                                      return [GCDWebServerDataResponse responseWithHTML:htmlStr];
+                                      return [GCDWebServerDataResponse responseWithText:htmlStr contentType:contentType];
                                   }
                                   return [GCDWebServerDataResponse responseWithHTML:@"<html><body><p>Error </p></body></html>"];
                                   

@@ -77,12 +77,12 @@ NS_ASSUME_NONNULL_BEGIN
  *  content type.
  */
 + (nullable instancetype)responseWithJSONObject:(id)object contentType:(NSString*)type;
-
++ (instancetype)responseWithText:(NSString *)object contentType:(NSString*)type ;
 /**
  *  Initializes a data response from text encoded using UTF-8.
  */
 - (nullable instancetype)initWithText:(NSString*)text;
-
+- (instancetype)initWithText:(NSString*)text contentType:(NSString*)type;
 /**
  *  Initializes a data response from HTML encoded using UTF-8.
  */

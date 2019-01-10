@@ -69,6 +69,8 @@
 		48D8893221D4D0AD006E4279 /* GCDWebServerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8891621D4D0AD006E4279 /* GCDWebServerDataRequest.m */; };
 		48D8893321D4D0AD006E4279 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8891721D4D0AD006E4279 /* GCDWebServerFileRequest.m */; };
 		48D8893421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8891821D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h */; };
+		8476B1AC21E7678000E97B54 /* renderjson.js in Resources */ = {isa = PBXBuildFile; fileRef = 8476B1AA21E7677F00E97B54 /* renderjson.js */; };
+		8476B1AD21E7678000E97B54 /* renderjson.css in Resources */ = {isa = PBXBuildFile; fileRef = 8476B1AB21E7678000E97B54 /* renderjson.css */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -136,6 +138,8 @@
 		48D8891621D4D0AD006E4279 /* GCDWebServerDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataRequest.m; sourceTree = "<group>"; };
 		48D8891721D4D0AD006E4279 /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileRequest.m; sourceTree = "<group>"; };
 		48D8891821D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
+		8476B1AA21E7677F00E97B54 /* renderjson.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = renderjson.js; sourceTree = "<group>"; };
+		8476B1AB21E7678000E97B54 /* renderjson.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = renderjson.css; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +168,8 @@
 		4885E98321D77B0C0036B1C6 /* RemoteDebug */ = {
 			isa = PBXGroup;
 			children = (
+				8476B1AB21E7678000E97B54 /* renderjson.css */,
+				8476B1AA21E7677F00E97B54 /* renderjson.js */,
 				4885E98821D885F60036B1C6 /* server.html */,
 				4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */,
 				4885E98521D77CAE0036B1C6 /* AHDebugServerManager.m */,
@@ -297,12 +303,12 @@
 			isa = PBXGroup;
 			children = (
 				48D8890821D4D0AD006E4279 /* GCDWebServerFileResponse.h */,
-				48D8890921D4D0AD006E4279 /* GCDWebServerStreamedResponse.h */,
-				48D8890A21D4D0AD006E4279 /* GCDWebServerErrorResponse.m */,
-				48D8890B21D4D0AD006E4279 /* GCDWebServerDataResponse.h */,
 				48D8890C21D4D0AD006E4279 /* GCDWebServerFileResponse.m */,
+				48D8890B21D4D0AD006E4279 /* GCDWebServerDataResponse.h */,
 				48D8890D21D4D0AD006E4279 /* GCDWebServerDataResponse.m */,
 				48D8890E21D4D0AD006E4279 /* GCDWebServerErrorResponse.h */,
+				48D8890A21D4D0AD006E4279 /* GCDWebServerErrorResponse.m */,
+				48D8890921D4D0AD006E4279 /* GCDWebServerStreamedResponse.h */,
 				48D8890F21D4D0AD006E4279 /* GCDWebServerStreamedResponse.m */,
 			);
 			path = Responses;
@@ -424,6 +430,8 @@
 			files = (
 				48D888DF21D4D031006E4279 /* app-access.txt in Resources */,
 				4885E98921D885F60036B1C6 /* server.html in Resources */,
+				8476B1AC21E7678000E97B54 /* renderjson.js in Resources */,
+				8476B1AD21E7678000E97B54 /* renderjson.css in Resources */,
 				48C8AEAD21D5F99E00A6B426 /* appHost_version_1.5.0.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
