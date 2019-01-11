@@ -52,14 +52,20 @@
 - (void)requestEventOccur:(NSNotification*)notification
 {
     dispatch_async(_logQueue, ^{
-        [self->_eventLogs addObject:notification.object];
+        [self->_eventLogs addObject:@{
+                                      @"type":@"callNative",
+                                      @"value":notification.object
+                                      }];
     });
 }
 
 - (void)responseEventOccur:(NSNotification*)notification
 {
     dispatch_async(_logQueue, ^{
-        [self->_eventLogs addObject:notification.object];
+        [self->_eventLogs addObject:@{
+                                      @"type":@"callJS",
+                                      @"value":notification.object
+                                      }];
     });
 }
 

@@ -5,7 +5,7 @@
 .renderjson .string        { color: #af0404; }
 .renderjson .number        { color:  #af0404; }
 .renderjson .boolean       { color:  #af0404; }
-.renderjson .key           { color: lightblue; }
+.renderjson .key           { color: #333; }
 .renderjson .keyword       { color: lightgoldenrodyellow; }
 .renderjson .object.syntax { color: lightseagreen; }
 .renderjson .array.syntax  { color:  #af0404; }

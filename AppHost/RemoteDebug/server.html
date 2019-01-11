@@ -17,14 +17,17 @@
             height: 100%;
             padding: 0;
             margin: 0;
+            overflow: hidden;
         }
 
         .m-output {
             height: 100%;
             width: 100%;
-            padding-bottom: 50px;
+            padding-bottom: 66px;
             box-sizing: border-box;
-            font-weight: 200
+            font-weight: 200;
+            overflow-y: scroll;
+            overflow-x: hidden;
         }
 
         .m-output-result {
@@ -34,13 +37,13 @@
         }
 
         .m-input {
-            height: 50px;
+            height: 60px;
             position: fixed;
             background-color: white;
             left: 0;
-            bottom: 0;
+            bottom: 10px;
             right: 0;
-            border-top: 1.5px solid #444;
+            border-top: 1px dotted #777
         }
 
         .m-input .w-command {
@@ -70,21 +73,45 @@
             text-align: center;
         }
 
-        .w-logs-item {
+        .m-output-command {
             width: 100%;
             padding: 0;
             margin: 0;
             border-bottom: 1px dotted #CCCCCC;
-            min-height: 40px;
-            color: white;
-            font-size: 16px;
-            line-height: 40px;
+            min-height: 30px;
+            color: #333333;
+            font-size: 12px;
+            line-height: 30px;
             text-indent: 10px;
         }
 
         .w-em-seq {
-            font-size: 20px;
             color: #777777;
+        }
+
+        pre {
+            margin-top: 0;
+            padding-left: 15px;
+        }
+
+        .m-output-type {
+            margin-top: 5px;
+            text-indent: 5px;
+            text-decoration: underline;
+        }
+
+        .w-help-code {
+            background-color: #333333;
+            color: #fff;
+            font-size: 14px;
+            padding: 12px;
+            font-weight: 400;
+            font-family: monospace;
+        }
+
+        .w-err-code {
+            color: #de3535;
+            font-size: 14px;
         }
     </style>
     <link href="./renderjson.css" rel="stylesheet" type="text/css">
@@ -113,32 +140,31 @@
 
         function appendLog(logs) {
             var output = document.getElementById('output');
-            var e = '';
             for (var i = 0; i < logs.length; i++) {
-                e += '<p class="w-logs-item"><span class="w-em-seq">&gt;&gt; ' + (window.kIndex + i) + ': </span>' +
-                    logs[i] + '</p>';
-                var example = window.JSON.parse(logs[i]);
+                var log = window.JSON.parse(logs[i]);
+                var logType = log.type;
+                var logVal = log.value;
+
                 var result = divEle('m-output-result');
-                var row = result.appendChild(renderjson.set_icons('+', '-').set_show_to_level(2)(example));
+                // 先显示日志类型，
+                var logTypeEle = divEle('m-output-type');
+                logTypeEle.insertAdjacentHTML('beforeend', '输出类型：' + logType.toLocaleUpperCase());
+                result.appendChild(logTypeEle);
+
+                var row = result.appendChild(renderjson.set_icons('+', '-').set_show_to_level(2)(logVal));
                 output.appendChild(result);
             }
-            // window.kIndex += logs.length;
-            // output.insertAdjacentHTML('beforeend', e);
-
+            scrollToBottom();
         }
+
         function appendCommand(command) {
             var output = document.getElementById('output');
             var e = '';
-            for (var i = 0; i < logs.length; i++) {
-                e += '<p class="w-logs-item"><span class="w-em-seq">&gt;&gt; ' + (window.kIndex + i) + ': </span>' +
-                    logs[i] + '</p>';
-                var example = window.JSON.parse(logs[i]);
-                var result = divEle('m-output-result');
-                var row = result.appendChild(renderjson.set_icons('+', '-').set_show_to_level(2)(example));
-                output.appendChild(result);
-            }
-            
+            e += '<p class="m-output-command"><span class="w-em-seq">&gt;&gt; ' + (window.kIndex++) + ': </span>' +
+                command + '</p>';
+            output.insertAdjacentHTML('beforeend', e);
 
+            scrollToBottom();
         }
 
         function loop() {
@@ -147,7 +173,7 @@
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhr.responseType = 'json'
             xhr.onload = function () {
-                console.log(xhr.response); // http://example.com/test
+                console.log(xhr.response);
                 var json = xhr.response;
                 if (json.code == 'OK') {
                     var data = json.data;
@@ -162,6 +188,37 @@
             xhr.send('');
         }
 
+        function scrollToBottom() {
+
+            // scroll to bottom
+            var output = document.getElementById('output');
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function showHelp() {
+            var output = document.getElementById('output');
+            var e = '<p class="m-output-command"> 调用方式同 h5 接口，如: </p><div class="w-help-code">' + "window.appHost.invoke('startNewPage', {'url': 'http://dashi.mail.163.com', 'title': 'title', 'type': 'push','actionTitle':'发布'});" +
+                '</div>';
+            output.insertAdjacentHTML('beforeend', e);
+            scrollToBottom();
+        }
+
+        function showError(error) {
+            var output = document.getElementById('output');
+            var e = '<p class="m-output-command"> 输入有误，错误: <span class="w-err-code">' + error.message +
+                '</span></p>';
+            output.insertAdjacentHTML('beforeend', e);
+
+            scrollToBottom();
+        }
+        function showEvalResult(result) {
+            var output = document.getElementById('output');
+            var e = '<p class="m-output-command"> 执行结果是: ' + result + '</p>';
+            output.insertAdjacentHTML('beforeend', e);
+
+            scrollToBottom();
+        }
+
         document.addEventListener("DOMContentLoaded", function (event) {
             console.log("DOM ready!");
             window.setInterval(loop, 1000);
@@ -173,13 +230,34 @@
                 var com = command.value;
                 if (com.length > 0) {
                     command.value = '';
-                    eval(com);
+                    if (com == ':help') {
+                        showHelp();
+                    } else {
+                        appendCommand(com);
+                        try {
+                            var r = eval(com);
+                            if (r) {
+                                showEvalResult(r);
+                            }
+                        } catch (error) {
+                            if (error) {
+                                showError(error)
+                            }
+                        }
+                    }
+
                 } else {
                     alert('请输入命令');
                 }
             }
 
+            command.onkeyup = function (e) {
+                if (e.keyCode === 13) {
+                    run.click();
+                }
 
+                return true;
+            }
         });
 
 
