@@ -102,7 +102,7 @@ void GCDWebServerLogMessage(GCDWebServerLoggingLevel level, NSString* format, ..
     va_end(arguments);
     fprintf(stderr, "[%s] %s\n", levelNames[level], [message UTF8String]);
       // Hack, 所有 "DEBUG" 以上的日志都写到文件里，
-      if (_logFile_io && kGCDWebServerLoggingLevel_Debug > 0) {
+      if (GCDWebServer_logging_enabled && _logFile_io && level > kGCDWebServerLoggingLevel_Debug) {
           long timeout = dispatch_semaphore_wait(_sync_log_semaphore, DISPATCH_TIME_FOREVER);
           if (timeout == 0) {
               dispatch_queue_t dq = dispatch_queue_create("me.hite.app.apphost.log", DISPATCH_QUEUE_SERIAL);

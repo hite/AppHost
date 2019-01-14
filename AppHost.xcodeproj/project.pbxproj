@@ -69,6 +69,8 @@
 		48D8893221D4D0AD006E4279 /* GCDWebServerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8891621D4D0AD006E4279 /* GCDWebServerDataRequest.m */; };
 		48D8893321D4D0AD006E4279 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8891721D4D0AD006E4279 /* GCDWebServerFileRequest.m */; };
 		48D8893421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8891821D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h */; };
+		8415243F21EC578700203C2D /* AHDebugWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 8415243D21EC578700203C2D /* AHDebugWindow.h */; };
+		8415244021EC578700203C2D /* AHDebugWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8415243E21EC578700203C2D /* AHDebugWindow.m */; };
 		8476B1AC21E7678000E97B54 /* renderjson.js in Resources */ = {isa = PBXBuildFile; fileRef = 8476B1AA21E7677F00E97B54 /* renderjson.js */; };
 		8476B1AD21E7678000E97B54 /* renderjson.css in Resources */ = {isa = PBXBuildFile; fileRef = 8476B1AB21E7678000E97B54 /* renderjson.css */; };
 /* End PBXBuildFile section */
@@ -138,6 +140,8 @@
 		48D8891621D4D0AD006E4279 /* GCDWebServerDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataRequest.m; sourceTree = "<group>"; };
 		48D8891721D4D0AD006E4279 /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileRequest.m; sourceTree = "<group>"; };
 		48D8891821D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
+		8415243D21EC578700203C2D /* AHDebugWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDebugWindow.h; sourceTree = "<group>"; };
+		8415243E21EC578700203C2D /* AHDebugWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHDebugWindow.m; sourceTree = "<group>"; };
 		8476B1AA21E7677F00E97B54 /* renderjson.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = renderjson.js; sourceTree = "<group>"; };
 		8476B1AB21E7678000E97B54 /* renderjson.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = renderjson.css; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -173,6 +177,8 @@
 				4885E98821D885F60036B1C6 /* server.html */,
 				4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */,
 				4885E98521D77CAE0036B1C6 /* AHDebugServerManager.m */,
+				8415243D21EC578700203C2D /* AHDebugWindow.h */,
+				8415243E21EC578700203C2D /* AHDebugWindow.m */,
 			);
 			path = RemoteDebug;
 			sourceTree = "<group>";
@@ -350,6 +356,7 @@
 				48D8891A21D4D0AD006E4279 /* GCDWebServerPrivate.h in Headers */,
 				48D8892421D4D0AD006E4279 /* GCDWebServerRequest.h in Headers */,
 				48D8892521D4D0AD006E4279 /* GCDWebServerFileResponse.h in Headers */,
+				8415243F21EC578700203C2D /* AHDebugWindow.h in Headers */,
 				48D888EF21D4D031006E4279 /* AHWebViewScrollPositionManager.h in Headers */,
 				48D888EA21D4D031006E4279 /* AHBuiltInResponse.h in Headers */,
 				48D8892B21D4D0AD006E4279 /* GCDWebServerErrorResponse.h in Headers */,
@@ -453,6 +460,7 @@
 				48D8891B21D4D0AD006E4279 /* GCDWebServerResponse.m in Sources */,
 				48D8892921D4D0AD006E4279 /* GCDWebServerFileResponse.m in Sources */,
 				48D8893221D4D0AD006E4279 /* GCDWebServerDataRequest.m in Sources */,
+				8415244021EC578700203C2D /* AHDebugWindow.m in Sources */,
 				48D8892221D4D0AD006E4279 /* GCDWebServer.m in Sources */,
 				48D888E121D4D031006E4279 /* AHNavigationResponse.m in Sources */,
 				48D888E321D4D031006E4279 /* AHBuiltInResponse.m in Sources */,

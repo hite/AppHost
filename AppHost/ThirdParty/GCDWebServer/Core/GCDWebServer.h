@@ -219,6 +219,8 @@ extern NSString* const GCDWebServerAuthenticationMethod_Basic;
 extern NSString* const GCDWebServerAuthenticationMethod_DigestAccess;
 
 static NSString *GCDWebServer_accessLogFileName = @"access_log.txt";
+// 是否打开 log 日志
+extern BOOL GCDWebServer_logging_enabled;
 
 @class GCDWebServer;
 
@@ -305,6 +307,8 @@ static NSString *GCDWebServer_accessLogFileName = @"access_log.txt";
  *  Returns YES if the server is currently running.
  */
 @property(nonatomic, readonly, getter=isRunning) BOOL running;
+
+@property(nonatomic, assign) BOOL logging;
 
 /**
  *  Returns the port used by the server.

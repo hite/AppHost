@@ -70,6 +70,11 @@
 }
 
 #pragma mark - public
+- (void)showDebugWindow
+{
+    
+}
+
 - (void)start
 {
     // Create server
