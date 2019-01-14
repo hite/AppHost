@@ -23,10 +23,14 @@
     } else if ([@"pageBounceEnabled" isEqualToString:action]) {
         BOOL bounce = [[paramDict objectForKey:@"enabled"] boolValue];
         [self enablePageBounce:bounce];
+#ifdef DEBUG
     } else if ([@"eval" isEqualToString:action]) {
         [self.appHost.webView evaluateJavaScript:[paramDict objectForKey:@"code"] completionHandler:^(id _Nullable result, NSError * _Nullable error) {
             AHLog(@"23323");
         }];
+#endif
+    } else {
+        return NO;
     }
     
     return YES;
