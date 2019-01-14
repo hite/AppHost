@@ -218,6 +218,8 @@ extern NSString* const GCDWebServerAuthenticationMethod_Basic;
  */
 extern NSString* const GCDWebServerAuthenticationMethod_DigestAccess;
 
+static NSString *GCDWebServer_accessLogFileName = @"access_log.txt";
+
 @class GCDWebServer;
 
 /**
@@ -331,6 +333,8 @@ extern NSString* const GCDWebServerAuthenticationMethod_DigestAccess;
  *  This method is the designated initializer for the class.
  */
 - (instancetype)init;
+    
+    - (instancetype)initWithLogServer:(BOOL)server;
 
 /**
  *  Adds to the server a handler that generates responses synchronously when handling incoming HTTP requests.

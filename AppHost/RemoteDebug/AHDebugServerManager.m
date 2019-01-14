@@ -73,7 +73,9 @@
 - (void)start
 {
     // Create server
-    _webServer = [[GCDWebServer alloc] init];
+    _webServer = [[GCDWebServer alloc] initWithLogServer:YES];
+    
+    NSLog(@"Document = %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]);
     
     // Add a handler to respond to GET requests on any URL
     typeof(self) __weak weakSelf = self;

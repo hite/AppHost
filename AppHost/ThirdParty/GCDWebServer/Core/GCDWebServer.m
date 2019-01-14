@@ -85,6 +85,10 @@ static BOOL _run;
 
 #ifdef __GCDWEBSERVER_LOGGING_FACILITY_BUILTIN__
 
+static dispatch_io_t _logFile_io;
+static off_t _log_offset = 0;
+static dispatch_semaphore_t _sync_log_semaphore;
+
 void GCDWebServerLogMessage(GCDWebServerLoggingLevel level, NSString* format, ...) {
   static const char* levelNames[] = {"DEBUG", "VERBOSE", "INFO", "WARNING", "ERROR"};
   static int enableLogging = -1;
@@ -97,6 +101,29 @@ void GCDWebServerLogMessage(GCDWebServerLoggingLevel level, NSString* format, ..
     NSString* message = [[NSString alloc] initWithFormat:format arguments:arguments];
     va_end(arguments);
     fprintf(stderr, "[%s] %s\n", levelNames[level], [message UTF8String]);
+      // Hack, 所有 "DEBUG" 以上的日志都写到文件里，
+      if (_logFile_io && kGCDWebServerLoggingLevel_Debug > 0) {
+          long timeout = dispatch_semaphore_wait(_sync_log_semaphore, DISPATCH_TIME_FOREVER);
+          if (timeout == 0) {
+              dispatch_queue_t dq = dispatch_queue_create("me.hite.app.apphost.log", DISPATCH_QUEUE_SERIAL);
+              NSString *content = [NSString stringWithFormat:@"[%s] %s\n", levelNames[level], [message UTF8String]];
+
+              NSData *data = [content dataUsingEncoding:NSUTF8StringEncoding];
+              dispatch_data_t data_t = dispatch_data_create([data bytes], [data length], dq, DISPATCH_DATA_DESTRUCTOR_DEFAULT);
+              
+              dispatch_io_write(_logFile_io, _log_offset, data_t, dq, ^(bool done, dispatch_data_t  _Nullable data, int error) {
+                  if (done && error == 0) {
+                      off_t start = dispatch_data_get_size(data_t);
+                      _log_offset+= start;
+                  }
+                  dispatch_semaphore_signal(_sync_log_semaphore);
+              });
+          } else {
+              dispatch_semaphore_signal(_sync_log_semaphore);
+              NSLog(@"The message '%@' is not written", message);
+          }
+          
+      }
   }
 }
 
@@ -173,8 +200,12 @@ static void _ExecuteMainThreadRunLoopSources() {
 + (void)initialize {
   GCDWebServerInitializeFunctions();
 }
+    
+    - (instancetype)init {
+        return [self initWithLogServer:NO];
+    }
 
-- (instancetype)init {
+- (instancetype)initWithLogServer:(BOOL)log {
   if ((self = [super init])) {
     _syncQueue = dispatch_queue_create([NSStringFromClass([self class]) UTF8String], DISPATCH_QUEUE_SERIAL);
     _sourceGroup = dispatch_group_create();
@@ -182,6 +213,31 @@ static void _ExecuteMainThreadRunLoopSources() {
 #if TARGET_OS_IPHONE
     _backgroundTask = UIBackgroundTaskInvalid;
 #endif
+      if (log) {
+          // 创建日志文件，如果有旧的则删掉旧日志文件
+          NSString *docsdir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+          NSString *logFile = [docsdir stringByAppendingPathComponent:GCDWebServer_accessLogFileName];
+          NSError *err = nil;
+          if ([[NSFileManager defaultManager] fileExistsAtPath:logFile]) {
+              [[NSFileManager defaultManager] removeItemAtPath:logFile error:&err];
+          }
+          if (!err) {
+              [[NSFileManager defaultManager] createFileAtPath:logFile contents:nil attributes:nil];
+              dispatch_queue_t dq = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
+              _logFile_io = dispatch_io_create_with_path(DISPATCH_IO_RANDOM,
+                                                         [logFile UTF8String],   // Convert to C-string
+                                                         O_RDWR,                // Open for reading
+                                                         0,                       // No extra flags
+                                                         dq,
+                                                         ^(int error){
+                                                             // Cleanup code for normal channel operation.
+                                                             // Assumes that dispatch_io_close was called elsewhere.
+                                                             NSLog(@"I am ok ");
+                                                         });
+              //
+              _sync_log_semaphore = dispatch_semaphore_create(1);
+          }
+      }
   }
   return self;
 }
@@ -196,6 +252,7 @@ static void _ExecuteMainThreadRunLoopSources() {
   dispatch_release(_sourceGroup);
   dispatch_release(_syncQueue);
 #endif
+    dispatch_io_close(_logFile_io, 0);
 }
 
 #if TARGET_OS_IPHONE
