@@ -19,12 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)tryCollapseWindow:(AHDebugViewController *)viewController;
 
+- (void)fetchData:(AHDebugViewController *)viewController completion:(void (^)(NSArray<NSString *> *))completion;
 @end
 
 @interface AHDebugViewController : UIViewController
 
 @property (nonatomic, weak) id<AHDebugViewDelegate> debugViewDelegate;
 
+- (void)showNewLine:(NSArray<NSString *> *)line;
 @end
 
 NS_ASSUME_NONNULL_END

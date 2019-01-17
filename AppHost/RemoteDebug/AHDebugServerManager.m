@@ -24,12 +24,8 @@
  */
 @property (nonatomic, assign) CGPoint lastOffset;
 
-/**
- 原始的，真正的 log 日志数据。在 tableView 显示时，读取数据时需要进行加锁
- */
-@property (nonatomic, strong) NSMutableArray *rawLogs;
+@property (nonatomic, assign) BOOL isSyncing;
 
-@property (nonatomic, strong) NSArray<NSString *> *dataSource;
 @end
 
 static dispatch_io_t _logFile_io;
@@ -46,11 +42,9 @@ static off_t _log_offset = 0;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _manager = [AHDebugServerManager new];
-
         _manager.logQueue = dispatch_queue_create("com.effetiveobjectivec.syncQueue", DISPATCH_QUEUE_SERIAL);
 
     });
-
     return _manager;
 }
 
@@ -81,7 +75,7 @@ static off_t _log_offset = 0;
 
 #pragma mark - public
 CGFloat kDebugWinInitWidth = 55.f;
-CGFloat kDebugWinInitHeight = 36.f;
+CGFloat kDebugWinInitHeight = 46.f;
 - (void)showDebugWindow
 {
     if (self.debugWindow) {
@@ -92,7 +86,7 @@ CGFloat kDebugWinInitHeight = 36.f;
     AHDebugViewController *vc = [[AHDebugViewController alloc] init];
     vc.debugViewDelegate = self;
     window.rootViewController = vc;
-    window.backgroundColor = [UIColor clearColor];
+    window.backgroundColor = [UIColor grayColor];
     window.windowLevel = UIWindowLevelStatusBar + 14;
     window.hidden = NO;
     window.clipsToBounds = YES;
@@ -140,6 +134,10 @@ CGFloat kDebugWinInitHeight = 36.f;
                      }];
 }
 
+- (void)fetchData:(AHDebugViewController *)viewController completion:(void (^)(NSArray<NSString *> *))completion
+{
+    [self parseLog:completion];
+}
 #pragma mark - public
 
 - (void)start
@@ -229,66 +227,43 @@ CGFloat kDebugWinInitHeight = 36.f;
 
                               }];
     // Start server on port 8080
-    [_webServer startWithPort:8080 bonjourName:nil];
+    [_webServer startWithPort:8989 bonjourName:nil];
     NSURL *_Nullable serverURL = _webServer.serverURL;
     NSLog(@"Visit %@ in your web browser", serverURL);
-
-    [self logSync];
-}
-
-- (void)logSync
-{
+    
     if (kGCDWebServer_logging_enabled) {
-
-        NSString *docsdir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-        NSString *logFile = [docsdir stringByAppendingPathComponent:GCDWebServer_accessLogFileName];
-
-        if ([[NSFileManager defaultManager] fileExistsAtPath:logFile]) {
-            int fd = open([logFile UTF8String], O_EVTONLY);
-            if (fd == -1) {
-                NSLog(@"读日志文件出错了.");
-                return;
-            }
-            fcntl(fd, F_SETFL, O_NONBLOCK); // Avoid blocking the read operation
-            dispatch_queue_t dq = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-            dispatch_source_t readfile = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE, fd, DISPATCH_VNODE_WRITE, dq);
-            if (!readfile) {
-                close(fd);
-                NSLog(@"创建 source 出错.");
-                return;
-            }
-
-            dispatch_source_set_event_handler(readfile, ^{
-                size_t estimated = dispatch_source_get_data(readfile) + 1;
+        if (_logFile_io == nil) {
+            NSString *docsdir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+            NSString *logFile = [docsdir stringByAppendingPathComponent:GCDWebServer_accessLogFileName];
+            
+            if ([[NSFileManager defaultManager] fileExistsAtPath:logFile]) {
+                // 同时设置读取流对象
+                dispatch_queue_t dq = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
                 
-                [self parseLog];
-            });
-
-            dispatch_source_set_cancel_handler(readfile, ^{
-                close(fd);
-            });
-
-            dispatch_resume(readfile);
-            NSLog(@"开始同步是否有服务器日志.");
-            // 同时设置读取流d对象
-            _logFile_io = dispatch_io_create_with_path(DISPATCH_IO_RANDOM,
-                                                       [logFile UTF8String], // Convert to C-string
-                                                       O_RDWR,               // Open for reading
-                                                       0,                    // No extra flags
-                                                       dq, ^(int error) {
-                                                           // Cleanup code for normal channel operation.
-                                                           // Assumes that dispatch_io_close was called elsewhere.
-                                                           NSLog(@"I am ok ");
-                                                       });
-        } else {
-            NSLog(@"日志文件不存在");
+                _logFile_io = dispatch_io_create_with_path(DISPATCH_IO_RANDOM,
+                                                           [logFile UTF8String], // Convert to C-string
+                                                           O_RDWR,               // Open for reading
+                                                           0,                    // No extra flags
+                                                           dq, ^(int error) {
+                                                               // Cleanup code for normal channel operation.
+                                                               // Assumes that dispatch_io_close was called elsewhere.
+                                                               NSLog(@"I am ok ");
+                                                           });
+            } else {
+                NSLog(@"日志文件不存在");
+            }
         }
     }
 }
 
-- (void)parseLog
+- (void)parseLog:(void (^)(NSArray<NSString *> *))completion
 {
     if (_logFile_io) {
+        if (self.isSyncing) {
+            return;
+        }
+        self.isSyncing = YES;
+        
         dispatch_queue_t dq = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_io_read(_logFile_io, _log_offset, SIZE_T_MAX, dq, ^(bool done, dispatch_data_t _Nullable data, int error) {
             if (error == 0) {
@@ -297,21 +272,35 @@ CGFloat kDebugWinInitHeight = 36.f;
                 size_t size = 0;
                 dispatch_data_t new_data_file = dispatch_data_create_map(data, &buffer, &size);
                 if (new_data_file && size == 0) { /* to avoid warning really - since dispatch_data_create_map demands we care about the return arg */
+                    self.isSyncing = NO;
                     return ;
                 }
                 _log_offset+=size;
 
                 NSData *nsdata = [[NSData alloc] initWithBytes:buffer length:size];
                 NSString *line = [[NSString alloc] initWithData:nsdata encoding:NSUTF8StringEncoding];
-                NSLog(@"获取到日志: %@", line);
+                
+                if (completion && line.length > 0) {
+                    NSArray<NSString *> *lines = [line componentsSeparatedByString:@"\n"];
+                    NSMutableArray *newLines = [NSMutableArray arrayWithCapacity:10];
+                    [lines enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if (obj.length > 0) {
+                            [newLines addObject:obj];
+                        }
+                    }];
+                    completion(newLines);
+                }
                 // clean up
 //                free(buffer);
             } else if (error != 0) {
                 NSLog(@"出错了");
             }
+            
+            self.isSyncing = NO;
         });
     }
 }
+
 
 - (NSString *)stringDecodeURIComponent:(NSString *)encoded
 {
