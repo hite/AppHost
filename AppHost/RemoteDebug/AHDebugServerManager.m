@@ -13,9 +13,9 @@
 #import "GCDWebServerURLEncodedFormRequest.h"
 #import "AHDebugViewController.h"
 
-@interface AHDebugServerManager() <AHDebugViewDelegate>
+@interface AHDebugServerManager () <AHDebugViewDelegate>
 
-@property (nonatomic,strong) dispatch_queue_t logQueue;
+@property (nonatomic, strong) dispatch_queue_t logQueue;
 
 @property (nonatomic, strong) UIWindow *debugWindow;
 
@@ -23,12 +23,21 @@
  记录上次拖动的位移，两者做差值，来计算此次拖动的距离。
  */
 @property (nonatomic, assign) CGPoint lastOffset;
+
+/**
+ 原始的，真正的 log 日志数据。在 tableView 显示时，读取数据时需要进行加锁
+ */
+@property (nonatomic, strong) NSMutableArray *rawLogs;
+
+@property (nonatomic, strong) NSArray<NSString *> *dataSource;
 @end
 
-@implementation AHDebugServerManager
-{
-    GCDWebServer* _webServer;
-    NSMutableArray *_eventLogs;// 保存所有 native 向 h5 发送的数据；
+static dispatch_io_t _logFile_io;
+static off_t _log_offset = 0;
+
+@implementation AHDebugServerManager {
+    GCDWebServer *_webServer;
+    NSMutableArray *_eventLogs; // 保存所有 native 向 h5 发送的数据；
 }
 
 + (instancetype)sharedInstance
@@ -37,11 +46,11 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _manager = [AHDebugServerManager new];
-        
+
         _manager.logQueue = dispatch_queue_create("com.effetiveobjectivec.syncQueue", DISPATCH_QUEUE_SERIAL);
-        
+
     });
-    
+
     return _manager;
 }
 
@@ -49,30 +58,24 @@
 {
     if (self = [super init]) {
         _eventLogs = [NSMutableArray arrayWithCapacity:10];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestEventOccur:) name:kAppHostInvokeRequestEvent object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(responseEventOccur:) name:kAppHostInvokeResponseEvent object:nil];
     }
     return self;
 }
 
-- (void)requestEventOccur:(NSNotification*)notification
+- (void)requestEventOccur:(NSNotification *)notification
 {
     dispatch_async(_logQueue, ^{
-        [self->_eventLogs addObject:@{
-                                      @"type":@"callNative",
-                                      @"value":notification.object
-                                      }];
+        [self->_eventLogs addObject:@{ @"type" : @"callNative", @"value" : notification.object }];
     });
 }
 
-- (void)responseEventOccur:(NSNotification*)notification
+- (void)responseEventOccur:(NSNotification *)notification
 {
     dispatch_async(_logQueue, ^{
-        [self->_eventLogs addObject:@{
-                                      @"type":@"callJS",
-                                      @"value":notification.object
-                                      }];
+        [self->_eventLogs addObject:@{ @"type" : @"callJS", @"value" : notification.object }];
     });
 }
 
@@ -81,6 +84,10 @@ CGFloat kDebugWinInitWidth = 55.f;
 CGFloat kDebugWinInitHeight = 36.f;
 - (void)showDebugWindow
 {
+    if (self.debugWindow) {
+        return;
+    }
+
     UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(AH_SCREEN_WIDTH - 60, 150, kDebugWinInitWidth, kDebugWinInitHeight)];
     AHDebugViewController *vc = [[AHDebugViewController alloc] init];
     vc.debugViewDelegate = self;
@@ -90,11 +97,11 @@ CGFloat kDebugWinInitHeight = 36.f;
     window.hidden = NO;
     window.clipsToBounds = YES;
     self.debugWindow = window;
-    
-//    // 为 window 增加拖拽功能
-//    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDragFpsWin:)]; //创建手势
-//    window.userInteractionEnabled = YES;
-//    [window addGestureRecognizer:pan];
+
+    //    // 为 window 增加拖拽功能
+    //    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDragFpsWin:)]; //创建手势
+    //    window.userInteractionEnabled = YES;
+    //    [window addGestureRecognizer:pan];
 }
 
 - (void)handleDragFpsWin:(UIPanGestureRecognizer *)pan
@@ -108,9 +115,9 @@ CGFloat kDebugWinInitHeight = 36.f;
     CGRect newFrame = CGRectOffset(self.debugWindow.frame, offset.x - self.lastOffset.x, offset.y - self.lastOffset.y);
     //    SELog(@"drag new %@", NSStringFromCGRect(newFrame));
     self.debugWindow.frame = newFrame;
-    
+
     self.lastOffset = offset;
-    
+
     if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateCancelled || pan.state == UIGestureRecognizerStateFailed) {
         self.lastOffset = CGPointZero;
     }
@@ -119,16 +126,18 @@ CGFloat kDebugWinInitHeight = 36.f;
 
 - (void)tryExpandWindow:(AHDebugViewController *)viewController
 {
-    [UIView animateWithDuration:0.4 animations:^{
-        self.debugWindow.frame = CGRectMake(0, 150, AH_SCREEN_WIDTH, AH_SCREEN_HEIGHT - 150 - 100);
-    }];
+    [UIView animateWithDuration:0.4
+                     animations:^{
+                         self.debugWindow.frame = CGRectMake(0, 150, AH_SCREEN_WIDTH, AH_SCREEN_HEIGHT - 150 - 100);
+                     }];
 }
 
 - (void)tryCollapseWindow:(AHDebugViewController *)viewController
 {
-    [UIView animateWithDuration:0.3 animations:^{
-        self.debugWindow.frame = CGRectMake(AH_SCREEN_WIDTH - 60, 150, kDebugWinInitWidth, kDebugWinInitHeight);
-    }];
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         self.debugWindow.frame = CGRectMake(AH_SCREEN_WIDTH - 60, 150, kDebugWinInitWidth, kDebugWinInitHeight);
+                     }];
 }
 
 #pragma mark - public
@@ -136,78 +145,73 @@ CGFloat kDebugWinInitHeight = 36.f;
 - (void)start
 {
     // Create server
-    _webServer = [[GCDWebServer alloc] initWithLogServer:YES];
-    
+    _webServer = [[GCDWebServer alloc] initWithLogServer:kGCDWebServer_logging_enabled];
+
     NSLog(@"Document = %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]);
-    
+
     // Add a handler to respond to GET requests on any URL
     typeof(self) __weak weakSelf = self;
     [_webServer addDefaultHandlerForMethod:@"GET"
                               requestClass:[GCDWebServerRequest class]
-                              processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
-                                  
+                              processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
+
                                   NSBundle *bundle = [NSBundle bundleForClass:[weakSelf class]];
-                                  
+
                                   NSString *fileName = [request.URL lastPathComponent];
-                                  
+
                                   if ([fileName isEqualToString:@"/"]) {
                                       fileName = @"server.html";
                                   }
-                                  
+
                                   NSString *contentType = nil;
                                   if ([fileName hasSuffix:@".html"]) {
                                       contentType = @"text/html; charset=utf-8";
-                                  } else if([fileName hasSuffix:@".js"]){
+                                  } else if ([fileName hasSuffix:@".js"]) {
                                       contentType = @"application/javascript";
-                                  } else if([fileName hasSuffix:@".css"]){
+                                  } else if ([fileName hasSuffix:@".css"]) {
                                       contentType = @"text/css";
                                   }
-                                  
+
                                   NSURL *htmlURL = [[bundle bundleURL] URLByAppendingPathComponent:fileName];
-                                  
+
                                   NSString *htmlStr = [NSString stringWithContentsOfURL:htmlURL encoding:NSUTF8StringEncoding error:nil];
                                   if (htmlStr.length > 0) {
-//                                      htmlStr = [htmlStr stringByReplacingOccurrencesOfString:@"{{ReactLoopURL}}" withString:@"/react_log.do"];
+                                      //                                      htmlStr = [htmlStr stringByReplacingOccurrencesOfString:@"{{ReactLoopURL}}" withString:@"/react_log.do"];
                                       return [GCDWebServerDataResponse responseWithText:htmlStr contentType:contentType];
                                   }
                                   return [GCDWebServerDataResponse responseWithHTML:@"<html><body><p>Error </p></body></html>"];
-                                  
+
                               }];
     [_webServer addDefaultHandlerForMethod:@"POST"
                               requestClass:[GCDWebServerURLEncodedFormRequest class]
-                              processBlock:^GCDWebServerResponse *(GCDWebServerURLEncodedFormRequest* request) {
-                                  
+                              processBlock:^GCDWebServerResponse *(GCDWebServerURLEncodedFormRequest *request) {
+
                                   NSURL *url = request.URL;
                                   NSDictionary __block *result = @{};
                                   if ([url.path hasPrefix:@"/react_log.do"]) {
-                                      typeof(weakSelf)__strong strongSelf = weakSelf;
+                                      typeof(weakSelf) __strong strongSelf = weakSelf;
                                       dispatch_sync(strongSelf->_logQueue, ^{
                                           NSMutableArray *logStrs = [NSMutableArray arrayWithCapacity:10];
-                                          [strongSelf->_eventLogs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                                              
+                                          [strongSelf->_eventLogs enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+
                                               NSError *error;
-                                              NSData *jsonData = [NSJSONSerialization dataWithJSONObject:obj
-                                                                                                 options:NSJSONWritingPrettyPrinted
-                                                                                                   error:&error];
-                                              
-                                              if (! jsonData) {
+                                              NSData *jsonData = [NSJSONSerialization dataWithJSONObject:obj options:NSJSONWritingPrettyPrinted error:&error];
+
+                                              if (!jsonData) {
                                                   NSLog(@"%s: error: %@", __func__, error.localizedDescription);
                                               } else {
-                                                  [logStrs addObject: [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]];
+                                                  [logStrs addObject:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]];
                                               }
                                           }];
-                                          result = @{
-                                                     @"count":@(strongSelf->_eventLogs.count),
-                                                     @"logs": logStrs
-                                                     };
-                                          
+                                          result = @{ @"count" : @(strongSelf->_eventLogs.count), @"logs" : logStrs };
+
                                           [strongSelf->_eventLogs removeAllObjects];
                                       });
                                   } else if ([url.path hasPrefix:@"/command.do"]) {
                                       NSLog(@"command");
                                       NSString *action = [request.arguments objectForKey:@"action"];
-                                      NSString *param = [request.arguments objectForKey:@"param"]?:@"";
-                                      
+                                      NSString *param = [request.arguments objectForKey:@"param"] ?: @"";
+
                                       NSDictionary *contentJSON = nil;
                                       NSError *contentParseError;
                                       if (param) {
@@ -215,30 +219,99 @@ CGFloat kDebugWinInitHeight = 36.f;
                                           contentJSON = [NSJSONSerialization JSONObjectWithData:[param dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&contentParseError];
                                       }
                                       if (action.length > 0) {
-                                          [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeDebugEvent
-                                                                                              object:@{
-                                                                                                       @"action": action,
-                                                                                                       @"param": contentJSON
-                                                                                                       }];
+                                          [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeDebugEvent object:@{ @"action" : action, @"param" : contentJSON }];
                                       } else {
                                           AHLog(@"command.do arguments error");
                                       }
-//
+                                      //
                                   }
-                                  return [GCDWebServerDataResponse responseWithJSONObject:@{
-                                                                                            @"code":@"OK",
-                                                                                            @"data":result
-                                                                                            }];
-                                  
+                                  return [GCDWebServerDataResponse responseWithJSONObject:@{ @"code" : @"OK", @"data" : result }];
+
                               }];
     // Start server on port 8080
     [_webServer startWithPort:8080 bonjourName:nil];
-    NSURL * _Nullable serverURL = _webServer.serverURL;
+    NSURL *_Nullable serverURL = _webServer.serverURL;
     NSLog(@"Visit %@ in your web browser", serverURL);
-   
-    
+
+    [self logSync];
 }
 
+- (void)logSync
+{
+    if (kGCDWebServer_logging_enabled) {
+
+        NSString *docsdir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *logFile = [docsdir stringByAppendingPathComponent:GCDWebServer_accessLogFileName];
+
+        if ([[NSFileManager defaultManager] fileExistsAtPath:logFile]) {
+            int fd = open([logFile UTF8String], O_EVTONLY);
+            if (fd == -1) {
+                NSLog(@"读日志文件出错了.");
+                return;
+            }
+            fcntl(fd, F_SETFL, O_NONBLOCK); // Avoid blocking the read operation
+            dispatch_queue_t dq = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            dispatch_source_t readfile = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE, fd, DISPATCH_VNODE_WRITE, dq);
+            if (!readfile) {
+                close(fd);
+                NSLog(@"创建 source 出错.");
+                return;
+            }
+
+            dispatch_source_set_event_handler(readfile, ^{
+                size_t estimated = dispatch_source_get_data(readfile) + 1;
+                
+                [self parseLog];
+            });
+
+            dispatch_source_set_cancel_handler(readfile, ^{
+                close(fd);
+            });
+
+            dispatch_resume(readfile);
+            NSLog(@"开始同步是否有服务器日志.");
+            // 同时设置读取流d对象
+            _logFile_io = dispatch_io_create_with_path(DISPATCH_IO_RANDOM,
+                                                       [logFile UTF8String], // Convert to C-string
+                                                       O_RDWR,               // Open for reading
+                                                       0,                    // No extra flags
+                                                       dq, ^(int error) {
+                                                           // Cleanup code for normal channel operation.
+                                                           // Assumes that dispatch_io_close was called elsewhere.
+                                                           NSLog(@"I am ok ");
+                                                       });
+        } else {
+            NSLog(@"日志文件不存在");
+        }
+    }
+}
+
+- (void)parseLog
+{
+    if (_logFile_io) {
+        dispatch_queue_t dq = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_io_read(_logFile_io, _log_offset, SIZE_T_MAX, dq, ^(bool done, dispatch_data_t _Nullable data, int error) {
+            if (error == 0) {
+                // convert
+                const void *buffer = NULL;
+                size_t size = 0;
+                dispatch_data_t new_data_file = dispatch_data_create_map(data, &buffer, &size);
+                if (new_data_file && size == 0) { /* to avoid warning really - since dispatch_data_create_map demands we care about the return arg */
+                    return ;
+                }
+                _log_offset+=size;
+
+                NSData *nsdata = [[NSData alloc] initWithBytes:buffer length:size];
+                NSString *line = [[NSString alloc] initWithData:nsdata encoding:NSUTF8StringEncoding];
+                NSLog(@"获取到日志: %@", line);
+                // clean up
+//                free(buffer);
+            } else if (error != 0) {
+                NSLog(@"出错了");
+            }
+        });
+    }
+}
 
 - (NSString *)stringDecodeURIComponent:(NSString *)encoded
 {
@@ -246,7 +319,6 @@ CGFloat kDebugWinInitHeight = 36.f;
     //    NSLog(@"decodedString %@", decoded);
     return decoded;
 }
-
 
 - (void)stop
 {
