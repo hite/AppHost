@@ -227,7 +227,7 @@ CGFloat kDebugWinInitHeight = 46.f;
 
                               }];
     // Start server on port 8080
-    [_webServer startWithPort:8989 bonjourName:nil];
+    [_webServer startWithPort:12345 bonjourName:@"hite-mac.local"];
     NSURL *_Nullable serverURL = _webServer.serverURL;
     NSLog(@"Visit %@ in your web browser", serverURL);
     
