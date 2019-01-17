@@ -51,6 +51,7 @@ static NSString *const kAppHostScheme = @"apphost";
 // 作为写 cookie 的假地址
 NSString *_Nonnull kFakeCookieWebPageURLWithQueryString;
 long long kWebViewProgressTintColorRGB;
+BOOL kGCDWebServer_logging_enabled;
 /**
  * 代理类，管理所有 AppHostViewController 自身和 AppHostViewController 子类。
  * 使更具模块化，在保持灵活的同时，也保留了可读性。

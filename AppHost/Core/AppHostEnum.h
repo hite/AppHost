@@ -48,6 +48,8 @@ alpha:alphaValue]
 extern NSString * _Nonnull kFakeCookieWebPageURLWithQueryString;
 // 设置进度条的颜色，如 "0xff00ff";
 extern long long kWebViewProgressTintColorRGB;
+// 是否打开 debug server 的日志。
+extern BOOL kGCDWebServer_logging_enabled;
 
 static NSString *kAHLogoutNotification = @"kAHLogoutNotification";
 static NSString *kAHLoginSuccessNotification = @"kAHLoginSuccessNotification";

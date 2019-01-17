@@ -41,6 +41,7 @@
 #import <dns_sd.h>
 
 #import "GCDWebServerPrivate.h"
+#import "AppHostEnum.h"
 
 #if TARGET_OS_IPHONE && !TARGET_IPHONE_SIMULATOR
 #define kDefaultPort 80
@@ -89,6 +90,8 @@ static dispatch_io_t _logFile_io;
 static off_t _log_offset = 0;
 static dispatch_semaphore_t _sync_log_semaphore;
 
+BOOL GCDWebServer_logging_enabled = NO;
+
 void GCDWebServerLogMessage(GCDWebServerLoggingLevel level, NSString* format, ...) {
   static const char* levelNames[] = {"DEBUG", "VERBOSE", "INFO", "WARNING", "ERROR"};
   static int enableLogging = -1;
@@ -102,7 +105,7 @@ void GCDWebServerLogMessage(GCDWebServerLoggingLevel level, NSString* format, ..
     va_end(arguments);
     fprintf(stderr, "[%s] %s\n", levelNames[level], [message UTF8String]);
       // Hack, 所有 "DEBUG" 以上的日志都写到文件里，
-      if (GCDWebServer_logging_enabled && _logFile_io && level > kGCDWebServerLoggingLevel_Debug) {
+      if (kGCDWebServer_logging_enabled && _logFile_io && level > kGCDWebServerLoggingLevel_Debug) {
           long timeout = dispatch_semaphore_wait(_sync_log_semaphore, DISPATCH_TIME_FOREVER);
           if (timeout == 0) {
               dispatch_queue_t dq = dispatch_queue_create("me.hite.app.apphost.log", DISPATCH_QUEUE_SERIAL);

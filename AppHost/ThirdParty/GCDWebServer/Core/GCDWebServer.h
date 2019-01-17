@@ -219,8 +219,6 @@ extern NSString* const GCDWebServerAuthenticationMethod_Basic;
 extern NSString* const GCDWebServerAuthenticationMethod_DigestAccess;
 
 static NSString *GCDWebServer_accessLogFileName = @"access_log.txt";
-// 是否打开 log 日志
-extern BOOL GCDWebServer_logging_enabled;
 
 @class GCDWebServer;
 

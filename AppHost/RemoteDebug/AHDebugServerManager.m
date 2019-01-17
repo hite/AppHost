@@ -11,11 +11,18 @@
 #import "GCDWebServerDataResponse.h"
 #import "AppHostViewController.h"
 #import "GCDWebServerURLEncodedFormRequest.h"
+#import "AHDebugViewController.h"
 
-@interface AHDebugServerManager()
+@interface AHDebugServerManager() <AHDebugViewDelegate>
 
 @property (nonatomic,strong) dispatch_queue_t logQueue;
 
+@property (nonatomic, strong) UIWindow *debugWindow;
+
+/**
+ 记录上次拖动的位移，两者做差值，来计算此次拖动的距离。
+ */
+@property (nonatomic, assign) CGPoint lastOffset;
 @end
 
 @implementation AHDebugServerManager
@@ -70,10 +77,61 @@
 }
 
 #pragma mark - public
+CGFloat kDebugWinInitWidth = 55.f;
+CGFloat kDebugWinInitHeight = 36.f;
 - (void)showDebugWindow
 {
+    UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(AH_SCREEN_WIDTH - 60, 150, kDebugWinInitWidth, kDebugWinInitHeight)];
+    AHDebugViewController *vc = [[AHDebugViewController alloc] init];
+    vc.debugViewDelegate = self;
+    window.rootViewController = vc;
+    window.backgroundColor = [UIColor clearColor];
+    window.windowLevel = UIWindowLevelStatusBar + 14;
+    window.hidden = NO;
+    window.clipsToBounds = YES;
+    self.debugWindow = window;
     
+//    // 为 window 增加拖拽功能
+//    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDragFpsWin:)]; //创建手势
+//    window.userInteractionEnabled = YES;
+//    [window addGestureRecognizer:pan];
 }
+
+- (void)handleDragFpsWin:(UIPanGestureRecognizer *)pan
+{
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        self.lastOffset = CGPointZero;
+    }
+    // 注意：这里的 offset 是相对于在手势开始之前的位置作为基准，和当前手势做差值得出来的位移
+    CGPoint offset = [pan translationInView:self.debugWindow];
+    //    SELog(@"drag %@", NSStringFromCGPoint(offset));
+    CGRect newFrame = CGRectOffset(self.debugWindow.frame, offset.x - self.lastOffset.x, offset.y - self.lastOffset.y);
+    //    SELog(@"drag new %@", NSStringFromCGRect(newFrame));
+    self.debugWindow.frame = newFrame;
+    
+    self.lastOffset = offset;
+    
+    if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateCancelled || pan.state == UIGestureRecognizerStateFailed) {
+        self.lastOffset = CGPointZero;
+    }
+}
+#pragma mark - delegate
+
+- (void)tryExpandWindow:(AHDebugViewController *)viewController
+{
+    [UIView animateWithDuration:0.4 animations:^{
+        self.debugWindow.frame = CGRectMake(0, 150, AH_SCREEN_WIDTH, AH_SCREEN_HEIGHT - 150 - 100);
+    }];
+}
+
+- (void)tryCollapseWindow:(AHDebugViewController *)viewController
+{
+    [UIView animateWithDuration:0.3 animations:^{
+        self.debugWindow.frame = CGRectMake(AH_SCREEN_WIDTH - 60, 150, kDebugWinInitWidth, kDebugWinInitHeight);
+    }];
+}
+
+#pragma mark - public
 
 - (void)start
 {
