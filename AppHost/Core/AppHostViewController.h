@@ -93,4 +93,23 @@ static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
  */
 - (void)loadLocalFile:(NSURL *)url domain:(NSString *)baseDomain;
 
+#pragma mark - 自定义 Response 区域
+/**
+ 注册自定义的 Response
+
+ @param cls 可以处理响应的子类 class，其符合 AppHostProtocol
+ */
+- (void)addCustomResponse:(id<AppHostProtocol>)cls;
+
+#ifdef DEBUG
+
+/**
+ 获取所有注册的 Response 的接口
+
+ @return class 的实例
+ */
+- (NSArray *)allResponseClasses;
+
+#endif
+
 @end

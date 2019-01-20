@@ -36,6 +36,10 @@
 @property (nonatomic, strong) NSArray<NSString *> *responseClassNames;
 
 /**
+ 自定义response类
+ */
+@property (nonatomic, strong) NSMutableArray *customResponseClasses;
+/**
  response类的 实例的缓存。
  */
 @property (nonatomic, strong) NSMutableDictionary *responseClassObjs;
@@ -51,7 +55,7 @@ static NSString *const kAppHostScheme = @"apphost";
 // 作为写 cookie 的假地址
 NSString *_Nonnull kFakeCookieWebPageURLWithQueryString;
 long long kWebViewProgressTintColorRGB;
-BOOL kGCDWebServer_logging_enabled;
+
 /**
  * 代理类，管理所有 AppHostViewController 自身和 AppHostViewController 子类。
  * 使更具模块化，在保持灵活的同时，也保留了可读性。
@@ -73,6 +77,7 @@ BOOL kGCDWebServer_logging_enabled;
                                     @"AHBuiltInResponse",
                                     @"AHAppLoggerResponse" ];
         self.responseClassObjs = [NSMutableDictionary dictionaryWithCapacity:10];
+        self.customResponseClasses = [NSMutableDictionary dictionaryWithCapacity:10];
         // 注意：此时还没有 navigationController。
         self.taskDelegate = [AHSchemeTaskDelegate new];
         
@@ -191,6 +196,14 @@ BOOL kGCDWebServer_logging_enabled;
     AHLog(@"AppHostViewController dealloc");
 }
 
+#pragma mark - public
+- (void)addCustomResponse:(id<AppHostProtocol>)cls
+{
+    if (cls) {
+        [self.customResponseClasses addObject:cls];
+    }
+}
+
 - (void)loadLocalFile:(NSURL *)url domain:(NSString *)domain;
 {
     NSError *err;
@@ -261,35 +274,51 @@ BOOL kGCDWebServer_logging_enabled;
 // 延迟初始化； 短路判断
 - (BOOL)callNative:(NSString *)action parameter:(NSDictionary *)paramDict
 {
-    BOOL catched = NO;
-
-    for (NSInteger i = 0; i < self.responseClassNames.count; i++) {
-        NSString *key = [self.responseClassNames objectAtIndex:i];
-
-        Class responseClass = NSClassFromString(key);
+    id<AppHostProtocol> vc = nil;
+    // 首先检查自定义的类
+    for (NSInteger i = 0; i < self.customResponseClasses.count; i++) {
+        Class responseClass = [self.customResponseClasses objectAtIndex:i];
         if ([responseClass isSupportedAction:action]) {
             // 先判断是否可以响应，再决定初始化。
-            id<AppHostProtocol> vc = [self.responseClassObjs objectForKey:key];
+            NSString *key = NSStringFromClass(responseClass);
+            vc = [self.responseClassObjs objectForKey:key];
             if (vc == nil) {
                 vc = [[responseClass alloc] initWithAppHost:self];
                 // 缓存住
                 [self.responseClassObjs setObject:vc forKey:key];
             }
-
-            [vc handleAction:action withParam:paramDict];
-            catched = YES;
             break;
         }
     }
+
+    if(vc == nil){
+        for (NSInteger i = 0; i < self.responseClassNames.count; i++) {
+            NSString *key = [self.responseClassNames objectAtIndex:i];
+            Class responseClass = NSClassFromString(key);
+            if ([responseClass isSupportedAction:action]) {
+                // 先判断是否可以响应，再决定初始化。
+                vc = [self.responseClassObjs objectForKey:key];
+                if (vc == nil) {
+                    vc = [[responseClass alloc] initWithAppHost:self];
+                    // 缓存住
+                    [self.responseClassObjs setObject:vc forKey:key];
+                }
+                break;
+            }
+        }
+    }
     //
-    if (catched == NO) {
+    if (vc == nil) {
         NSString *errMsg = [NSString stringWithFormat:@"action (%@) not supported yet.", action];
         AHLog(@"action (%@) not supported yet.", action);
         [self sendMessageToWebPage:@"NotSupported" param:@{
                                                   @"error": errMsg
                                                   }];
+        return NO;
+    } else {
+        [vc handleAction:action withParam:paramDict];
+        return YES;
     }
-    return catched;
 }
 
 #pragma mark - wkwebview uidelegate
@@ -582,7 +611,7 @@ BOOL kGCDWebServer_logging_enabled;
     return lst;
 }
 
-#pragma mark -
+#pragma mark - debug
 
 - (void)insertData:(NSDictionary *)json intoPageWithVarName:(NSString *)appProperty
 {
@@ -595,6 +624,53 @@ BOOL kGCDWebServer_logging_enabled;
         [self executeJavaScriptString:[NSString stringWithFormat:@"if(window.appHost){window.appHost.%@ = %@;}", appProperty, str]];
     }
 }
+
+#ifdef DEBUG
+
+/**
+ //TODO: 缓存
+
+ @return 接口的数组
+ */
+- (NSArray *)allResponseClasses
+{
+    NSMutableArray *clss = [NSMutableArray arrayWithCapacity:10];
+    // 首先检查自定义的类
+//    for (NSInteger i = 0; i < self.customResponseClasses.count; i++) {
+//        Class responseClass = [self.customResponseClasses objectAtIndex:i];
+//        if ([responseClass isSupportedAction:action]) {
+//            // 先判断是否可以响应，再决定初始化。
+//            NSString *key = NSStringFromClass(responseClass);
+//            vc = [self.responseClassObjs objectForKey:key];
+//            if (vc == nil) {
+//                vc = [[responseClass alloc] initWithAppHost:self];
+//                // 缓存住
+//                [self.responseClassObjs setObject:vc forKey:key];
+//            }
+//            break;
+//        }
+//    }
+//
+//    if(vc == nil){
+//        for (NSInteger i = 0; i < self.responseClassNames.count; i++) {
+//            NSString *key = [self.responseClassNames objectAtIndex:i];
+//            Class responseClass = NSClassFromString(key);
+//            if ([responseClass isSupportedAction:action]) {
+//                // 先判断是否可以响应，再决定初始化。
+//                vc = [self.responseClassObjs objectForKey:key];
+//                if (vc == nil) {
+//                    vc = [[responseClass alloc] initWithAppHost:self];
+//                    // 缓存住
+//                    [self.responseClassObjs setObject:vc forKey:key];
+//                }
+//                break;
+//            }
+//        }
+//    }
+    return clss;
+}
+
+#endif
 
 #pragma mark - innner
 - (void)debugCommand:(NSNotification *)notif

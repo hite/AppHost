@@ -26,8 +26,11 @@
 #ifdef DEBUG
     } else if ([@"eval" isEqualToString:action]) {
         [self.appHost.webView evaluateJavaScript:[paramDict objectForKey:@"code"] completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-            AHLog(@"23323");
+            AHLog(@"%@", result);
         }];
+    } else if ([@"help_list" isEqualToString:action]) {
+        // 遍历所有的可用接口和注释和测试用例
+        
 #endif
     } else {
         return NO;
@@ -40,7 +43,10 @@
 {
     return @{
              @"toast" : @"1",
+#ifdef DEBUG
              @"eval" : @"1",
+             @"help_list" : @"1",
+#endif
              @"showLoading" : @"1",
              @"hideLoading" : @"1",
              @"pageBounceEnabled" : @"1"
