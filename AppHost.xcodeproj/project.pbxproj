@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4805C81121D4D4D000C058D1 /* AHNavigationBarResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */; };
+		482FF50721F6BBB8005FCD7A /* AHResponseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 482FF50521F6BBB8005FCD7A /* AHResponseManager.h */; };
+		482FF50821F6BBB8005FCD7A /* AHResponseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 482FF50621F6BBB8005FCD7A /* AHResponseManager.m */; };
 		4839FE0121D746BE008EB0DF /* AHSchemeTaskDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */; };
 		4839FE0221D746BE008EB0DF /* AHSchemeTaskDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4885E98621D77CAE0036B1C6 /* AHDebugServerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -76,6 +78,8 @@
 
 /* Begin PBXFileReference section */
 		4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHNavigationBarResponse.m; sourceTree = "<group>"; };
+		482FF50521F6BBB8005FCD7A /* AHResponseManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHResponseManager.h; sourceTree = "<group>"; };
+		482FF50621F6BBB8005FCD7A /* AHResponseManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHResponseManager.m; sourceTree = "<group>"; };
 		4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHSchemeTaskDelegate.m; sourceTree = "<group>"; };
 		4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHSchemeTaskDelegate.h; sourceTree = "<group>"; };
 		4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDebugServerManager.h; sourceTree = "<group>"; };
@@ -168,6 +172,23 @@
 			path = URLChecker;
 			sourceTree = "<group>";
 		};
+		482FF50421F6BB74005FCD7A /* Response */ = {
+			isa = PBXGroup;
+			children = (
+				48D888BC21D4D030006E4279 /* AHAppLoggerResponse.h */,
+				48D888B821D4D030006E4279 /* AHAppLoggerResponse.m */,
+				48D888C921D4D031006E4279 /* AHBuiltInResponse.h */,
+				48D888C221D4D031006E4279 /* AHBuiltInResponse.m */,
+				48D888C321D4D031006E4279 /* AHNavigationBarResponse.h */,
+				4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */,
+				48D888BA21D4D030006E4279 /* AHNavigationResponse.h */,
+				48D888C021D4D030006E4279 /* AHNavigationResponse.m */,
+				482FF50521F6BBB8005FCD7A /* AHResponseManager.h */,
+				482FF50621F6BBB8005FCD7A /* AHResponseManager.m */,
+			);
+			path = Response;
+			sourceTree = "<group>";
+		};
 		4885E98321D77B0C0036B1C6 /* RemoteDebug */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,16 +266,9 @@
 				48D888D621D4D031006E4279 /* AppHostResponse.m */,
 				48D888C521D4D031006E4279 /* AppHostViewController.h */,
 				48D888D521D4D031006E4279 /* AppHostViewController.m */,
-				48D888BC21D4D030006E4279 /* AHAppLoggerResponse.h */,
-				48D888B821D4D030006E4279 /* AHAppLoggerResponse.m */,
-				48D888C921D4D031006E4279 /* AHBuiltInResponse.h */,
-				48D888C221D4D031006E4279 /* AHBuiltInResponse.m */,
-				48D888C321D4D031006E4279 /* AHNavigationBarResponse.h */,
-				4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */,
-				48D888BA21D4D030006E4279 /* AHNavigationResponse.h */,
-				48D888C021D4D030006E4279 /* AHNavigationResponse.m */,
 				4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */,
 				4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */,
+				482FF50421F6BB74005FCD7A /* Response */,
 				482CD47D21D5CEE8006C1120 /* URLChecker */,
 				48D888CC21D4D031006E4279 /* Helper */,
 				48C8AEA921D5F96A00A6B426 /* html */,
@@ -341,6 +355,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				482FF50721F6BBB8005FCD7A /* AHResponseManager.h in Headers */,
 				48D888F421D4D031006E4279 /* AppHostProtocol.h in Headers */,
 				48D8892821D4D0AD006E4279 /* GCDWebServerDataResponse.h in Headers */,
 				48D888E621D4D031006E4279 /* AppHostViewController.h in Headers */,
@@ -461,6 +476,7 @@
 				8415244021EC578700203C2D /* AHDebugViewController.m in Sources */,
 				48D8892221D4D0AD006E4279 /* GCDWebServer.m in Sources */,
 				48D888E121D4D031006E4279 /* AHNavigationResponse.m in Sources */,
+				482FF50821F6BBB8005FCD7A /* AHResponseManager.m in Sources */,
 				48D888E321D4D031006E4279 /* AHBuiltInResponse.m in Sources */,
 				4805C81121D4D4D000C058D1 /* AHNavigationBarResponse.m in Sources */,
 				48D8892721D4D0AD006E4279 /* GCDWebServerErrorResponse.m in Sources */,

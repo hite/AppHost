@@ -233,6 +233,9 @@
                     if (com == ':help') {
                         showHelp();
                     } else {
+                        if (com == ':api_list') {
+                            com = "window.appHost.invoke('api_list', {})";
+                        }
                         appendCommand(com);
                         try {
                             var r = eval(com);

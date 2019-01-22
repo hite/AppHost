@@ -16,6 +16,7 @@
 #import "AppHostCookie.h"
 #import "AHScriptMessageDelegate.h"
 #import "AHURLChecker.h"
+#import "AHResponseManager.h"
 
 @interface AppHostViewController () <UIScrollViewDelegate, WKUIDelegate, WKScriptMessageHandler>
 
@@ -29,22 +30,8 @@
 
 @property (nonatomic, assign) BOOL isProgressorDone;
 
-// 以下是注册 response 使用的属性
-/**
- 可处理 h5 action 的 response类的 NSString 形式。
- */
-@property (nonatomic, strong) NSArray<NSString *> *responseClassNames;
-
-/**
- 自定义response类
- */
-@property (nonatomic, strong) NSMutableArray *customResponseClasses;
-/**
- response类的 实例的缓存。
- */
-@property (nonatomic, strong) NSMutableDictionary *responseClassObjs;
-
 @property (nonatomic, strong) AHSchemeTaskDelegate *taskDelegate;
+
 @end
 
 static NSString *const kAHRequestItmsApp = @"itms-apps://";
@@ -54,7 +41,9 @@ static NSString *const kAppHostScheme = @"apphost";
 // 是否将客户端的 cookie 同步到 WKWebview 的 cookie 当中
 // 作为写 cookie 的假地址
 NSString *_Nonnull kFakeCookieWebPageURLWithQueryString;
+// 以下两个是为了设置进度条颜色和日志开关
 long long kWebViewProgressTintColorRGB;
+BOOL kGCDWebServer_logging_enabled = YES;
 
 /**
  * 代理类，管理所有 AppHostViewController 自身和 AppHostViewController 子类。
@@ -70,14 +59,6 @@ long long kWebViewProgressTintColorRGB;
 {
     self = [super init];
     if (self) {
-        // 静态注册 可响应的类
-        self.responseClassNames = @[
-                                    @"AHNavigationResponse",
-                                    @"AHNavigationBarResponse",
-                                    @"AHBuiltInResponse",
-                                    @"AHAppLoggerResponse" ];
-        self.responseClassObjs = [NSMutableDictionary dictionaryWithCapacity:10];
-        self.customResponseClasses = [NSMutableDictionary dictionaryWithCapacity:10];
         // 注意：此时还没有 navigationController。
         self.taskDelegate = [AHSchemeTaskDelegate new];
         
@@ -184,25 +165,13 @@ long long kWebViewProgressTintColorRGB;
     [self.webView stopLoading];
     [self.webView removeFromSuperview];
     self.webView = nil;
-    // 清理 response
-    [self.responseClassObjs enumerateKeysAndObjectsUsingBlock:^(NSString *key, id _Nonnull obj, BOOL *_Nonnull stop) {
-        obj = nil;
-    }];
-    [self.responseClassObjs removeAllObjects];
-    self.responseClassObjs = nil;
-    
+
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAppHostInvokeDebugEvent object:nil];
     
     AHLog(@"AppHostViewController dealloc");
 }
 
 #pragma mark - public
-- (void)addCustomResponse:(id<AppHostProtocol>)cls
-{
-    if (cls) {
-        [self.customResponseClasses addObject:cls];
-    }
-}
 
 - (void)loadLocalFile:(NSURL *)url domain:(NSString *)domain;
 {
@@ -274,39 +243,7 @@ long long kWebViewProgressTintColorRGB;
 // 延迟初始化； 短路判断
 - (BOOL)callNative:(NSString *)action parameter:(NSDictionary *)paramDict
 {
-    id<AppHostProtocol> vc = nil;
-    // 首先检查自定义的类
-    for (NSInteger i = 0; i < self.customResponseClasses.count; i++) {
-        Class responseClass = [self.customResponseClasses objectAtIndex:i];
-        if ([responseClass isSupportedAction:action]) {
-            // 先判断是否可以响应，再决定初始化。
-            NSString *key = NSStringFromClass(responseClass);
-            vc = [self.responseClassObjs objectForKey:key];
-            if (vc == nil) {
-                vc = [[responseClass alloc] initWithAppHost:self];
-                // 缓存住
-                [self.responseClassObjs setObject:vc forKey:key];
-            }
-            break;
-        }
-    }
-
-    if(vc == nil){
-        for (NSInteger i = 0; i < self.responseClassNames.count; i++) {
-            NSString *key = [self.responseClassNames objectAtIndex:i];
-            Class responseClass = NSClassFromString(key);
-            if ([responseClass isSupportedAction:action]) {
-                // 先判断是否可以响应，再决定初始化。
-                vc = [self.responseClassObjs objectForKey:key];
-                if (vc == nil) {
-                    vc = [[responseClass alloc] initWithAppHost:self];
-                    // 缓存住
-                    [self.responseClassObjs setObject:vc forKey:key];
-                }
-                break;
-            }
-        }
-    }
+    id<AppHostProtocol> vc = [[AHResponseManager defaultManager] responseForAction:action withAppHost:self];
     //
     if (vc == nil) {
         NSString *errMsg = [NSString stringWithFormat:@"action (%@) not supported yet.", action];
@@ -593,11 +530,10 @@ long long kWebViewProgressTintColorRGB;
     } mutableCopy];
     // 内置接口
     // 各个response 的 supportFunction
-    for (NSInteger i = 0; i < self.responseClassNames.count; i++) {
-        NSString *obj = [self.responseClassNames objectAtIndex:i];
-        Class resp = NSClassFromString(obj);
+    [[AHResponseManager defaultManager].customResponseClasses enumerateObjectsUsingBlock:^(Class resp, NSUInteger idx, BOOL * _Nonnull stop) {
         [supportedFunctions addEntriesFromDictionary:[resp supportActionList]];
-    }
+    }];
+
 
     NSMutableDictionary *lst = [NSMutableDictionary dictionaryWithCapacity:10];
     [lst setObject:supportedFunctions forKey:@"supportFunctionType"];
@@ -625,52 +561,7 @@ long long kWebViewProgressTintColorRGB;
     }
 }
 
-#ifdef DEBUG
 
-/**
- //TODO: 缓存
-
- @return 接口的数组
- */
-- (NSArray *)allResponseClasses
-{
-    NSMutableArray *clss = [NSMutableArray arrayWithCapacity:10];
-    // 首先检查自定义的类
-//    for (NSInteger i = 0; i < self.customResponseClasses.count; i++) {
-//        Class responseClass = [self.customResponseClasses objectAtIndex:i];
-//        if ([responseClass isSupportedAction:action]) {
-//            // 先判断是否可以响应，再决定初始化。
-//            NSString *key = NSStringFromClass(responseClass);
-//            vc = [self.responseClassObjs objectForKey:key];
-//            if (vc == nil) {
-//                vc = [[responseClass alloc] initWithAppHost:self];
-//                // 缓存住
-//                [self.responseClassObjs setObject:vc forKey:key];
-//            }
-//            break;
-//        }
-//    }
-//
-//    if(vc == nil){
-//        for (NSInteger i = 0; i < self.responseClassNames.count; i++) {
-//            NSString *key = [self.responseClassNames objectAtIndex:i];
-//            Class responseClass = NSClassFromString(key);
-//            if ([responseClass isSupportedAction:action]) {
-//                // 先判断是否可以响应，再决定初始化。
-//                vc = [self.responseClassObjs objectForKey:key];
-//                if (vc == nil) {
-//                    vc = [[responseClass alloc] initWithAppHost:self];
-//                    // 缓存住
-//                    [self.responseClassObjs setObject:vc forKey:key];
-//                }
-//                break;
-//            }
-//        }
-//    }
-    return clss;
-}
-
-#endif
 
 #pragma mark - innner
 - (void)debugCommand:(NSNotification *)notif

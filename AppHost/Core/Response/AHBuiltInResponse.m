@@ -8,6 +8,7 @@
 
 #import "AHBuiltInResponse.h"
 #import "AppHostViewController.h"
+#import "AHResponseManager.h"
 
 @implementation AHBuiltInResponse
 
@@ -28,9 +29,9 @@
         [self.appHost.webView evaluateJavaScript:[paramDict objectForKey:@"code"] completionHandler:^(id _Nullable result, NSError * _Nullable error) {
             AHLog(@"%@", result);
         }];
-    } else if ([@"help_list" isEqualToString:action]) {
+    } else if ([@"api_list" isEqualToString:action]) {
         // 遍历所有的可用接口和注释和测试用例
-        
+        [self callbackFunctionOnWebPage:@"api_list" param:[[AHResponseManager defaultManager] allResponseMethods]];
 #endif
     } else {
         return NO;
@@ -45,7 +46,7 @@
              @"toast" : @"1",
 #ifdef DEBUG
              @"eval" : @"1",
-             @"help_list" : @"1",
+             @"api_list" : @"1",
 #endif
              @"showLoading" : @"1",
              @"hideLoading" : @"1",
