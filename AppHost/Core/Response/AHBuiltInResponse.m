@@ -8,7 +8,6 @@
 
 #import "AHBuiltInResponse.h"
 #import "AppHostViewController.h"
-#import "AHResponseManager.h"
 
 @implementation AHBuiltInResponse
 
@@ -24,15 +23,6 @@
     } else if ([@"pageBounceEnabled" isEqualToString:action]) {
         BOOL bounce = [[paramDict objectForKey:@"enabled"] boolValue];
         [self enablePageBounce:bounce];
-#ifdef DEBUG
-    } else if ([@"eval" isEqualToString:action]) {
-        [self.appHost.webView evaluateJavaScript:[paramDict objectForKey:@"code"] completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-            AHLog(@"%@", result);
-        }];
-    } else if ([@"api_list" isEqualToString:action]) {
-        // 遍历所有的可用接口和注释和测试用例
-        [self callbackFunctionOnWebPage:@"api_list" param:[[AHResponseManager defaultManager] allResponseMethods]];
-#endif
     } else {
         return NO;
     }
@@ -44,10 +34,6 @@
 {
     return @{
              @"toast" : @"1",
-#ifdef DEBUG
-             @"eval" : @"1",
-             @"api_list" : @"1",
-#endif
              @"showLoading" : @"1",
              @"hideLoading" : @"1",
              @"pageBounceEnabled" : @"1"

@@ -12,6 +12,8 @@
 		482FF50821F6BBB8005FCD7A /* AHResponseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 482FF50621F6BBB8005FCD7A /* AHResponseManager.m */; };
 		4839FE0121D746BE008EB0DF /* AHSchemeTaskDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */; };
 		4839FE0221D746BE008EB0DF /* AHSchemeTaskDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		486C3EE921F6F2E800BE582F /* AHDebugResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 486C3EE721F6F2E800BE582F /* AHDebugResponse.h */; };
+		486C3EEA21F6F2E800BE582F /* AHDebugResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 486C3EE821F6F2E800BE582F /* AHDebugResponse.m */; };
 		4885E98621D77CAE0036B1C6 /* AHDebugServerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4885E98721D77CAE0036B1C6 /* AHDebugServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4885E98521D77CAE0036B1C6 /* AHDebugServerManager.m */; };
 		4885E98921D885F60036B1C6 /* server.html in Resources */ = {isa = PBXBuildFile; fileRef = 4885E98821D885F60036B1C6 /* server.html */; };
@@ -82,6 +84,8 @@
 		482FF50621F6BBB8005FCD7A /* AHResponseManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHResponseManager.m; sourceTree = "<group>"; };
 		4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHSchemeTaskDelegate.m; sourceTree = "<group>"; };
 		4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHSchemeTaskDelegate.h; sourceTree = "<group>"; };
+		486C3EE721F6F2E800BE582F /* AHDebugResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDebugResponse.h; sourceTree = "<group>"; };
+		486C3EE821F6F2E800BE582F /* AHDebugResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHDebugResponse.m; sourceTree = "<group>"; };
 		4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDebugServerManager.h; sourceTree = "<group>"; };
 		4885E98521D77CAE0036B1C6 /* AHDebugServerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHDebugServerManager.m; sourceTree = "<group>"; };
 		4885E98821D885F60036B1C6 /* server.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = server.html; sourceTree = "<group>"; };
@@ -179,6 +183,8 @@
 				48D888B821D4D030006E4279 /* AHAppLoggerResponse.m */,
 				48D888C921D4D031006E4279 /* AHBuiltInResponse.h */,
 				48D888C221D4D031006E4279 /* AHBuiltInResponse.m */,
+				486C3EE721F6F2E800BE582F /* AHDebugResponse.h */,
+				486C3EE821F6F2E800BE582F /* AHDebugResponse.m */,
 				48D888C321D4D031006E4279 /* AHNavigationBarResponse.h */,
 				4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */,
 				48D888BA21D4D030006E4279 /* AHNavigationResponse.h */,
@@ -383,6 +389,7 @@
 				48D8892621D4D0AD006E4279 /* GCDWebServerStreamedResponse.h in Headers */,
 				48D8892F21D4D0AD006E4279 /* GCDWebServerFileRequest.h in Headers */,
 				48D8892E21D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.h in Headers */,
+				486C3EE921F6F2E800BE582F /* AHDebugResponse.h in Headers */,
 				48B00FF621D4DA6E0037FABF /* Reachability.h in Headers */,
 				48D8891C21D4D0AD006E4279 /* GCDWebServerConnection.h in Headers */,
 				48D8892D21D4D0AD006E4279 /* GCDWebServerDataRequest.h in Headers */,
@@ -474,6 +481,7 @@
 				48D8892921D4D0AD006E4279 /* GCDWebServerFileResponse.m in Sources */,
 				48D8893221D4D0AD006E4279 /* GCDWebServerDataRequest.m in Sources */,
 				8415244021EC578700203C2D /* AHDebugViewController.m in Sources */,
+				486C3EEA21F6F2E800BE582F /* AHDebugResponse.m in Sources */,
 				48D8892221D4D0AD006E4279 /* GCDWebServer.m in Sources */,
 				48D888E121D4D031006E4279 /* AHNavigationResponse.m in Sources */,
 				482FF50821F6BBB8005FCD7A /* AHResponseManager.m in Sources */,

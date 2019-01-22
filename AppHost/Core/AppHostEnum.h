@@ -42,6 +42,25 @@ green:((float)((rgbValue & 0x00FF00) >> 8))/255.0 \
 blue:((float)(rgbValue & 0x0000FF))/255.0 \
 alpha:alphaValue]
 
+// 定义 oc-doc，为自动化生成测试代码和自动化注释做准备
+#define ah_concat(A, B) A##B
+#define ah_doc_log_prefix @"ah_doc_for_"
+
+#define ah_doc_begin(log, desc) -(NSDictionary *)ah_concat(ah_doc_for_, log)\
+{\
+return @{\
+@"discuss":@#desc,
+
+#define ah_doc_code(code) "code":@#code,
+
+#define ah_doc_param(paramName, paramDesc) "param":@{@#paramName:@paramDesc},
+
+#define ah_doc_return(type, desc) "return":@{@#type:@desc}
+
+#define ah_doc_end };\
+}
+// oc-doc 结束
+
 #endif /* AppHostEnum_h */
 
 // 为了解决 webview Cookie 而需要提前加载的页面

@@ -138,6 +138,22 @@
             return s;
         };
 
+        function apiDocEle(_doc){
+            var logTypeEle = divEle('m-output-doc');
+            var html = '';
+            if (_doc.discuss){
+                html += '<p class="w-doc-discuss">' + _doc.discuss + '</p>';
+            }
+            if (_doc.param && _doc.param.length > 0){
+                html += '<ul class="w-doc-param-container">';
+
+                html += '</p>';
+            }
+
+            logTypeEle.insertAdjacentHTML('beforeend', '输出类型：' + logType.toLocaleUpperCase());
+            return logTypeEle;
+        }
+
         function appendLog(logs) {
             var output = document.getElementById('output');
             for (var i = 0; i < logs.length; i++) {
@@ -146,12 +162,19 @@
                 var logVal = log.value;
 
                 var result = divEle('m-output-result');
+                if (logVal.action.indexOf('api_list.') >= 0) {
+                    // 特殊处理 API 接口的显示
+                    var doc = logVal.param;
+                    result.appendChild(apiDocEle(doc));
+                } else {
                 // 先显示日志类型，
-                var logTypeEle = divEle('m-output-type');
-                logTypeEle.insertAdjacentHTML('beforeend', '输出类型：' + logType.toLocaleUpperCase());
-                result.appendChild(logTypeEle);
+                    var logTypeEle = divEle('m-output-type');
+                    logTypeEle.insertAdjacentHTML('beforeend', '输出类型：' + logType.toLocaleUpperCase());
+                    result.appendChild(logTypeEle);
 
-                var row = result.appendChild(renderjson.set_icons('+', '-').set_show_to_level(2)(logVal));
+                    result.appendChild(renderjson.set_icons('+', '-').set_show_to_level(2)(logVal));
+                }
+                
                 output.appendChild(result);
             }
             scrollToBottom();
@@ -233,8 +256,18 @@
                     if (com == ':help') {
                         showHelp();
                     } else {
-                        if (com == ':api_list') {
-                            com = "window.appHost.invoke('api_list', {})";
+                        if (com == ':testcase') {
+                            com = "window.appHost.invoke('testcase', {})";
+                        } else if (com.indexOf(':api_list') >= 0) {
+                            var args = com.split(' ');
+                            if(args.length == 1) {
+                                com = "window.appHost.invoke('api_list', {})";
+                            } else if(args.length == 2) {
+                                com = "window.appHost.invoke('api_list', {name:'" + args[1] + "'})";
+                            } else {
+                                console.log('参数出错 ' + com);
+                            }
+                            
                         }
                         appendCommand(com);
                         try {

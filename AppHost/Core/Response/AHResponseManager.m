@@ -41,6 +41,7 @@
                                                     @"AHNavigationResponse",
                                                     @"AHNavigationBarResponse",
                                                     @"AHBuiltInResponse",
+                                                    @"AHDebugResponse",
                                                     @"AHAppLoggerResponse"];
         [responseClassNames enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [kResponeManger.customResponseClasses addObject:NSClassFromString(obj)];
@@ -59,21 +60,31 @@
     }
 }
 
-- (id<AppHostProtocol>)responseForAction:(NSString *)action withAppHost:(AppHostViewController *)appHost
+- (id<AppHostProtocol>)responseForAction:(NSString *)action withAppHost:(AppHostViewController * _Nullable)appHost
 {
+    
+    if (self.customResponseClasses.count == 0) {
+        return nil;
+    }
+    
     id<AppHostProtocol> vc = nil;
     // 逆序遍历，让后添加的 Response 能够覆盖内置的方法；
     for (NSInteger i = self.customResponseClasses.count - 1; i >= 0; i--) {
         Class responseClass = [self.customResponseClasses objectAtIndex:i];
         if ([responseClass isSupportedAction:action]) {
             // 先判断是否可以响应，再决定初始化。
-            NSString *key = NSStringFromClass(responseClass);
-            vc = [self.responseClassObjs objectForKey:key];
-            if (vc == nil) {
-                vc = [[responseClass alloc] initWithAppHost:appHost];
-                // 缓存住
-                [self.responseClassObjs setObject:vc forKey:key];
+            if (appHost) {
+                NSString *key = NSStringFromClass(responseClass);
+                if (vc == nil) {
+                    vc = [self.responseClassObjs objectForKey:key];
+                    vc = [[responseClass alloc] initWithAppHost:appHost];
+                    // 缓存住
+                    [self.responseClassObjs setObject:vc forKey:key];
+                }
+            }  else {
+                vc = [responseClass new];
             }
+            
             break;
         }
     }
