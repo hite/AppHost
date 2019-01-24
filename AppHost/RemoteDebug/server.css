@@ -94,9 +94,25 @@ pre {
     padding: 12px;
     font-weight: 400;
     font-family: monospace;
+    word-wrap: break-word;
 }
 
 .w-err-code {
     color: #de3535;
     font-size: 14px;
+}
+
+.w-welcome-slogan{
+    font-size: 16px;
+    color:#42b983;
+    text-align: center;
+    height: 20px;
+    line-height: 18px;
+}
+
+.w-example-title{
+    font-size: 16px;
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 12px;
 }

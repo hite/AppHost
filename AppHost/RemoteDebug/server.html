@@ -12,229 +12,47 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
     <link href="./server.css" rel="stylesheet" type="text/css" />
     <link href="./renderjson.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="./renderjson.js" charset="utf-8"></script>
-    <script type="text/javascript" charset="utf-8">
-        window.appHost = {
-            invoke: function (action, param) {
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/command.do', true);
-                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xhr.onload = function () {
-                    console.log(xhr.responseURL); // http://example.com/test
-                };
-
-                xhr.send('action=' + action + '&param=' + encodeURI(window.JSON.stringify(param)));
-            }
-        }
-
-        window.kIndex = 1;
-
-        var divEle = function (classname) {
-            var s = document.createElement("div");
-            if (classname) s.className = classname;
-            return s;
-        };
-
-        function apiDocEle(_doc){
-            var logTypeEle = divEle('m-output-doc');
-            var html = '';
-            if (_doc.discuss){
-                html += '<p class="w-doc-discuss">' + _doc.discuss + '</p>';
-            }
-            if (_doc.param && _doc.param.length > 0){
-                html += '<ul class="w-doc-param-container">';
-
-                html += '</p>';
-            }
-
-            logTypeEle.insertAdjacentHTML('beforeend', '输出类型：' + logType.toLocaleUpperCase());
-            return logTypeEle;
-        }
-
-        function appendLog(logs) {
-            var output = document.getElementById('output');
-            for (var i = 0; i < logs.length; i++) {
-                var log = window.JSON.parse(logs[i]);
-                var logType = log.type;
-                var logVal = log.value;
-
-                var result = divEle('m-output-result');
-                if (logVal.action.indexOf('api_list.') >= 0) {
-                    // 特殊处理 API 接口的显示
-                    var doc = logVal.param;
-                    result.appendChild(apiDocEle(doc));
-                } else {
-                // 先显示日志类型，
-                    var logTypeEle = divEle('m-output-type');
-                    logTypeEle.insertAdjacentHTML('beforeend', '输出类型：' + logType.toLocaleUpperCase());
-                    result.appendChild(logTypeEle);
-
-                    result.appendChild(renderjson.set_icons('+', '-').set_show_to_level(2)(logVal));
-                }
-                
-                output.appendChild(result);
-            }
-            scrollToBottom();
-        }
-
-        function appendCommand(command) {
-            var output = document.getElementById('output');
-            var e = '';
-            e += '<p class="m-output-command"><span class="w-em-seq">&gt;&gt; ' + (window.kIndex++) + ': </span>' +
-                command + '</p>';
-            output.insertAdjacentHTML('beforeend', e);
-
-            scrollToBottom();
-        }
-
-        function loop() {
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/react_log.do', true);
-            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhr.responseType = 'json'
-            xhr.onload = function () {
-                console.log(xhr.response);
-                var json = xhr.response;
-                if (json.code == 'OK') {
-                    var data = json.data;
-                    if (data) {
-                        var logs = data.logs;
-                        if (logs.length > 0) {
-                            appendLog(logs);
-                        }
-                    }
-                }
-            };
-            xhr.send('');
-        }
-
-        function scrollToBottom() {
-
-            // scroll to bottom
-            var output = document.getElementById('output');
-            output.scrollTop = output.scrollHeight;
-        }
-
-        function showHelp() {
-            var output = document.getElementById('output');
-            var e = '<p class="m-output-command"> 调用方式同 h5 接口，如: </p><div class="w-help-code">' + "window.appHost.invoke('startNewPage', {'url': 'http://dashi.mail.163.com', 'title': 'title', 'type': 'push','actionTitle':'发布'});" +
-                '</div>';
-            output.insertAdjacentHTML('beforeend', e);
-            scrollToBottom();
-        }
-
-        function showError(error) {
-            var output = document.getElementById('output');
-            var e = '<p class="m-output-command"> 输入有误，错误: <span class="w-err-code">' + error.message +
-                '</span></p>';
-            output.insertAdjacentHTML('beforeend', e);
-
-            scrollToBottom();
-        }
-        function showEvalResult(result) {
-            var output = document.getElementById('output');
-            var e = '<p class="m-output-command"> 执行结果是: ' + result + '</p>';
-            output.insertAdjacentHTML('beforeend', e);
-
-            scrollToBottom();
-        }
-
-        document.addEventListener("DOMContentLoaded", function (event) {
-            console.log("DOM ready!");
-            window.setInterval(loop, 1000);
-
-            // 执行命令 
-            var command = document.getElementById('command');
-            var run = document.getElementById('run');
-            run.onclick = function (e) {
-                var com = command.value;
-                if (com.length > 0) {
-                    command.value = '';
-                    if (com == ':help') {
-                        showHelp();
-                    } else {
-                        if (com == ':testcase') {
-                            com = "window.appHost.invoke('testcase', {})";
-                        } else if (com.indexOf(':api_list') >= 0) {
-                            var args = com.split(' ');
-                            if(args.length == 1) {
-                                com = "window.appHost.invoke('api_list', {})";
-                            } else if(args.length == 2) {
-                                com = "window.appHost.invoke('api_list', {name:'" + args[1] + "'})";
-                            } else {
-                                console.log('参数出错 ' + com);
-                            }
-                            
-                        }
-                        appendCommand(com);
-                        try {
-                            var r = eval(com);
-                            if (r) {
-                                showEvalResult(r);
-                            }
-                        } catch (error) {
-                            if (error) {
-                                showError(error)
-                            }
-                        }
-                    }
-
-                } else {
-                    alert('请输入命令');
-                }
-            }
-
-            command.onkeyup = function (e) {
-                if (e.keyCode === 13) {
-                    run.click();
-                }
-
-                return true;
-            }
-        });
-
-
-        document.addEventListener("readystatechange", function (event) {
-            console.log("readystatechange!" + document.readyState);
-            if (document.readyState == 'complete') {
-                // jsdebugger
-                window.__bri = -1;
-
-                function jdb(line) {
-                    // do a thing, possibly async, then…
-                    if (window.__bri == line) {
-                        window.alert('Stop at Debugger;');
-                    } else {
-                        console.log('Skip at line ' + line);
-                    }
-                }
-                var command = document.getElementById('command'); jdb(0);
-                var run = document.getElementById('run'); jdb(1);
-                var a = 10; jdb(2)
-                var c = 9; jdb(3)
-                a = a + ~c + 1; jdb(4)
-                console.log(a); jdb(5)
-
-                // run.onclick = function (e) {
-                //     var com = command.value; jdb(6);
-                //     if (com.length > 0) {
-                //         eval(com); jdb(7);
-                //     } else {
-                //         alert('请输入命令'); jdb(8);
-                //     }
-                // }
-            }
-        });
-    </script>
+    
 </head>
 
 <body>
-    <div class="m-output" id="output">
+    <div id="app">
+        <command-output></command-output>
+        <command-value></command-value>
     </div>
-    <div class="m-input">
-        <input id="command" class="w-command" type="text" name="command" placeholder="输入命令，如. :help" />
-        <a id="run" class="w-command-run" value="Run">Run</a>
-    </div>
+
+    <script type="text/x-template" id="command-output-template">
+        <div class="m-output">
+            <template v-for="(item, idx) in dataSource">
+                <p v-if="item.type === 'welcome'" class="w-welcome-slogan">{{item.message}}</p>
+                <p v-else-if="item.type === 'evalResult'" class="m-output-command"> 执行结果是: {{item.message}}</p>
+                <p v-else-if="item.type === 'command'" class="m-output-command">
+                    <span class="w-em-seq">&gt;&gt; {{idx}}: </span>{{item.message}}
+                </p>
+                <p v-else-if="item.type === 'error'" class="m-output-command"> 输入有误，错误: <span class="w-err-code">{{item.message}}</span></p>
+                <p v-else-if="item.type === 'help'" class="m-output-command">
+                    <div class='w-example-title'>1. 调用 appHost 接口方式：</div>
+                    <div class="w-help-code">window.appHost.invoke('startNewPage', {'url': 'http://qian.163.com', 'title': 'title', 'type': 'push','actionTitle':'发布'});</div>
+                    <div class='w-example-title'>2. 查看所有支持的 native 接口，输入如下；</div>
+                    <div class="w-help-code">:api_list</div>
+                    <div class='w-example-title'>3. 查看所有支持的 某个具体的接口，api doc, 如 `log` 接口，输入如下；</div>
+                    <div class="w-help-code">:api_list log</div>
+                </p>
+                <p v-else> 未知参数</p>
+            </template>
+        </div>
+    </script>
+    
+    <script type="text/x-template" id="command-value-template">
+        <div class="m-input">
+            <input id="command" v-model="command" v-on:keyup.enter="submit" class="w-command" type="text" name="command" placeholder="输入命令，如. :help" />
+            <a id="run" class="w-command-run" ref="run" v-on:click="run" value="Run">Run</a>
+        </div>
+    </script>
+    
+    <script type="text/javascript" src="./renderjson.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./vue.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./server.js" charset="utf-8"></script>
 </body>
 
 </html>
