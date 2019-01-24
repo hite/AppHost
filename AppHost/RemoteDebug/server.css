@@ -1,0 +1,102 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.m-output {
+    height: 100%;
+    width: 100%;
+    padding-bottom: 66px;
+    box-sizing: border-box;
+    font-weight: 200;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.m-output-result {
+    border-bottom: 1px solid #CCCCCC;
+    font-size: 12px;
+    text-indent: 10px;
+}
+
+.m-input {
+    height: 60px;
+    position: fixed;
+    background-color: white;
+    left: 0;
+    bottom: 10px;
+    right: 0;
+    border-top: 1px dotted #777
+}
+
+.m-input .w-command {
+    width: 100%;
+    height: 50px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    /* border: 1px solid #ff00ff; */
+    border-right: 100px solid #fff;
+    overflow: hidden;
+    font-size: 24px;
+    font-weight: 200;
+    text-indent: 10px;
+    box-sizing: border-box;
+}
+
+.m-input .w-command-run {
+    color: #333333;
+    position: absolute;
+    width: 90px;
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    font-size: 25px;
+    line-height: 38px;
+    text-align: center;
+}
+
+.m-output-command {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px dotted #CCCCCC;
+    min-height: 30px;
+    color: #333333;
+    font-size: 12px;
+    line-height: 30px;
+    text-indent: 10px;
+}
+
+.w-em-seq {
+    color: #777777;
+}
+
+pre {
+    margin-top: 0;
+    padding-left: 15px;
+}
+
+.m-output-type {
+    margin-top: 5px;
+    text-indent: 5px;
+    text-decoration: underline;
+}
+
+.w-help-code {
+    background-color: #333333;
+    color: #fff;
+    font-size: 14px;
+    padding: 12px;
+    font-weight: 400;
+    font-family: monospace;
+}
+
+.w-err-code {
+    color: #de3535;
+    font-size: 14px;
+}
