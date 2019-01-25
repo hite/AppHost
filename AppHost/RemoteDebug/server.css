@@ -7,10 +7,14 @@ body {
     overflow: hidden;
 }
 
+#app{
+    height: 100%;
+    width: 100%;
+}
 .m-output {
     height: 100%;
     width: 100%;
-    padding-bottom: 66px;
+    border-bottom: 70px solid #fff;
     box-sizing: border-box;
     font-weight: 200;
     overflow-y: scroll;
@@ -91,7 +95,8 @@ pre {
     background-color: #333333;
     color: #fff;
     font-size: 14px;
-    padding: 12px;
+    line-height: 20px;
+    padding: 0 12px;
     font-weight: 400;
     font-family: monospace;
     word-wrap: break-word;
@@ -104,7 +109,7 @@ pre {
 
 .w-welcome-slogan{
     font-size: 16px;
-    color:#42b983;
+    color:#4468b9;
     text-align: center;
     height: 20px;
     line-height: 18px;
@@ -115,4 +120,42 @@ pre {
     text-align: left;
     font-weight: bold;
     padding: 5px 12px;
+}
+/* 注释部分 */
+.m-output-doc{
+    font-size: 14px;
+    padding: 0 15px
+}
+.w-doc-type_title{
+    font-weight: bold;
+    padding: 5px 0;
+}
+.w-doc-param-container{
+    list-style-type: circle;
+    padding-left: 20px;
+    margin: 5px;
+}
+
+.w-doc-param span{
+    font-weight: bold;
+}
+
+.w-doc-code{
+    background-color: black;
+    padding: 10px 5px;
+    color: white;
+}
+.w-doc-codeResult{
+    padding: 5px 0;
+}
+
+.w-api_list-group{
+    margin-bottom: 5px;
+}
+.w-api_list-api{
+    display: block;
+}
+
+.w-api_list-other{
+    padding: 0 5px;
 }

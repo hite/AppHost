@@ -36,7 +36,7 @@
             }
         }
     } else if ([@"testcase" isEqualToString:action]) {
-        
+        // 检查是否有文件生成，如果没有则遍历
     } else {
         return NO;
     }

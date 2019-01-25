@@ -43,15 +43,19 @@ blue:((float)(rgbValue & 0x0000FF))/255.0 \
 alpha:alphaValue]
 
 // 定义 oc-doc，为自动化生成测试代码和自动化注释做准备
+// 凡是可能多行的文字描述都用 @result，而不是@#result
+
 #define ah_concat(A, B) A##B
 #define ah_doc_log_prefix @"ah_doc_for_"
 
 #define ah_doc_begin(log, desc) -(NSDictionary *)ah_concat(ah_doc_for_, log)\
 {\
 return @{\
-@"discuss":@#desc,
+@"discuss":@desc,
 
 #define ah_doc_code(code) "code":@#code,
+//ah_doc_code_result 是为了给 ah_doc_code 的代码执行后结果的描述，
+#define ah_doc_code_result(result) "codeResult":@result,
 
 #define ah_doc_param(paramName, paramDesc) "param":@{@#paramName:@paramDesc},
 

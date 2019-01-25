@@ -22,22 +22,53 @@
     </div>
 
     <script type="text/x-template" id="command-output-template">
-        <div class="m-output">
+        <div class="m-output" id="output">
             <template v-for="(item, idx) in dataSource">
                 <p v-if="item.type === 'welcome'" class="w-welcome-slogan">{{item.message}}</p>
+                <div v-else-if="item.type === 'log'" class="m-output-result">
+                    <div class="m-output-type">
+                        输出类型：{{item.message}}
+                    </div>
+                    <div v-bind:id="item.eid"></div>
+                </div>
                 <p v-else-if="item.type === 'evalResult'" class="m-output-command"> 执行结果是: {{item.message}}</p>
                 <p v-else-if="item.type === 'command'" class="m-output-command">
                     <span class="w-em-seq">&gt;&gt; {{idx}}: </span>{{item.message}}
                 </p>
                 <p v-else-if="item.type === 'error'" class="m-output-command"> 输入有误，错误: <span class="w-err-code">{{item.message}}</span></p>
-                <p v-else-if="item.type === 'help'" class="m-output-command">
+                <div v-else-if="item.type === 'help'" class="m-output-command">
                     <div class='w-example-title'>1. 调用 appHost 接口方式：</div>
                     <div class="w-help-code">window.appHost.invoke('startNewPage', {'url': 'http://qian.163.com', 'title': 'title', 'type': 'push','actionTitle':'发布'});</div>
                     <div class='w-example-title'>2. 查看所有支持的 native 接口，输入如下；</div>
                     <div class="w-help-code">:api_list</div>
                     <div class='w-example-title'>3. 查看所有支持的 某个具体的接口，api doc, 如 `log` 接口，输入如下；</div>
                     <div class="w-help-code">:api_list log</div>
-                </p>
+                    <div class='w-example-title'>4. 启动内置的 testcase，测试 API 接口实现是否正常，执行后会在手机端打开一个 测试页面；</div>
+                    <div class="w-help-code">:testcase</div>
+                </div>
+                <div v-else-if="item.type === 'api_list'" class="m-output-result">
+                    <template v-for="api in item.apis">
+                        <p v-if="api.type === 'group'" class="w-api_list-group">{{api.value}}</p>
+                        <span v-else class="w-api_list-api">{{api.value}}</span>
+                    </template>
+                    <p class="w-api_list-other">详细的 API 可以输入 `:api_list api`,如 `:api_list log` 查看详细接口说明、示例、描述</p>
+                </div>
+                <div v-else-if="item.type === 'api_list_item'" class="m-output-doc">
+                        <p v-if="item.doc.discuss" class="w-doc-discuss">{{item.doc.discuss}}</p>
+                        <div v-if="item.doc.param" class="w-doc-type_title">参数说明：</div>
+                        <ul v-if="item.doc.param" class="w-doc-param-container">
+                            <template v-for="(desc, name) in item.doc.param">
+                                <li class="w-doc-param" ><span>{{name}}</span>: {{desc}}</li>
+                            </template>
+                        </ul>
+                        <div v-if="item.doc.return" class="w-doc-return">
+                            <span  class="w-doc-type_title">参数说明：</span>
+                            {{item.doc.return}}
+                        </div>
+                        <div v-if="item.doc.code" class="w-doc-type_title">可执行代码示例：</div>
+                        <div v-if="item.doc.code" class="w-doc-code">{{item.doc.code}}</div>
+                        <div v-if="item.doc.codeResult" class="w-doc-codeResult"><span  class="w-doc-type_title">代码执行后期望：</span>{{item.doc.codeResult}}</div>
+                </div>
                 <p v-else> 未知参数</p>
             </template>
         </div>
