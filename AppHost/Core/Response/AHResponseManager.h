@@ -38,8 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)addCustomResponse:(id<AppHostProtocol>)cls;
 
-- (id<AppHostProtocol>)responseForAction:(NSString *)action withAppHost:(AppHostViewController * _Nullable)appHost;
+- (id<AppHostProtocol>)responseForAction:(NSString *)action withAppHost:(AppHostViewController * _Nonnull)appHost;
 
+- (Class)responseForAction:(NSString *)action;
 @end
 
 NS_ASSUME_NONNULL_END

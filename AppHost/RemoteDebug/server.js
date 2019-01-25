@@ -212,15 +212,13 @@ Vue.component('command-output',{
 
 document.addEventListener("DOMContentLoaded", function (event) {
     console.log("DOM ready!");
-    // window.setInterval(loop, 1000);
-
     var app = new Vue({
         el: '#app',
         created: function(){
             console.log('App goes');
         },
         mounted: function(){
-            // window.setInterval(loop, 2000);
+            window.setInterval(loop, 2000);
         }
     });
 });

@@ -10,6 +10,7 @@
 		4805C81121D4D4D000C058D1 /* AHNavigationBarResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */; };
 		482FF50721F6BBB8005FCD7A /* AHResponseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 482FF50521F6BBB8005FCD7A /* AHResponseManager.h */; };
 		482FF50821F6BBB8005FCD7A /* AHResponseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 482FF50621F6BBB8005FCD7A /* AHResponseManager.m */; };
+		4832C7EE21FB13BA00CD371C /* testcase.tmpl in Resources */ = {isa = PBXBuildFile; fileRef = 4832C7ED21FB13B900CD371C /* testcase.tmpl */; };
 		4837FFC421FA237900D2FE9C /* server.css in Resources */ = {isa = PBXBuildFile; fileRef = 4837FFC121FA237800D2FE9C /* server.css */; };
 		4837FFC521FA237900D2FE9C /* server.js in Resources */ = {isa = PBXBuildFile; fileRef = 4837FFC221FA237800D2FE9C /* server.js */; };
 		4837FFC621FA237900D2FE9C /* vue.js in Resources */ = {isa = PBXBuildFile; fileRef = 4837FFC321FA237800D2FE9C /* vue.js */; };
@@ -85,6 +86,7 @@
 		4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHNavigationBarResponse.m; sourceTree = "<group>"; };
 		482FF50521F6BBB8005FCD7A /* AHResponseManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHResponseManager.h; sourceTree = "<group>"; };
 		482FF50621F6BBB8005FCD7A /* AHResponseManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHResponseManager.m; sourceTree = "<group>"; };
+		4832C7ED21FB13B900CD371C /* testcase.tmpl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = testcase.tmpl; sourceTree = "<group>"; };
 		4837FFC121FA237800D2FE9C /* server.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = server.css; sourceTree = "<group>"; };
 		4837FFC221FA237800D2FE9C /* server.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = server.js; sourceTree = "<group>"; };
 		4837FFC321FA237800D2FE9C /* vue.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = vue.js; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 		4885E98321D77B0C0036B1C6 /* RemoteDebug */ = {
 			isa = PBXGroup;
 			children = (
+				4832C7ED21FB13B900CD371C /* testcase.tmpl */,
 				4837FFC121FA237800D2FE9C /* server.css */,
 				4837FFC221FA237800D2FE9C /* server.js */,
 				4837FFC321FA237800D2FE9C /* vue.js */,
@@ -465,6 +468,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4837FFC421FA237900D2FE9C /* server.css in Resources */,
+				4832C7EE21FB13BA00CD371C /* testcase.tmpl in Resources */,
 				4837FFC621FA237900D2FE9C /* vue.js in Resources */,
 				48D888DF21D4D031006E4279 /* app-access.txt in Resources */,
 				4837FFC521FA237900D2FE9C /* server.js in Resources */,

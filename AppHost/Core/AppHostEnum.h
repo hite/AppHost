@@ -48,7 +48,7 @@ alpha:alphaValue]
 #define ah_concat(A, B) A##B
 #define ah_doc_log_prefix @"ah_doc_for_"
 
-#define ah_doc_begin(log, desc) -(NSDictionary *)ah_concat(ah_doc_for_, log)\
+#define ah_doc_begin(log, desc) +(NSDictionary *)ah_concat(ah_doc_for_, log)\
 {\
 return @{\
 @"discuss":@desc,

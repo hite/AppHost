@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<meta charset="utf-8">
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+	<style type="text/css">
+        fieldset {
+            border-width: 1px;
+            border-color: #7D5C5C;
+            border-style: dashed;
+        }
+
+        legend {
+            text-align: left;
+            color: #290B0B;
+        }
+
+        a {
+            width: 100%;
+            height: 25px;
+            text-decoration: none;
+            text-align: left;
+        }
+
+        ol {
+            margin: 0;
+            padding-left: 24px;
+        }
+
+        ol li {
+            text-align: left;
+        }
+
+        ol span {
+            font-size: 12px;
+            text-align: left;
+            display: block;
+        }
+
+        ol span:before {
+            content: "(";
+        }
+
+        ol span:after {
+            content: ")";
+        }
+
+        ol .propertyValue {
+            display: block;
+            width: 100%;
+        }
+
+        .err {
+            color: red;
+        }
+    </style>
+	<title>appHost 接口测试</title>
+	<script type="text/javascript">
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            var string = msg.toLowerCase();
+            var substring = "script error";
+            if (string.indexOf(substring) > -1) {
+                alert('Script Error: See Browser Console for Detail');
+            } else {
+                var message = [
+                    'Message: ' + msg,
+                    'URL: ' + url,
+                    'Line: ' + lineNo,
+                    'Column: ' + columnNo,
+                    'Error object: ' + JSON.stringify(error)
+                ].join(' - ');
+
+                alert(message);
+            }
+            return false;
+        };
+    </script>
+</head>
+
+<body style="background-color:#f3f3f3;text-align:center;">
+<div style="margin-top:10px;text-font:17px;color:#999999;">
+	<fieldset>
+		<legend>测试webview浏览器</legend>
+		<ol>
+			<li>
+				<input type="text" id="url" style="width:100%;" name="url" value="http://html5test.com" />
+				<br/>
+				<input type="button" id="testURL" name="go" value="Gooo">
+				<span>使用webview页面，加载以上链接</span>
+			</li>
+		</ol>
+    </fieldset>
+    {{ALL_DOCS}}
+</div>
+<script type="text/javascript">
+        (function() {
+            if (window.appHost) {
+                //
+                var testURL = document.getElementById('testURL');
+                testURL.onclick = function() {
+                    var url = document.getElementById('url');
+                    window.appHost.invoke('startNewPage', {url: url}); 
+                }
+
+                window.appHost.on('onready', function() {
+                    console.log('dom ready');
+                });
+            } else {
+                alert('appHost 对象不存在');
+            }
+
+        })();
+    </script>
+</body>
+</html>

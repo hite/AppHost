@@ -8,6 +8,7 @@
 
 #import "AHResponseManager.h"
 #import<pthread.h>
+#import "AHDebugResponse.h"
 
 @interface AHResponseManager ()
 
@@ -41,11 +42,27 @@
                                                     @"AHNavigationResponse",
                                                     @"AHNavigationBarResponse",
                                                     @"AHBuiltInResponse",
+#ifdef DEBUG
                                                     @"AHDebugResponse",
+#endif
                                                     @"AHAppLoggerResponse"];
         [responseClassNames enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [kResponeManger.customResponseClasses addObject:NSClassFromString(obj)];
         }];
+        
+        //TODO
+#ifdef DEBUG
+        NSString *docsdir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *file = [docsdir stringByAppendingPathComponent:kAppHostTestCaseFileName];
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:file]) {
+            NSError *err = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:file error:&err];
+            if (err) {
+                AHLog(@"删除文件错误");
+            }
+        }
+#endif
     });
     
     return kResponeManger;
@@ -60,7 +77,7 @@
     }
 }
 
-- (id<AppHostProtocol>)responseForAction:(NSString *)action withAppHost:(AppHostViewController * _Nullable)appHost
+- (id<AppHostProtocol>)responseForAction:(NSString *)action withAppHost:(AppHostViewController * _Nonnull)appHost
 {
     
     if (self.customResponseClasses.count == 0) {
@@ -90,6 +107,21 @@
     }
     
     return vc;
+}
+
+- (Class)responseForAction:(NSString *)action
+{
+    // 逆序遍历，让后添加的 Response 能够覆盖内置的方法；
+    Class r = nil;
+    for (NSInteger i = self.customResponseClasses.count - 1; i >= 0; i--) {
+        Class responseClass = [self.customResponseClasses objectAtIndex:i];
+        if ([responseClass isSupportedAction:action]) {
+            r = responseClass;
+            break;
+        }
+    }
+    
+    return r;
 }
 
 #ifdef DEBUG
