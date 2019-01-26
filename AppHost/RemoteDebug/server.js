@@ -101,19 +101,29 @@ function scrollToBottom() {
 }
 
 function _parseCommand(com){
-    if (com == ':testcase') {
-        com = "window.appHost.invoke('testcase', {})";
-    } else if (com.indexOf(':api_list') >= 0) {
-        var args = com.split(' ');
-        if (args.length == 1) {
-            com = "window.appHost.invoke('api_list', {})";
-        } else if (args.length == 2) {
-            com = "window.appHost.invoke('api_list', {name:'" + args[1] + "'})";
+    if(com.indexOf(':') == 0){
+        if (com == ':clear') {
+            store.state.dataSource.length = 0;
+            com = null;
+        } else if (com == ':testcase') {
+            com = "window.appHost.invoke('testcase', {})";
+        } else if (com.indexOf(':api_list') >= 0) {
+            var args = com.split(' ');
+            if (args.length == 1) {
+                com = "window.appHost.invoke('api_list', {})";
+            } else if (args.length == 2) {
+                com = "window.appHost.invoke('api_list', {name:'" + args[1] + "'})";
+            } else {
+                console.log('参数出错 ' + com);
+                com = null;
+            }
+    
         } else {
-            console.log('参数出错 ' + com);
+            window.alert('不支持的命令 ' + com);
+            com = null;
         }
-
     }
+
     return com;
 }
 // vue
@@ -177,13 +187,17 @@ Vue.component('command-value', {
                     message: com
                 });
                 try {
-                    var r = window.eval(_parseCommand(com));
-                    if (r) {
-                        addStore({
-                            type:'evalResult',
-                            'message': r
-                        });
+                    var newCom = _parseCommand(com);
+                    if (newCom && newCom.length > 0){
+                        var r = window.eval(newCom);
+                        if (r) {
+                            addStore({
+                                type:'evalResult',
+                                'message': r
+                            });
+                        }
                     }
+                    
                 } catch (error) {
                     if (error) {
                         addStore({

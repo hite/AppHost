@@ -56,7 +56,8 @@ CGFloat kDebugHeadeHeight = 46.f;
     
     toggle.translatesAutoresizingMaskIntoConstraints = NO;
     [toggle.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:10].active = YES;
-    [toggle.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:0].active = YES;
+    [toggle.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
+    [toggle.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
     // 导出文件按钮在下面的右边
     UIButton *export = [UIButton new];
     export.contentEdgeInsets = UIEdgeInsetsMake(2, 5, 2, 5);
@@ -181,6 +182,29 @@ CGFloat kDebugHeadeHeight = 46.f;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
+#pragma mark - context menu
+//允许 Menu菜单
+- (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+//每个cell都会点击出现Menu菜单
+- (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
+{
+    if (action == @selector(copy:)) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
+{
+    if (action == @selector(copy:)) {
+        [UIPasteboard generalPasteboard].string = [self.dataSource objectAtIndex:indexPath.row];
+    }
 }
 
 #pragma mark - getter

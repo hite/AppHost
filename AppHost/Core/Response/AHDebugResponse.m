@@ -126,7 +126,12 @@
         NSString *file = [docsdir stringByAppendingPathComponent:kAppHostTestCaseFileName];
         NSError *err = nil;
         [template writeToFile:file atomically:YES encoding:NSUTF8StringEncoding error:&err];
-        AHLog(@"解析文件有错误吗，%@", err);
+        if (err) {
+            AHLog(@"解析文件有错误吗，%@", err);
+        } else {
+            AHLog(@"测试文件生成完毕，%@", file);
+        }
+
     }
 
     

@@ -69,10 +69,10 @@ body {
     padding: 0;
     margin: 0;
     border-bottom: 1px dotted #CCCCCC;
-    min-height: 30px;
+    min-height: 36px;
     color: #333333;
-    font-size: 12px;
-    line-height: 30px;
+    font-size: 18px;
+    line-height: 35px;
     text-indent: 10px;
 }
 

@@ -101,7 +101,7 @@
                 //
                 var testURL = document.getElementById('testURL');
                 testURL.onclick = function() {
-                    var url = document.getElementById('url');
+                    var url = document.getElementById('url').value;
                     window.appHost.invoke('startNewPage', {url: url}); 
                 }
 
