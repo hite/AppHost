@@ -85,6 +85,7 @@ static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
  */
 - (void)sendMessageToWebPage:(NSString *)actionName param:(NSDictionary *)paramDict;
 
+#pragma mark - 使用缓存渲染界面
 /**
  加载本地 html 资源，支持发送 xhr 请求
 
@@ -93,4 +94,13 @@ static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
  */
 - (void)loadLocalFile:(NSURL *)url domain:(NSString *)baseDomain;
 
+/**
+ 加载本地文件夹。文件夹只支持 HTML，JS，CSS 文件。
+ <b> 在 iOS 11 以上使用 taskscheme，iOS 8+ 以上使用文件合并，不支持本地图片；</b>
+
+ @param fileName 主 HTML 文件的文件名，是个相对路径。 html 文件里应用的内部 js、css 文件都是相对于 directory 参数的
+ @param directory 相对路径，包含 HTML，JS，CSS 文件
+ @param baseDomain 为了解决相对路径 发送 xhr 请求的主域名地址，如 http://qian.163.com
+ */
+- (void)loadHTML:(NSString *)fileName inDirectory:(NSURL *)directory domain:(NSString *)baseDomain;
 @end

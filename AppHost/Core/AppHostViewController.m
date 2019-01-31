@@ -186,6 +186,11 @@ BOOL kGCDWebServer_logging_enabled = YES;
     }
 }
 
+- (void)loadHTML:(NSString *)fileName inDirectory:(NSURL *)directory domain:(NSString *)baseDomain
+{
+    // 实现方式是；将这些文件合并为新的 HTML，css 和 js 都作为内联的 script 和 style；
+    // 先把 filename 读出来，作为一个 ast，分析到相对 css、js，填充到新的 HTML 里
+}
 #pragma mark - UI相关
 
 - (void)loadWebPage
