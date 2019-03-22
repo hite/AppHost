@@ -58,7 +58,7 @@ static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
  */
 @property (nonatomic, strong) NSDictionary *backPageParameter;
 
-// 处理 Response 的事件分发
+// 处理 Response 内部发送的事件，这些事件，除了 h5 关心之外，可能 native 本身也很关心
 @property (nonatomic, weak) id<AppHostViewControllerDelegate> appHostDelegate;
 //核心的函数分发机制。可以继承，
 
@@ -102,5 +102,5 @@ static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
  @param directory 相对路径，包含 HTML，JS，CSS 文件
  @param baseDomain 为了解决相对路径 发送 xhr 请求的主域名地址，如 http://qian.163.com
  */
-- (void)loadHTML:(NSString *)fileName inDirectory:(NSURL *)directory domain:(NSString *)baseDomain;
+- (void)loadIndexFile:(NSString *)fileName inDirectory:(NSURL *)directory domain:(NSString *)baseDomain;
 @end

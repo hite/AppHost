@@ -7,6 +7,7 @@
 //
 
 #import "AHSchemeTaskDelegate.h"
+#import "AppHostProtocol.h"
 
 @interface AHSchemeTaskDelegate()
 
@@ -61,22 +62,26 @@
     if (handle) {
         data = handle(webView, urlSchemeTask);
     }
-    // 上面没有处理，使用默认逻辑
     
+    // 上面没有处理，使用默认逻辑
     if (data == nil) {
-        NSURL *referreURL = webView.URL;// 读取 path , 获取相对路径
-        if ([host hasPrefix:@"static_image"]) {// 相对路径
-            NSURL *mainBundlePath = [[NSBundle mainBundle] bundleURL];
-            NSURL *imageURL = [mainBundlePath URLByAppendingPathComponent: [referreURL.path stringByAppendingString:path]];
+        if ([host isEqualToString:kAppHostURLScriptHost]) {
+            NSURL *url = [NSURL fileURLWithPath:path];
+            data = [NSData dataWithContentsOfURL:url];
+            if (!data) {
+                AHLog(@"Read script file error. The path is %@", url);
+            }
+        } else if ([host isEqualToString:kAppHostURLStyleHost]) {
+            NSURL *url = [NSURL fileURLWithPath:path];
+            data = [NSData dataWithContentsOfURL:url];
+            if (!data) {
+                AHLog(@"Read style file error. The path is %@", url);
+            }
+        } else if ([host isEqualToString:kAppHostURLImageHost]) {
+            NSURL *imageURL = [NSURL fileURLWithPath:path];
             data = [NSData dataWithContentsOfURL:imageURL];
             if (!data) {
-                AHLog(@"Read file error. The path is %@", imageURL);
-            }
-        } else if([host hasPrefix:@"assets_image"]) {
-            UIImage *image = [UIImage imageNamed:[path stringByReplacingOccurrencesOfString:@"/" withString:@""]];
-            data = UIImageJPEGRepresentation(image, 1.0);
-            if (!data) {
-                AHLog(@"Read assets image error. The path is %@", path);
+                AHLog(@"Read image file error. The path is %@", imageURL);
             }
         }
     }

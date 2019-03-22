@@ -17,6 +17,7 @@
 #import "AHScriptMessageDelegate.h"
 #import "AHURLChecker.h"
 #import "AHResponseManager.h"
+#import "AHRequestMediate.h"
 
 @interface AppHostViewController () <UIScrollViewDelegate, WKUIDelegate, WKScriptMessageHandler>
 
@@ -36,7 +37,6 @@
 
 static NSString *const kAHRequestItmsApp = @"itms-apps://";
 static NSString *const kAHScriptHandlerName = @"kAHScriptHandlerName";
-static NSString *const kAppHostScheme = @"apphost";
 
 // 是否将客户端的 cookie 同步到 WKWebview 的 cookie 当中
 // 作为写 cookie 的假地址
@@ -53,7 +53,10 @@ BOOL kGCDWebServer_logging_enabled = YES;
  2. 设计一个 protocol ，所有可支持 h5 的类名 都遵循这一协议。
  */
 
-@implementation AppHostViewController
+@implementation AppHostViewController{
+    double _loadReqeustTime;
+    double _webViewInitTime;
+}
 
 - (instancetype)init
 {
@@ -61,6 +64,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
     if (self) {
         // 注意：此时还没有 navigationController。
         self.taskDelegate = [AHSchemeTaskDelegate new];
+        [self.view addSubview:self.webView];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(debugCommand:) name:kAppHostInvokeDebugEvent object:nil];
     }
@@ -114,18 +118,18 @@ BOOL kGCDWebServer_logging_enabled = YES;
 - (void)initViews
 {
     self.view.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:self.webView];
+    
+    NSLog(@">>>>> t2 = %f", [[NSDate date] timeIntervalSince1970] * 1000);
     //
     AHLog(@"load urltext: %@", self.url);
+}
 
-    NSURL *actualUrl = [NSURL URLWithString:self.url];
-    if (actualUrl == nil) {
-        AHLog(@"loadUlr 异常 = %@", self.url);
-        return;
-    }
+- (void)setUrl:(NSString *)url
+{
+    _url = url;
     // 添加url加载进度条。
     [self addWebviewProgressor];
-
+    
     if (kFakeCookieWebPageURLWithQueryString.length > 0 && [AppHostCookie loginCookieHasBeenSynced] == NO) { // 此时需要同步 Cookie，走同步 Cookie 的流程
         //
         NSURL *cookieURL = [NSURL URLWithString:kFakeCookieWebPageURLWithQueryString];
@@ -135,7 +139,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
         [cookieWebview loadRequest:mutableRequest];
         AHLog(@"preload cookie for url = %@", self.url);
     } else {
-        [self loadWebPage];
+        [self loadWebPageWithURL];
     }
 }
 
@@ -178,22 +182,36 @@ BOOL kGCDWebServer_logging_enabled = YES;
     NSError *err;
     NSStringEncoding encoding = NSUTF8StringEncoding;
     NSString *content = [NSString stringWithContentsOfURL:url usedEncoding:&encoding error:&err];
+    
     if (err == nil && content.length > 0 && domain.length > 0) {
         [self.webView loadHTMLString:content baseURL:[NSURL URLWithString:domain]];
+        
     } else {
         NSAssert(NO, @"加载本地文件出错，关键参数为空");
         AHLog(@"加载本地文件出错，关键参数为空");
     }
+
 }
 
-- (void)loadHTML:(NSString *)fileName inDirectory:(NSURL *)directory domain:(NSString *)baseDomain
+- (void)loadIndexFile:(NSString *)fileName inDirectory:(NSURL *)directory domain:(NSString *)domain
 {
-    // 实现方式是；将这些文件合并为新的 HTML，css 和 js 都作为内联的 script 和 style；
-    // 先把 filename 读出来，作为一个 ast，分析到相对 css、js，填充到新的 HTML 里
+    if (fileName.length == 0 && directory == nil) {
+        AHLog(@"文件参数错误");
+        return;
+    }
+    NSString *htmlContent = nil;
+    [AHRequestMediate interMediateFile:fileName inDirectory:directory output:&htmlContent];
+    
+    if (htmlContent.length > 0 && domain.length > 0) {
+        [self.webView loadHTMLString:htmlContent baseURL:[NSURL URLWithString:domain]];
+    } else {
+        NSAssert(NO, @"加载文件夹出错，关键参数为空");
+        AHLog(@"加载文件夹出错，关键参数为空");
+    }
 }
 #pragma mark - UI相关
 
-- (void)loadWebPage
+- (void)loadWebPageWithURL
 {
     NSURL *url = [NSURL URLWithString:self.url];
     if (url == nil) {
@@ -208,6 +226,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
         //
         NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:120];
         [self.webView loadRequest:mutableRequest];
+        _loadReqeustTime = [[NSDate date] timeIntervalSince1970] * 1000;
     } else {
         [self showTextTip:@"网络断开了，请检查网络。" hideAfterDelay:10.f];
     }
@@ -335,6 +354,11 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
+    double nowTime = [[NSDate date] timeIntervalSince1970] * 1000;
+    
+    NSLog(@">>>>>> navigation start to loadReqeust = %f", nowTime - _loadReqeustTime);
+    NSLog(@">>>>>> navigation start to webViewInit = %f", nowTime - _webViewInitTime);
+    NSLog(@">>>>>> nowTime = %f", nowTime);
     NSLog(@"%@", NSStringFromSelector(_cmd));
 
     NSURLRequest *request = navigationAction.request;
@@ -397,6 +421,10 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
+    double nowTime = [[NSDate date] timeIntervalSince1970] * 1000;
+    NSLog(@">>>>>> FinishNavigation to loadReqeust = %f", nowTime - _loadReqeustTime);
+    NSLog(@">>>>>> FinishNavigation to webViewInit = %f", nowTime - _webViewInitTime);
+    NSLog(@">>>>>> nowTime = %f", nowTime);
     if (webView.isLoading) {
         return;
     }
@@ -407,7 +435,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
         [AppHostCookie setLoginCookieHasBeenSynced:YES];
         // 加载真正的页面；此时已经有 App 的 cookie 存在了。
         [webView removeFromSuperview];
-        [self loadWebPage];
+        [self loadWebPageWithURL];
         return;
     }
 
@@ -643,8 +671,13 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 - (void)logRequestAndResponse:(NSString *)str type:(NSString *)type
 {
-    NSUInteger toIndex = MIN(500, str.length);
-    AHLog(@"debug type: %@ , url : %@", type, [str substringToIndex:toIndex]);
+    NSInteger limit = 500;
+    if (str.length > limit) {
+        AHLog(@"debug type: %@ , url : %@", type, [str substringToIndex:limit]);
+    } else {
+        AHLog(@"debug type: %@ , url : %@", type, str);
+    }
+    
 }
 
 #pragma mark - getter
@@ -679,6 +712,8 @@ BOOL kGCDWebServer_logging_enabled = YES;
 {
     if (_webView == nil) {
         // 设置加载页面完毕后，里面的后续请求，如 xhr 请求使用的cookie
+        _webViewInitTime = [[NSDate date] timeIntervalSince1970] * 1000;
+        NSLog(@">>>>> t1 = %f", _webViewInitTime);
         WKUserContentController *userContentController = [WKUserContentController new];
         __weak typeof(self) weakSelf = self;
         [userContentController addScriptMessageHandler:[[AHScriptMessageDelegate alloc] initWithDelegate:weakSelf] name:kAHScriptHandlerName];
@@ -686,20 +721,26 @@ BOOL kGCDWebServer_logging_enabled = YES;
         webViewConfig.userContentController = userContentController;
         webViewConfig.allowsInlineMediaPlayback = YES;
         webViewConfig.processPool = [AppHostCookie sharedPoolManager];
-        [webViewConfig setURLSchemeHandler:self.taskDelegate forURLScheme:kAppHostScheme];
+        [webViewConfig setURLSchemeHandler:self.taskDelegate forURLScheme:kAppHostURLScheme];
         
         // 注入关键 js 文件
         NSBundle *bundle = [NSBundle bundleForClass:[self class]];
         NSURL *jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"appHost_version_1.5.0.js"];
-        
+
         NSString *jsLib = [NSString stringWithContentsOfURL:jsLibURL encoding:NSUTF8StringEncoding error:nil];
         if (jsLib.length > 0) {
             WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:jsLib injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
             [userContentController addUserScript:cookieScript];
+            WKUserScript *cookieScript1 = [[WKUserScript alloc] initWithSource:@"console.log('start = ' + (new Date()).getTime())" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+            [userContentController addUserScript:cookieScript1];
+            WKUserScript *cookieScript2 = [[WKUserScript alloc] initWithSource:@"console.log('end = ' + (new Date()).getTime())" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+            [userContentController addUserScript:cookieScript2];
         } else {
             NSAssert(NO, @"主 JS 文件加载失败");
             AHLog(@"Fatal Error: appHost.js is not loaded.");
         }
+        double nowTime = [[NSDate date] timeIntervalSince1970] * 1000;
+        NSLog(@">>>>>> addUserScript to webViewInit = %f", nowTime - _webViewInitTime);
         
         WKWebView *webview = [[WKWebView alloc] initWithFrame:CGRectMake(0, AH_NAVIGATION_BAR_HEIGHT, AH_SCREEN_WIDTH, AH_SCREEN_HEIGHT - AH_NAVIGATION_BAR_HEIGHT) configuration:webViewConfig];
         webview.scrollView.contentSize = CGSizeMake(CGRectGetWidth(webview.frame), CGRectGetHeight(webview.frame));

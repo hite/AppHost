@@ -32,7 +32,7 @@ function loop() {
                         var logVal = log.value;
                         
                         //  查询所有的接口，显示需要特殊处理下
-                        if (logVal.action === 'api_list') {
+                        if (logVal.action === 'list') {
                             var apis = [];
                             for (var key in logVal.param) {
                                 if (logVal.param.hasOwnProperty(key)) {
@@ -52,14 +52,14 @@ function loop() {
                                 }
                             }
                             addStore({
-                                type:'api_list',
+                                type:'list',
                                 apis: apis
                             });
-                        }else if (logVal.action.indexOf('api_list.') >= 0) {
+                        }else if (logVal.action.indexOf('apropos.') >= 0) {
                             // 特殊处理 API 接口的显示
                             var doc = logVal.param;
                             addStore({
-                                type:'api_list_item',
+                                type:'apropos_item',
                                 doc: doc
                             });
                         } else {
@@ -107,17 +107,16 @@ function _parseCommand(com){
             com = null;
         } else if (com == ':testcase') {
             com = "window.appHost.invoke('testcase', {})";
-        } else if (com.indexOf(':api_list') >= 0) {
+        } else if (com.indexOf(':list') >= 0) {
+            com = "window.appHost.invoke('list', {})";
+        } else if (com.indexOf(':apropos') >= 0) {
             var args = com.split(' ');
-            if (args.length == 1) {
-                com = "window.appHost.invoke('api_list', {})";
-            } else if (args.length == 2) {
-                com = "window.appHost.invoke('api_list', {name:'" + args[1] + "'})";
+            if (args.length == 2) {
+                com = "window.appHost.invoke('apropos', {name:'" + args[1] + "'})";
             } else {
                 console.log('参数出错 ' + com);
                 com = null;
             }
-    
         } else {
             window.alert('不支持的命令 ' + com);
             com = null;

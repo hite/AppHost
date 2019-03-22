@@ -61,7 +61,7 @@ static BOOL kLoginCookieHasBeenSynced = NO;
 
 + (void)didLogout:(id)notif
 {
-    // 清空旧的 progress
+    // 清空旧的 WKProcessPool
     AHLog(@"didLogout, old pool is destoryed");
     _sharedManager = [[WKProcessPool alloc] init];
 }

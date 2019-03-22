@@ -10,6 +10,8 @@
 #import "AHResponseManager.h"
 #import "AppHostViewController.h"
 
+// 保存 weinre 注入脚本的地址，方便在加载其它页面时也能自动注入。
+static NSString *kLastWeinreScript = nil;
 
 @implementation AHDebugResponse
 - (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict
@@ -20,11 +22,11 @@
         [self.appHost.webView evaluateJavaScript:[paramDict objectForKey:@"code"] completionHandler:^(id _Nullable result, NSError * _Nullable error) {
             AHLog(@"%@", result);
         }];
-    } else if ([@"api_list" isEqualToString:action]) {
+    } else if ([@"list" isEqualToString:action]) {
         // 遍历所有的可用接口和注释和测试用例
         NSString *action = [paramDict objectForKey:@"name"];
         if (action.length == 0) {
-            [self callbackFunctionOnWebPage:@"api_list" param:[[AHResponseManager defaultManager] allResponseMethods]];
+            [self callbackFunctionOnWebPage:@"list" param:[[AHResponseManager defaultManager] allResponseMethods]];
         } else {// 如果是具体的某个接口，输出对应的 API 描述
             Class appHostCls = [[AHResponseManager defaultManager] responseForAction:action];
             SEL targetMethod = NSSelectorFromString([NSString stringWithFormat:@"%@%@", ah_doc_log_prefix, action]);
@@ -33,12 +35,27 @@
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 NSDictionary *doc = [appHostCls performSelector:targetMethod withObject:nil];
 #pragma clang diagnostic pop
-                [self callbackFunctionOnWebPage:[@"api_list." stringByAppendingString:action] param:doc];
+                [self callbackFunctionOnWebPage:[@"list." stringByAppendingString:action] param:doc];
             }
         }
-    } else if ([@"testcase" isEqualToString:action]) {
+    } else if ([@"list" isEqualToString:action]) {
+        // 遍历所有的可用接口和注释和测试用例
+        NSString *action = [paramDict objectForKey:@"name"];
+        if (action.length == 0) {
+            [self callbackFunctionOnWebPage:@"list" param:[[AHResponseManager defaultManager] allResponseMethods]];
+        } else {// 如果是具体的某个接口，输出对应的 API 描述
+            Class appHostCls = [[AHResponseManager defaultManager] responseForAction:action];
+            SEL targetMethod = NSSelectorFromString([NSString stringWithFormat:@"%@%@", ah_doc_log_prefix, action]);
+            if ([appHostCls respondsToSelector:targetMethod]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                NSDictionary *doc = [appHostCls performSelector:targetMethod withObject:nil];
+#pragma clang diagnostic pop
+                [self callbackFunctionOnWebPage:[@"list." stringByAppendingString:action] param:doc];
+            }
+        }
+    }else if ([@"testcase" isEqualToString:action]) {
         // 检查是否有文件生成，如果没有则遍历
-        
         NSString *docsdir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
         NSString *file = [docsdir stringByAppendingPathComponent:kAppHostTestCaseFileName];
         
@@ -46,6 +63,10 @@
             [self generatorHtml];
         }
         [self.appHost loadLocalFile:[NSURL fileURLWithPath:file] domain:@"http://qian.163.com"];
+        // 支持 或者关闭 weinre 远程调试
+    }else if ([@"weinre" isEqualToString:action]) {
+        //
+        BOOL disabled = [[paramDict objectForKey:@"disabled"] boolValue];
     } else {
         return NO;
     }

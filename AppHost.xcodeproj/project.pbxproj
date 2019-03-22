@@ -16,11 +16,21 @@
 		4837FFC621FA237900D2FE9C /* vue.js in Resources */ = {isa = PBXBuildFile; fileRef = 4837FFC321FA237800D2FE9C /* vue.js */; };
 		4839FE0121D746BE008EB0DF /* AHSchemeTaskDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */; };
 		4839FE0221D746BE008EB0DF /* AHSchemeTaskDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		483E884922028FAD00066375 /* HTMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 483E884522028FAD00066375 /* HTMLParser.m */; };
+		483E884A22028FAD00066375 /* HTMLNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 483E884622028FAD00066375 /* HTMLNode.h */; };
+		483E884B22028FAD00066375 /* HTMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 483E884722028FAD00066375 /* HTMLParser.h */; };
+		483E884C22028FAD00066375 /* HTMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 483E884822028FAD00066375 /* HTMLNode.m */; };
+		483E884F22028FD500066375 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 483E884E22028FD500066375 /* libxml2.tbd */; };
 		486C3EE921F6F2E800BE582F /* AHDebugResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 486C3EE721F6F2E800BE582F /* AHDebugResponse.h */; };
 		486C3EEA21F6F2E800BE582F /* AHDebugResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 486C3EE821F6F2E800BE582F /* AHDebugResponse.m */; };
 		4885E98621D77CAE0036B1C6 /* AHDebugServerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4885E98721D77CAE0036B1C6 /* AHDebugServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4885E98521D77CAE0036B1C6 /* AHDebugServerManager.m */; };
 		4885E98921D885F60036B1C6 /* server.html in Resources */ = {isa = PBXBuildFile; fileRef = 4885E98821D885F60036B1C6 /* server.html */; };
+		4888F1D72244CA2900A933E8 /* AHRequestMediate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4888F1D52244CA2900A933E8 /* AHRequestMediate.h */; };
+		4888F1D82244CA2900A933E8 /* AHRequestMediate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4888F1D62244CA2900A933E8 /* AHRequestMediate.m */; };
+		4888F1DB2244D59700A933E8 /* AHUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 4888F1D92244D59700A933E8 /* AHUtil.h */; };
+		4888F1DC2244D59700A933E8 /* AHUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4888F1DA2244D59700A933E8 /* AHUtil.m */; };
+		48A44CFC222525AC00F50C4D /* debuggap.js in Resources */ = {isa = PBXBuildFile; fileRef = 48A44CFB222525AB00F50C4D /* debuggap.js */; };
 		48B00FF521D4DA6E0037FABF /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B00FF321D4DA6E0037FABF /* Reachability.m */; };
 		48B00FF621D4DA6E0037FABF /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 48B00FF421D4DA6E0037FABF /* Reachability.h */; };
 		48C8AEA721D5F3B800A6B426 /* AHURLChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C8AEA521D5F3B800A6B426 /* AHURLChecker.m */; };
@@ -92,11 +102,21 @@
 		4837FFC321FA237800D2FE9C /* vue.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = vue.js; sourceTree = "<group>"; };
 		4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHSchemeTaskDelegate.m; sourceTree = "<group>"; };
 		4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHSchemeTaskDelegate.h; sourceTree = "<group>"; };
+		483E884522028FAD00066375 /* HTMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HTMLParser.m; path = "Objective-C-HMTL-Parser/HTMLParser.m"; sourceTree = "<group>"; };
+		483E884622028FAD00066375 /* HTMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HTMLNode.h; path = "Objective-C-HMTL-Parser/HTMLNode.h"; sourceTree = "<group>"; };
+		483E884722028FAD00066375 /* HTMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HTMLParser.h; path = "Objective-C-HMTL-Parser/HTMLParser.h"; sourceTree = "<group>"; };
+		483E884822028FAD00066375 /* HTMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HTMLNode.m; path = "Objective-C-HMTL-Parser/HTMLNode.m"; sourceTree = "<group>"; };
+		483E884E22028FD500066375 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		486C3EE721F6F2E800BE582F /* AHDebugResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDebugResponse.h; sourceTree = "<group>"; };
 		486C3EE821F6F2E800BE582F /* AHDebugResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHDebugResponse.m; sourceTree = "<group>"; };
 		4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDebugServerManager.h; sourceTree = "<group>"; };
 		4885E98521D77CAE0036B1C6 /* AHDebugServerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHDebugServerManager.m; sourceTree = "<group>"; };
 		4885E98821D885F60036B1C6 /* server.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = server.html; sourceTree = "<group>"; };
+		4888F1D52244CA2900A933E8 /* AHRequestMediate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHRequestMediate.h; sourceTree = "<group>"; };
+		4888F1D62244CA2900A933E8 /* AHRequestMediate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHRequestMediate.m; sourceTree = "<group>"; };
+		4888F1D92244D59700A933E8 /* AHUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHUtil.h; sourceTree = "<group>"; };
+		4888F1DA2244D59700A933E8 /* AHUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHUtil.m; sourceTree = "<group>"; };
+		48A44CFB222525AB00F50C4D /* debuggap.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = debuggap.js; sourceTree = "<group>"; };
 		48B00FF321D4DA6E0037FABF /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		48B00FF421D4DA6E0037FABF /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		48C8AEA421D5EFCC00A6B426 /* AppHostEnum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppHostEnum.h; sourceTree = "<group>"; };
@@ -166,6 +186,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				483E884F22028FD500066375 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,9 +224,29 @@
 			path = Response;
 			sourceTree = "<group>";
 		};
+		483E884422028F9500066375 /* Objective-C-HMTL-Parser */ = {
+			isa = PBXGroup;
+			children = (
+				483E884622028FAD00066375 /* HTMLNode.h */,
+				483E884822028FAD00066375 /* HTMLNode.m */,
+				483E884722028FAD00066375 /* HTMLParser.h */,
+				483E884522028FAD00066375 /* HTMLParser.m */,
+			);
+			name = "Objective-C-HMTL-Parser";
+			sourceTree = "<group>";
+		};
+		483E884D22028FD500066375 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				483E884E22028FD500066375 /* libxml2.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4885E98321D77B0C0036B1C6 /* RemoteDebug */ = {
 			isa = PBXGroup;
 			children = (
+				48A44CFB222525AB00F50C4D /* debuggap.js */,
 				4832C7ED21FB13B900CD371C /* testcase.tmpl */,
 				4837FFC121FA237800D2FE9C /* server.css */,
 				4837FFC221FA237800D2FE9C /* server.js */,
@@ -221,9 +262,19 @@
 			path = RemoteDebug;
 			sourceTree = "<group>";
 		};
+		4888F1D42244C91700A933E8 /* Intermediate */ = {
+			isa = PBXGroup;
+			children = (
+				4888F1D52244CA2900A933E8 /* AHRequestMediate.h */,
+				4888F1D62244CA2900A933E8 /* AHRequestMediate.m */,
+			);
+			path = Intermediate;
+			sourceTree = "<group>";
+		};
 		48B00FF121D4DA380037FABF /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				483E884422028F9500066375 /* Objective-C-HMTL-Parser */,
 				48B00FF221D4DA6E0037FABF /* Reachability */,
 				48D888F921D4D0AD006E4279 /* GCDWebServer */,
 			);
@@ -252,6 +303,7 @@
 			children = (
 				48D888AC21D4CF08006E4279 /* AppHost */,
 				48D888AB21D4CF08006E4279 /* Products */,
+				483E884D22028FD500066375 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -286,6 +338,7 @@
 				48D888D521D4D031006E4279 /* AppHostViewController.m */,
 				4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */,
 				4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */,
+				4888F1D42244C91700A933E8 /* Intermediate */,
 				482FF50421F6BB74005FCD7A /* Response */,
 				482CD47D21D5CEE8006C1120 /* URLChecker */,
 				48D888CC21D4D031006E4279 /* Helper */,
@@ -297,6 +350,8 @@
 		48D888CC21D4D031006E4279 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				4888F1D92244D59700A933E8 /* AHUtil.h */,
+				4888F1DA2244D59700A933E8 /* AHUtil.m */,
 				48D888D221D4D031006E4279 /* AppHostCookie.h */,
 				48D888CE21D4D031006E4279 /* AppHostCookie.m */,
 				48D888D121D4D031006E4279 /* AHScriptMessageDelegate.h */,
@@ -379,12 +434,14 @@
 				48D888E621D4D031006E4279 /* AppHostViewController.h in Headers */,
 				48D888DA21D4D031006E4279 /* AppHostResponse.h in Headers */,
 				48D888F221D4D031006E4279 /* AppHostCookie.h in Headers */,
+				4888F1D72244CA2900A933E8 /* AHRequestMediate.h in Headers */,
 				48C8AEDE21D6293500A6B426 /* AppHostEnum.h in Headers */,
 				4839FE0221D746BE008EB0DF /* AHSchemeTaskDelegate.h in Headers */,
 				4885E98621D77CAE0036B1C6 /* AHDebugServerManager.h in Headers */,
 				48D888F121D4D031006E4279 /* AHScriptMessageDelegate.h in Headers */,
 				48D888E421D4D031006E4279 /* AHNavigationBarResponse.h in Headers */,
 				48D888AF21D4CF08006E4279 /* AppHost.h in Headers */,
+				483E884B22028FAD00066375 /* HTMLParser.h in Headers */,
 				48D8891A21D4D0AD006E4279 /* GCDWebServerPrivate.h in Headers */,
 				48D8892421D4D0AD006E4279 /* GCDWebServerRequest.h in Headers */,
 				48D8892521D4D0AD006E4279 /* GCDWebServerFileResponse.h in Headers */,
@@ -393,8 +450,10 @@
 				48D888EA21D4D031006E4279 /* AHBuiltInResponse.h in Headers */,
 				48D8892B21D4D0AD006E4279 /* GCDWebServerErrorResponse.h in Headers */,
 				48D8893421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h in Headers */,
+				483E884A22028FAD00066375 /* HTMLNode.h in Headers */,
 				48C8AEA821D5F3B800A6B426 /* AHURLChecker.h in Headers */,
 				48D8892021D4D0AD006E4279 /* GCDWebServerResponse.h in Headers */,
+				4888F1DB2244D59700A933E8 /* AHUtil.h in Headers */,
 				48D8891921D4D0AD006E4279 /* GCDWebServerFunctions.h in Headers */,
 				48D888DD21D4D031006E4279 /* AHAppLoggerResponse.h in Headers */,
 				48D8891F21D4D0AD006E4279 /* GCDWebServerHTTPStatusCodes.h in Headers */,
@@ -476,6 +535,7 @@
 				8476B1AC21E7678000E97B54 /* renderjson.js in Resources */,
 				8476B1AD21E7678000E97B54 /* renderjson.css in Resources */,
 				48C8AEAD21D5F99E00A6B426 /* appHost_version_1.5.0.js in Resources */,
+				48A44CFC222525AC00F50C4D /* debuggap.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,6 +546,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				483E884C22028FAD00066375 /* HTMLNode.m in Sources */,
 				48D8892C21D4D0AD006E4279 /* GCDWebServerStreamedResponse.m in Sources */,
 				48D888F021D4D031006E4279 /* AHWebViewScrollPositionManager.m in Sources */,
 				48D8893021D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
@@ -495,11 +556,13 @@
 				48C8AEA721D5F3B800A6B426 /* AHURLChecker.m in Sources */,
 				48D8891B21D4D0AD006E4279 /* GCDWebServerResponse.m in Sources */,
 				48D8892921D4D0AD006E4279 /* GCDWebServerFileResponse.m in Sources */,
+				4888F1DC2244D59700A933E8 /* AHUtil.m in Sources */,
 				48D8893221D4D0AD006E4279 /* GCDWebServerDataRequest.m in Sources */,
 				8415244021EC578700203C2D /* AHDebugViewController.m in Sources */,
 				486C3EEA21F6F2E800BE582F /* AHDebugResponse.m in Sources */,
 				48D8892221D4D0AD006E4279 /* GCDWebServer.m in Sources */,
 				48D888E121D4D031006E4279 /* AHNavigationResponse.m in Sources */,
+				483E884922028FAD00066375 /* HTMLParser.m in Sources */,
 				482FF50821F6BBB8005FCD7A /* AHResponseManager.m in Sources */,
 				48D888E321D4D031006E4279 /* AHBuiltInResponse.m in Sources */,
 				4805C81121D4D4D000C058D1 /* AHNavigationBarResponse.m in Sources */,
@@ -516,6 +579,7 @@
 				48D8893321D4D0AD006E4279 /* GCDWebServerFileRequest.m in Sources */,
 				48D888EE21D4D031006E4279 /* AppHostCookie.m in Sources */,
 				48D888EB21D4D031006E4279 /* AHAppWhiteListParser.m in Sources */,
+				4888F1D82244CA2900A933E8 /* AHRequestMediate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -650,6 +714,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				HEADER_SEARCH_PATHS = "$(SDK_DIR)/usr/include/libxml2";
 				INFOPLIST_FILE = AppHost/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -674,6 +739,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				HEADER_SEARCH_PATHS = "$(SDK_DIR)/usr/include/libxml2";
 				INFOPLIST_FILE = AppHost/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (

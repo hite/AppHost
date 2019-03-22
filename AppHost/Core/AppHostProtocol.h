@@ -10,6 +10,16 @@
 @import WebKit;
 @class AppHostViewController;
 
+static NSString *const kAppHostURLScheme = @"apphost";
+static NSString *const kAppHostURLProtocal = @"apphost://";
+static NSString *const kAppHostURLImageHost = @"image.apphost.hite.me";
+static NSString *const kAppHostURLScriptHost = @"js.apphost.hite.me";
+static NSString *const kAppHostURLStyleHost = @"css.apphost.hite.me";
+
+#define AppHostURLScriptServer [kAppHostURLProtocal stringByAppendingString:kAppHostURLScriptHost]
+#define AppHostURLStyleServer [kAppHostURLProtocal stringByAppendingString:kAppHostURLStyleHost]
+#define AppHostURLImageServer [kAppHostURLProtocal stringByAppendingString:kAppHostURLImageHost]
+
 @protocol AppHostProtocol <NSObject>
 
 // 以下为 从AppHostViewController 里获得的 只读类属性
