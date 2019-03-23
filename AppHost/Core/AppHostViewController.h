@@ -10,8 +10,6 @@
 #import "AppHostProtocol.h"
 #import "AHSchemeTaskDelegate.h"
 
-@import WebKit;
-
 static NSString *kAppHostInvokeRequestEvent = @"kAppHostInvokeRequestEvent";
 static NSString *kAppHostInvokeResponseEvent = @"kAppHostInvokeResponseEvent";
 static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
@@ -68,22 +66,6 @@ static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
 @property (nonatomic, assign) BOOL fromPresented;
 
 @property (nonatomic, strong, readonly) AHSchemeTaskDelegate *taskDelegate;
-
-/**
- * 核心的h5调用native接口的分发器；
- * @return 是否已经被处理，YES 表示可被处理；
- */
-- (BOOL)callNative:(NSString *)action parameter:(NSDictionary *)paramDict;
-
-/**
- *  对应传入了匿名对象的接口的调用
- *
- */
-- (void)callbackFunctionOnWebPage:(NSString *)actionName param:(NSDictionary *)paramDict;
-/**
- *  对应，监听了事件的接口的调用
- */
-- (void)sendMessageToWebPage:(NSString *)actionName param:(NSDictionary *)paramDict;
 
 #pragma mark - 使用缓存渲染界面
 /**

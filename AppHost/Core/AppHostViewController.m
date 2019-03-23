@@ -18,24 +18,17 @@
 #import "AHURLChecker.h"
 #import "AHResponseManager.h"
 #import "AHRequestMediate.h"
+#import "AppHostViewController+Utils.h"
+#import "AppHostViewController+Scripts.h"
+#import "AppHostViewController+Dispatch.h"
+#import "AppHostViewController+Progressor.h"
 
 @interface AppHostViewController () <UIScrollViewDelegate, WKUIDelegate, WKScriptMessageHandler>
-
-@property (nonatomic, strong) NSTimer *timer;
-// 以下是页面加载的进度条
-@property (nonatomic, strong) NSTimer *progressorTimer;
-
-@property (nonatomic, strong) NSTimer *clearProgressorTimer;
-
-@property (nonatomic, strong) UIProgressView *progressorView;
-
-@property (nonatomic, assign) BOOL isProgressorDone;
 
 @property (nonatomic, strong) AHSchemeTaskDelegate *taskDelegate;
 
 @end
 
-static NSString *const kAHRequestItmsApp = @"itms-apps://";
 static NSString *const kAHScriptHandlerName = @"kAHScriptHandlerName";
 
 // 是否将客户端的 cookie 同步到 WKWebview 的 cookie 当中
@@ -86,8 +79,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
     [self sendMessageToWebPage:@"pageshow" param:@{ @"url" : urlStr ?: @"null" }];
     // 检查是否有上次遗留下来的进度条,避免 webview 在 tabbar 第一屏时出现进度条残留
     if (self.webView.estimatedProgress >= 1.f) {
-        self.isProgressorDone = YES;
-        self.progressorView.hidden = YES;
+        [self resetProgressor];
     }
 }
 
@@ -99,37 +91,21 @@ BOOL kGCDWebServer_logging_enabled = YES;
         urlStr = self.url;
     }
     [self sendMessageToWebPage:@"pagehide" param:@{ @"url" : urlStr ?: @"null" }];
-
-    //
-    [self.timer invalidate];
-    self.timer = nil;
-    [self.progressorTimer invalidate];
-    self.progressorTimer = nil;
-    [self.clearProgressorTimer invalidate];
-    self.clearProgressorTimer = nil;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self initViews];
-}
 
-- (void)initViews
-{
     self.view.backgroundColor = [UIColor whiteColor];
-    
     NSLog(@">>>>> t2 = %f", [[NSDate date] timeIntervalSince1970] * 1000);
-    //
     AHLog(@"load urltext: %@", self.url);
 }
 
 - (void)setUrl:(NSString *)url
 {
     _url = url;
-    // 添加url加载进度条。
-    [self addWebviewProgressor];
-    
+
     if (kFakeCookieWebPageURLWithQueryString.length > 0 && [AppHostCookie loginCookieHasBeenSynced] == NO) { // 此时需要同步 Cookie，走同步 Cookie 的流程
         //
         NSURL *cookieURL = [NSURL URLWithString:kFakeCookieWebPageURLWithQueryString];
@@ -141,16 +117,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
     } else {
         [self loadWebPageWithURL];
     }
-}
-
-- (void)addWebviewProgressor
-{
-    // 仿微信进度条
-    self.progressorView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, AH_NAVIGATION_BAR_HEIGHT, AH_SCREEN_WIDTH, 20.0f)];
- 
-    self.progressorView.progressTintColor = kWebViewProgressTintColorRGB > 0? AHColorFromRGB(kWebViewProgressTintColorRGB):[UIColor grayColor];
-    self.progressorView.trackTintColor = [UIColor whiteColor];
-    [self.view addSubview:self.progressorView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -171,7 +137,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
     self.webView = nil;
 
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAppHostInvokeDebugEvent object:nil];
-    
+    [self stopProgressor];
     AHLog(@"AppHostViewController dealloc");
 }
 
@@ -190,7 +156,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
         NSAssert(NO, @"加载本地文件出错，关键参数为空");
         AHLog(@"加载本地文件出错，关键参数为空");
     }
-
 }
 
 - (void)loadIndexFile:(NSString *)fileName inDirectory:(NSURL *)directory domain:(NSString *)domain
@@ -220,7 +185,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
         return;
     }
     //检查网络是否联网；
-
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     if ([reachability isReachable]) {
         //
@@ -229,56 +193,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
         _loadReqeustTime = [[NSDate date] timeIntervalSince1970] * 1000;
     } else {
         [self showTextTip:@"网络断开了，请检查网络。" hideAfterDelay:10.f];
-    }
-}
-
-#pragma mark - shim
-
-- (void)showTextTip:(NSString *)text
-{
-    [self showTextTip:text hideAfterDelay:2.f];
-}
-
-- (void)showTextTip:(NSString *)text hideAfterDelay:(CGFloat)delay
-{
-    [self callNative:@"showTextTip" parameter:@{
-                                                @"text" : text ?: @"<空>",
-                                                @"hideAfterDelay" : @(delay > 0 ?: 2.f)
-                                                }];
-}
-
-#pragma mark - core
-- (void)dispatchParsingParameter:(NSDictionary *)contentJSON
-{
-    NSMutableDictionary *paramDict = [[contentJSON objectForKey:@"param"] mutableCopy];
-
-    // 增加对异常参数的catch
-    @try {
-        [self callNative:[contentJSON objectForKey:@"action"] parameter:paramDict];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeRequestEvent object:contentJSON];
-    } @catch (NSException *exception) {
-        [self showTextTip:@"H5接口异常"];
-        AHLog(@"h5接口解析异常，接口数据：%@", contentJSON);
-    } @finally {
-    }
-}
-
-// 延迟初始化； 短路判断
-- (BOOL)callNative:(NSString *)action parameter:(NSDictionary *)paramDict
-{
-    id<AppHostProtocol> vc = [[AHResponseManager defaultManager] responseForAction:action withAppHost:self];
-    //
-    if (vc == nil) {
-        NSString *errMsg = [NSString stringWithFormat:@"action (%@) not supported yet.", action];
-        AHLog(@"action (%@) not supported yet.", action);
-        [self sendMessageToWebPage:@"NotSupported" param:@{
-                                                  @"error": errMsg
-                                                  }];
-        return NO;
-    } else {
-        [vc handleAction:action withParam:paramDict];
-        return YES;
     }
 }
 
@@ -296,22 +210,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
     return nil;
 }
 
-#pragma mark - scrollview delegate
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    [self scrollViewDidEndDecelerating:scrollView];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    if (self.disableScrollPositionMemory) {
-        return;
-    }
-    CGFloat y = scrollView.contentOffset.y;
-    NSLog(@"contentOffset.y = %.2f", y);
-    [[AHWebViewScrollPositionManager sharedInstance] cacheURL:self.webView.URL position:y];
-}
-
 #pragma mark - wkwebview ui delegate
 
 - (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler{
@@ -322,32 +220,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
     }])];
     [self presentViewController:alertController animated:YES completion:nil];
     
-}
-- (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completionHandler{
-    //    DLOG(@"msg = %@ frmae = %@",message,frame);
-    [webView evaluateJavaScript:@"document.title;" completionHandler:^(NSString *title, NSError * _Nullable error) {
-        AHLog(@"34343 %@", title);
-    }];
-    
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:message?:@"" preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addAction:([UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        completionHandler(NO);
-    }])];
-    [alertController addAction:([UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        completionHandler(YES);
-    }])];
-    [self presentViewController:alertController animated:YES completion:nil];
-}
-- (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString * _Nullable))completionHandler{
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:prompt message:@"" preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.text = defaultText;
-    }];
-    [alertController addAction:([UIAlertAction actionWithTitle:@"完成" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        completionHandler(alertController.textFields[0].text?:@"");
-    }])];
-    
-    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - wkwebview navigation delegate
@@ -369,7 +241,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
     if ([self isItmsAppsRequest:rurl]) {
         // 遇到 itms-apps://itunes.apple.com/cn/app/id992055304  主动 pop出去
         // URL Scheme and App Store links won't work https://github.com/ShingoFukuyama/WKWebViewTips#url-scheme-and-app-store-links-wont-work
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(popOutImmediately) userInfo:nil repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(popOutImmediately) userInfo:nil repeats:NO];
         [[UIApplication sharedApplication] openURL:[request URL] options:@{} completionHandler:nil];
         policy = WKNavigationActionPolicyCancel;
     } else if ([self isExternalSchemeRequest:rurl]) {
@@ -378,12 +250,13 @@ BOOL kGCDWebServer_logging_enabled = YES;
     }
     //
     decisionHandler(policy);
-    
 }
 
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation
 {
     AHLog(@"didReceiveServerRedirectForProvisionalNavigation = %@", navigation);
+    [self resetProgressor];
+    [self startProgressor];
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(nonnull WKNavigationResponse *)navigationResponse decisionHandler:(nonnull void (^)(WKNavigationResponsePolicy))decisionHandler
@@ -405,16 +278,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
     if (self.disabledProgressor) {
         self.progressorView.hidden = YES;
     } else {
-        // 清理旧的timer
-        [self.progressorTimer invalidate];
-
-        self.progressorView.progress = 0;
-        self.isProgressorDone = NO;
-        self.progressorView.hidden = NO;
-        // 0.01667 is roughly 1/60, so it will update at 60 FPS
-
-        self.progressorTimer = [NSTimer scheduledTimerWithTimeInterval:0.01667 target:self selector:@selector(loadingProgressor) userInfo:nil repeats:YES];
-        [[NSRunLoop currentRunLoop] addTimer:self.progressorTimer forMode:NSRunLoopCommonModes];
+        [self startProgressor];
     }
     NSLog(@"%@", NSStringFromSelector(_cmd));
 }
@@ -455,33 +319,9 @@ BOOL kGCDWebServer_logging_enabled = YES;
     }];
 
     [self sendMessageToWebPage:@"onready" param:@{}];
-
-    self.isProgressorDone = YES;
-    // 防止内存飙升
-    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"WebKitCacheModelPreferenceKey"];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"WebKitDiskImageCacheEnabled"];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"WebKitOfflineWebApplicationCacheEnabled"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     //
     [self dealWithViewHistory];
-
     NSLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-- (void)dealWithViewHistory
-{
-    if (self.disableScrollPositionMemory) {
-        return;
-    }
-
-    NSURL *url = self.webView.URL;
-    UIScrollView *sv = self.webView.scrollView;
-    CGFloat oldY = [[AHWebViewScrollPositionManager sharedInstance] positionForCacheURL:url];
-    if (oldY != sv.contentOffset.y) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            sv.contentOffset = CGPointMake(0, oldY);
-        });
-    }
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
@@ -506,97 +346,19 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    self.isProgressorDone = YES;
     NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    self.isProgressorDone = YES;
     NSLog(@"%@", NSStringFromSelector(_cmd));
     //    [self showTextTip:@"加载页面内容时出错"];
     AHLog(@"load page error = %@", error);
 }
 
-- (void)popOutImmediately
-{
-    if (self.fromPresented) {
-        [self dismissViewControllerAnimated:NO completion:nil];
-    } else {
-        [self.navigationController popViewControllerAnimated:NO];
-    }
-}
-
-- (void)loadingProgressor
-{
-    //    AHLog(@"progress = %f", self.webview.estimatedProgress);
-    if (self.isProgressorDone) {
-        [self.progressorView setProgress:1 animated:YES];
-        [self.progressorTimer invalidate];
-        // 完成之后clear进度
-        self.clearProgressorTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(clearProgressor) userInfo:nil repeats:NO];
-    } else {
-        self.progressorView.progress = self.webView.estimatedProgress;
-    }
-}
-
-- (void)clearProgressor
-{
-    self.progressorView.hidden = YES;
-    [self.clearProgressorTimer invalidate];
-}
-
-#pragma mark - supportType
-
-- (void)executeJavaScriptString:(NSString *)javaScriptString
-{
-    [self.webView evaluateJavaScript:javaScriptString completionHandler:nil];
-}
-
-- (NSDictionary *)supportListByNow
-{
-    //人肉维护支持列表；
-    NSMutableDictionary *supportedFunctions = [@{
-        //增加apphost的supportTypeFunction
-        @"pageshow" : @"2",
-        @"pagehide" : @"2"
-    } mutableCopy];
-    // 内置接口
-    // 各个response 的 supportFunction
-    [[AHResponseManager defaultManager].customResponseClasses enumerateObjectsUsingBlock:^(Class resp, NSUInteger idx, BOOL * _Nonnull stop) {
-        [supportedFunctions addEntriesFromDictionary:[resp supportActionList]];
-    }];
-
-
-    NSMutableDictionary *lst = [NSMutableDictionary dictionaryWithCapacity:10];
-    [lst setObject:supportedFunctions forKey:@"supportFunctionType"];
-
-    NSMutableDictionary *appInfo = [NSMutableDictionary dictionaryWithCapacity:10];
-    if (AH_IS_SCREEN_HEIGHT_X) {
-        [appInfo setObject:@{ @"iPhoneXVersion" : @"1" } forKey:@"iPhoneXInfo"];
-    }
-
-    [lst setObject:appInfo forKey:@"appInfo"];
-    return lst;
-}
 
 #pragma mark - debug
 
-- (void)insertData:(NSDictionary *)json intoPageWithVarName:(NSString *)appProperty
-{
-    NSData *objectOfJSON = nil;
-    NSError *contentParseError = nil;
-
-    objectOfJSON = [NSJSONSerialization dataWithJSONObject:json options:NSJSONWritingPrettyPrinted error:&contentParseError];
-    if (contentParseError == nil && objectOfJSON) {
-        NSString *str = [[NSString alloc] initWithData:objectOfJSON encoding:NSUTF8StringEncoding];
-        [self executeJavaScriptString:[NSString stringWithFormat:@"if(window.appHost){window.appHost.%@ = %@;}", appProperty, str]];
-    }
-}
-
-
-
-#pragma mark - innner
 - (void)debugCommand:(NSNotification *)notif
 {
     NSString *action = [notif.object objectForKey:@"action"];
@@ -607,77 +369,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
             [self callNative:action parameter:param];
         });
     }
-}
-
-- (BOOL)isExternalSchemeRequest:(NSString *)url
-{
-    NSArray<NSString *> *prefixs = @[ @"http://", @"https://"];
-    BOOL __block external = YES;
-
-    [prefixs enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-        if ([url hasPrefix:obj]) {
-            external = NO;
-            *stop = YES;
-        }
-    }];
-
-    return external;
-}
-
-- (BOOL)isItmsAppsRequest:(NSString *)url
-{
-    // itms-appss://itunes.apple.com/cn/app/id992055304
-    // https://itunes.apple.com/cn/app/id992055304
-    NSArray<NSString *> *prefixs = @[ kAHRequestItmsApp, @"https://itunes.apple.com", @"itms-appss://", @"itms-services://", @"itmss://" ];
-    BOOL __block pass = NO;
-
-    [prefixs enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-        if ([url hasPrefix:obj]) {
-            pass = YES;
-            *stop = YES;
-        }
-    }];
-
-    return pass;
-}
-
-- (void)callbackFunctionOnWebPage:(NSString *)actionName param:(NSDictionary *)paramDict
-{
-    [self __sendMessageToWebPage:actionName funcName:@"__callback" param:paramDict];
-}
-
-- (void)sendMessageToWebPage:(NSString *)actionName param:(NSDictionary *)paramDict
-{
-    [self __sendMessageToWebPage:actionName funcName:@"__fire" param:paramDict];
-}
-
-- (void)__sendMessageToWebPage:(NSString *)actionName funcName:(NSString *)funcName param:(NSDictionary *)paramDict
-{
-    NSData *objectOfJSON = nil;
-    NSError *contentParseError;
-
-    objectOfJSON = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&contentParseError];
-
-    NSString *jsCode = [NSString stringWithFormat:@"window.appHost.%@('%@',%@);", funcName, actionName, [[NSString alloc] initWithData:objectOfJSON encoding:NSUTF8StringEncoding]];
-    [self logRequestAndResponse:jsCode type:@"response"];
-    jsCode = [jsCode stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-    [self executeJavaScriptString:jsCode];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeResponseEvent object:@{
-                                                                                                    @"action": actionName,
-                                                                                                    @"param": paramDict
-                                                                                                    }];
-}
-
-- (void)logRequestAndResponse:(NSString *)str type:(NSString *)type
-{
-    NSInteger limit = 500;
-    if (str.length > limit) {
-        AHLog(@"debug type: %@ , url : %@", type, [str substringToIndex:limit]);
-    } else {
-        AHLog(@"debug type: %@ , url : %@", type, str);
-    }
-    
 }
 
 #pragma mark - getter
@@ -723,22 +414,8 @@ BOOL kGCDWebServer_logging_enabled = YES;
         webViewConfig.processPool = [AppHostCookie sharedPoolManager];
         [webViewConfig setURLSchemeHandler:self.taskDelegate forURLScheme:kAppHostURLScheme];
         
-        // 注入关键 js 文件
-        NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-        NSURL *jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"appHost_version_1.5.0.js"];
-
-        NSString *jsLib = [NSString stringWithContentsOfURL:jsLibURL encoding:NSUTF8StringEncoding error:nil];
-        if (jsLib.length > 0) {
-            WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:jsLib injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-            [userContentController addUserScript:cookieScript];
-            WKUserScript *cookieScript1 = [[WKUserScript alloc] initWithSource:@"console.log('start = ' + (new Date()).getTime())" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-            [userContentController addUserScript:cookieScript1];
-            WKUserScript *cookieScript2 = [[WKUserScript alloc] initWithSource:@"console.log('end = ' + (new Date()).getTime())" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-            [userContentController addUserScript:cookieScript2];
-        } else {
-            NSAssert(NO, @"主 JS 文件加载失败");
-            AHLog(@"Fatal Error: appHost.js is not loaded.");
-        }
+        [self injectScriptsToUserContent:userContentController];
+        
         double nowTime = [[NSDate date] timeIntervalSince1970] * 1000;
         NSLog(@">>>>>> addUserScript to webViewInit = %f", nowTime - _webViewInitTime);
         
@@ -747,13 +424,9 @@ BOOL kGCDWebServer_logging_enabled = YES;
         webview.navigationDelegate = self;
         webview.UIDelegate = self;
         webview.scrollView.delegate = self;
-        
-//        [webview setValue:@(NO) forKey:@"allowsRemoteInspection"];
-        
+   
         _webView = webview;
     }
-    
-    
     return _webView;
 }
 

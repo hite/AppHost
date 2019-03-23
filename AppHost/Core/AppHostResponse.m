@@ -8,6 +8,7 @@
 
 #import "AppHostResponse.h"
 #import "AppHostViewController.h"
+#import "AppHostViewController+Scripts.h"
 
 @interface AppHostResponse ()
 
