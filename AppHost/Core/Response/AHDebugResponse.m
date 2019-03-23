@@ -76,7 +76,7 @@ static NSString *kLastWeinreScript = nil;
         }
     }else if ([@"timing" isEqualToString:action]) {
         //
-        [self.appHost sendMessageToWebPage:@"requestToTiming" param:@{}];
+        [self.appHost fireAction:@"requestToTiming" param:@{}];
     }else {
         return NO;
     }
@@ -103,7 +103,7 @@ static NSString *kLastWeinreScript = nil;
     if (kLastWeinreScript.length == 0) {
         return;
     }
-    [self.appHost sendMessageToWebPage:@"weinre.enable" param:@{@"jsURL": kLastWeinreScript}];
+    [self.appHost fireAction:@"weinre.enable" param:@{@"jsURL": kLastWeinreScript}];
 }
 
 - (void)disableWeinreSupport

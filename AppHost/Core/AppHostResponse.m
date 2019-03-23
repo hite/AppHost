@@ -35,12 +35,12 @@
 
 - (void)callbackFunctionOnWebPage:(NSString *)actionName param:(NSDictionary *)paramDict
 {
-    [self.appHost callbackFunctionOnWebPage:actionName param:paramDict];
+    [self.appHost fireCallback:actionName param:paramDict];
 }
 
 - (void)sendMessageToWebPage:(NSString *)actionName param:(NSDictionary *)paramDict
 {
-    [self.appHost sendMessageToWebPage:actionName param:paramDict];
+    [self.appHost fireAction:actionName param:paramDict];
 }
 
 - (void)dealloc

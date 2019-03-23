@@ -18,11 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  对应传入了匿名对象的接口的调用
  *
  */
-- (void)callbackFunctionOnWebPage:(NSString *)actionName param:(NSDictionary *)paramDict;
+- (void)fireCallback:(NSString *)actionName param:(NSDictionary *)paramDict;
 /**
  *  对应，监听了事件的接口的调用
  */
-- (void)sendMessageToWebPage:(NSString *)actionName param:(NSDictionary *)paramDict;
+- (void)fireAction:(NSString *)actionName param:(NSDictionary *)paramDict;
 
 #pragma mark - like private
 

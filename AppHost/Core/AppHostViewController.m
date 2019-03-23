@@ -76,7 +76,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
         urlStr = self.url;
     }
 
-    [self sendMessageToWebPage:@"pageshow" param:@{ @"url" : urlStr ?: @"null" }];
+    [self fireAction:@"pageshow" param:@{ @"url" : urlStr ?: @"null" }];
     // 检查是否有上次遗留下来的进度条,避免 webview 在 tabbar 第一屏时出现进度条残留
     if (self.webView.estimatedProgress >= 1.f) {
         [self resetProgressor];
@@ -90,7 +90,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
     if (urlStr.length == 0) {
         urlStr = self.url;
     }
-    [self sendMessageToWebPage:@"pagehide" param:@{ @"url" : urlStr ?: @"null" }];
+    [self fireAction:@"pagehide" param:@{ @"url" : urlStr ?: @"null" }];
 }
 
 - (void)viewDidLoad
@@ -318,7 +318,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
         [self insertData:obj intoPageWithVarName:keyStr];
     }];
 
-    [self sendMessageToWebPage:@"onready" param:@{}];
+    [self fireAction:@"onready" param:@{}];
     //
     [self dealWithViewHistory];
     NSLog(@"%@", NSStringFromSelector(_cmd));

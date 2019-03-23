@@ -38,7 +38,7 @@
     if (vc == nil) {
         NSString *errMsg = [NSString stringWithFormat:@"action (%@) not supported yet.", action];
         AHLog(@"action (%@) not supported yet.", action);
-        [self sendMessageToWebPage:@"NotSupported" param:@{
+        [self fireAction:@"NotSupported" param:@{
                                                            @"error": errMsg
                                                            }];
         return NO;

@@ -31,17 +31,17 @@
 
 #pragma mark - public
 
-- (void)callbackFunctionOnWebPage:(NSString *)actionName param:(NSDictionary *)paramDict
+- (void)fireCallback:(NSString *)actionName param:(NSDictionary *)paramDict
 {
-    [self __sendMessageToWebPage:actionName funcName:@"__callback" param:paramDict];
+    [self __execScript:actionName funcName:@"__callback" param:paramDict];
 }
 
-- (void)sendMessageToWebPage:(NSString *)actionName param:(NSDictionary *)paramDict
+- (void)fireAction:(NSString *)actionName param:(NSDictionary *)paramDict
 {
-    [self __sendMessageToWebPage:actionName funcName:@"__fire" param:paramDict];
+    [self __execScript:actionName funcName:@"__fire" param:paramDict];
 }
 
-- (void)__sendMessageToWebPage:(NSString *)actionName funcName:(NSString *)funcName param:(NSDictionary *)paramDict
+- (void)__execScript:(NSString *)actionName funcName:(NSString *)funcName param:(NSDictionary *)paramDict
 {
     NSData *objectOfJSON = nil;
     NSError *contentParseError;
