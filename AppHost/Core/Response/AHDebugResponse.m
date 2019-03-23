@@ -9,6 +9,7 @@
 #import "AHDebugResponse.h"
 #import "AHResponseManager.h"
 #import "AppHostViewController.h"
+#import "AppHostViewController+Scripts.h"
 
 // 保存 weinre 注入脚本的地址，方便在加载其它页面时也能自动注入。
 static NSString *kLastWeinreScript = nil;
@@ -67,7 +68,16 @@ static NSString *kLastWeinreScript = nil;
     }else if ([@"weinre" isEqualToString:action]) {
         //
         BOOL disabled = [[paramDict objectForKey:@"disabled"] boolValue];
-    } else {
+        if (disabled) {
+            kLastWeinreScript = [paramDict objectForKey:@"url"];
+            [self disableWeinreSupport];
+        } else {
+            [self enableWeinreSupport];
+        }
+    }else if ([@"timing" isEqualToString:action]) {
+        //
+        [self.appHost sendMessageToWebPage:@"requestToTiming" param:@{}];
+    }else {
         return NO;
     }
     return YES;
@@ -77,15 +87,28 @@ static NSString *kLastWeinreScript = nil;
 #endif
 }
 
-+ (NSDictionary<NSString *, NSString *> *)supportActionList
-{
-    return @{
++ (NSDictionary<NSString *, NSString *> *)supportActionList {
+  return @{
 #ifdef DEBUG
-             @"eval" : @"1",
-             @"api_list" : @"1",
-             @"testcase": @"1"
+    @"eval" : @"1",
+    @"api_list" : @"1",
+    @"testcase" : @"1"
 #endif
-             };
+  };
+}
+
+// 注入 weinre 文件
+- (void)enableWeinreSupport
+{
+    if (kLastWeinreScript.length == 0) {
+        return;
+    }
+    [self.appHost sendMessageToWebPage:@"weinre.enable" param:@{@"jsURL": kLastWeinreScript}];
+}
+
+- (void)disableWeinreSupport
+{
+    kLastWeinreScript = nil;
 }
 
 #pragma mark - generate html file

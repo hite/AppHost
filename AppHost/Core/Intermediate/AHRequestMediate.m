@@ -82,7 +82,7 @@ static NSString *kFilePrefix = @"file://";
             NSLog(@"script src = %@, rawContents = %@", linkedScript, originalScript);
             if (originalScript.length > 0) {
                 NSString *path = [[[directory URLByAppendingPathComponent:linkedScript] absoluteString] stringByReplacingOccurrencesOfString:kFilePrefix withString:AppHostURLScriptServer];
-                NSString *scriptTxt = [NSString stringWithFormat:@"<script type='text/javascript' src='%@'></script>", [directory URLByAppendingPathComponent:path]];
+                NSString *scriptTxt = [NSString stringWithFormat:@"<script type='text/javascript' src='%@'></script>", path];
                 [replacements setObject:scriptTxt forKey:originalScript];
             } else {
                 ext = -3;
@@ -91,7 +91,7 @@ static NSString *kFilePrefix = @"file://";
         }
     }
     
-    // 处理图片, 将图片实现为 base64字符串, 只处理 img 标签。
+    // 处理图片, 只处理 img 标签。
     NSArray *imgNode = [bodyNode findChildTags:@"img"];
     for (HTMLNode *spanNode in imgNode) {
         NSString *imgSrc = [spanNode getAttributeNamed:@"src"];
@@ -198,7 +198,40 @@ static NSString *kFilePrefix = @"file://";
         }
     }
     
-    // 处理图片, 将图片实现为 base64字符串
+    // 处理图片, 将图片实现为 base64字符串, 只处理 img 标签。
+    NSArray *imgNode = [bodyNode findChildTags:@"img"];
+    for (HTMLNode *spanNode in imgNode) {
+        NSString *imgSrc = [spanNode getAttributeNamed:@"src"];
+        if ([AHUtil isNetworkUrl:imgSrc]) {
+            continue;
+        }
+        if (imgSrc.length > 0) {
+            NSString *originalSrc = spanNode.rawContents;
+            NSLog(@"image src = %@, rawContents = %@", imgSrc,originalSrc);
+            if (imgSrc.length > 0) {
+                NSURL *imgURL = [directory URLByAppendingPathComponent:imgSrc];
+                // 把文件转成 base64
+                NSData *imageData = [NSData dataWithContentsOfURL:imgURL];
+                NSString *encodedImageStr = [imageData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+                
+                NSError *error = nil;
+                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"src=['\"](.)+['\"]" options:NSRegularExpressionCaseInsensitive error:&error];
+                
+                NSString *imageType = @"image/jpeg";
+                if ([imgSrc hasSuffix:@".png"]){
+                    imageType = @"image/png";
+                }
+                
+                NSString *modifiedString = [regex stringByReplacingMatchesInString:originalSrc options:0 range:NSMakeRange(0, [originalSrc length]) withTemplate:[NSString stringWithFormat:@"src='data:%@;base64,%@'", imageType,encodedImageStr]];
+                
+                [replacements setObject:modifiedString forKey:originalSrc];
+            } else {
+                ext = -3;
+                AHLog(@"Replace linked script originalScript = %@", imgSrc);
+            }
+        }
+    }
+    
     
     
     
