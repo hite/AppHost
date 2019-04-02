@@ -22,6 +22,7 @@
 #import "AppHostViewController+Scripts.h"
 #import "AppHostViewController+Dispatch.h"
 #import "AppHostViewController+Progressor.h"
+#import "AppHostViewController+Timing.h"
 
 @interface AppHostViewController () <UIScrollViewDelegate, WKUIDelegate, WKScriptMessageHandler>
 
@@ -46,10 +47,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
  2. 设计一个 protocol ，所有可支持 h5 的类名 都遵循这一协议。
  */
 
-@implementation AppHostViewController{
-    double _loadReqeustTime;
-    double _webViewInitTime;
-}
+@implementation AppHostViewController
 
 - (instancetype)init
 {
@@ -96,16 +94,12 @@ BOOL kGCDWebServer_logging_enabled = YES;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     self.view.backgroundColor = [UIColor whiteColor];
-    NSLog(@">>>>> t2 = %f", [[NSDate date] timeIntervalSince1970] * 1000);
-    AHLog(@"load urltext: %@", self.url);
 }
 
 - (void)setUrl:(NSString *)url
 {
     _url = url;
-
     if (kFakeCookieWebPageURLWithQueryString.length > 0 && [AppHostCookie loginCookieHasBeenSynced] == NO) { // 此时需要同步 Cookie，走同步 Cookie 的流程
         //
         NSURL *cookieURL = [NSURL URLWithString:kFakeCookieWebPageURLWithQueryString];
@@ -113,7 +107,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
         WKWebView *cookieWebview = [self getCookieWebview];
         [self.view addSubview:cookieWebview];
         [cookieWebview loadRequest:mutableRequest];
-        AHLog(@"preload cookie for url = %@", self.url);
+        AHLog(@"preload cookie for url = %@", _url);
     } else {
         [self loadWebPageWithURL];
     }
@@ -131,13 +125,13 @@ BOOL kGCDWebServer_logging_enabled = YES;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAppHostInvokeDebugEvent object:nil];
     [self stopProgressor];
     //
-    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:kAHScriptHandlerName];
+    [_webView.configuration.userContentController removeScriptMessageHandlerForName:kAHScriptHandlerName];
 
-    self.webView.navigationDelegate = nil;
-    self.webView.scrollView.delegate = nil;
-    [self.webView stopLoading];
-    [self.webView removeFromSuperview];
-    self.webView = nil;
+    _webView.navigationDelegate = nil;
+    _webView.scrollView.delegate = nil;
+    [_webView stopLoading];
+    [_webView removeFromSuperview];
+    _webView = nil;
     AHLog(@"AppHostViewController dealloc");
 }
 
@@ -151,7 +145,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
     
     if (err == nil && content.length > 0 && domain.length > 0) {
         [self.webView loadHTMLString:content baseURL:[NSURL URLWithString:domain]];
-        
     } else {
         NSAssert(NO, @"加载本地文件出错，关键参数为空");
         AHLog(@"加载本地文件出错，关键参数为空");
@@ -180,18 +173,17 @@ BOOL kGCDWebServer_logging_enabled = YES;
 {
     NSURL *url = [NSURL URLWithString:self.url];
     if (url == nil) {
-        NSLog(@"loadUrl is nil，loadUrl = %@", self.url);
+        AHLog(@"loadUrl is nil，loadUrl = %@", self.url);
         [self showTextTip:@"地址为空"];
         return;
     }
     //检查网络是否联网；
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     if ([reachability isReachable]) {
-        //
         NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:120];
         NSLog(@"[Timing] loadRequest, %f", [[NSDate date] timeIntervalSince1970] * 1000);
         [self.webView loadRequest:mutableRequest];
-        _loadReqeustTime = [[NSDate date] timeIntervalSince1970] * 1000;
+        [self mark:@"loadRequest"];
     } else {
         [self showTextTip:@"网络断开了，请检查网络。" hideAfterDelay:10.f];
     }
@@ -232,15 +224,13 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
     TIMING_WK_METHOD
-    double nowTime = [[NSDate date] timeIntervalSince1970] * 1000;
-    
-    NSLog(@">>>>>> navigation start to loadReqeust = %f", nowTime - _loadReqeustTime);
-    NSLog(@">>>>>> navigation start to webViewInit = %f", nowTime - _webViewInitTime);
+    [self measure:@"decidePolicyForNavigationAction" to:@"loadRequest"];
+    [self measure:@"decidePolicyForNavigationAction" to:@"webViewInit"];
 
     NSURLRequest *request = navigationAction.request;
     //此url解析规则自己定义
     NSString *rurl = [[request URL] absoluteString];
-    NSLog(@">>>>>> rurl = %@", rurl);
+    NSLog(@">>>>>> 加载网页地址 = %@", rurl);
     WKNavigationActionPolicy policy = WKNavigationActionPolicyAllow;
 
     if ([self isItmsAppsRequest:rurl]) {
@@ -260,7 +250,6 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation
 {
     TIMING_WK_METHOD
-    NSLog(@">>>>>> rurl = %@", webView.URL);
     [self resetProgressor];
     [self startProgressor];
 }
@@ -270,7 +259,6 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
     TIMING_WK_METHOD
     NSURLResponse *resp = navigationResponse.response;
     NSURL *url = [resp URL];
-    AHLog(@"navigationResponse.url = %@", url);
 
     decisionHandler(WKNavigationResponsePolicyAllow);
 }
@@ -288,22 +276,16 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
     } else {
         [self startProgressor];
     }
-
-    NSLog(@">>>>>> rurl = %@", webView.URL);
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     TIMING_WK_METHOD
-    double nowTime = [[NSDate date] timeIntervalSince1970] * 1000;
-    NSLog(@">>>>>> FinishNavigation to loadReqeust = %f", nowTime - _loadReqeustTime);
-    NSLog(@">>>>>> FinishNavigation to webViewInit = %f", nowTime - _webViewInitTime);
-    
-    NSLog(@">>>>>> rurl = %@", webView.URL);
+    [self measure:@"didFinishNavigation" to:@"loadRequest"];
+    [self measure:@"didFinishNavigation" to:@"webViewInit"];
     if (webView.isLoading) {
         return;
     }
-
     NSURL *targetURL = webView.URL;
     // 如果是指明了 kFakeCookieWebPageURLWithQueryString 说明，需要同步此域下 Cookie；
     if (kFakeCookieWebPageURLWithQueryString.length > 0 && [AppHostCookie loginCookieHasBeenSynced] == NO && targetURL.query.length > 0 && [kFakeCookieWebPageURLWithQueryString containsString:targetURL.query]) {
@@ -313,7 +295,6 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
         [self loadWebPageWithURL];
         return;
     }
-
     //如果是全新加载页面，而不是从历史里弹出的情况下，需要渲染导航
     if (![self.webView canGoForward] && self.rightActionBarTitle.length > 0) {
         [self callNative:@"setNavRight" parameter:@{
@@ -330,7 +311,6 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
     }];
 
     [self fire:@"onready" param:@{}];
-    //
     [self dealWithViewHistory];
 }
 
@@ -362,7 +342,6 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     TIMING_WK_METHOD
-    //    [self showTextTip:@"加载页面内容时出错"];
     AHLog(@"load page error = %@", error);
 }
 
@@ -412,8 +391,7 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
 {
     if (_webView == nil) {
         // 设置加载页面完毕后，里面的后续请求，如 xhr 请求使用的cookie
-        _webViewInitTime = [[NSDate date] timeIntervalSince1970] * 1000;
-        NSLog(@">>>>> t1 = %f", _webViewInitTime);
+        [self mark:@"webViewInit"];
         WKUserContentController *userContentController = [WKUserContentController new];
         __weak typeof(self) weakSelf = self;
         [userContentController addScriptMessageHandler:[[AHScriptMessageDelegate alloc] initWithDelegate:weakSelf] name:kAHScriptHandlerName];
@@ -422,12 +400,9 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
         webViewConfig.allowsInlineMediaPlayback = YES;
         webViewConfig.processPool = [AppHostCookie sharedPoolManager];
         [webViewConfig setURLSchemeHandler:self.taskDelegate forURLScheme:kAppHostURLScheme];
-        
         [self injectScriptsToUserContent:userContentController];
-        
-        double nowTime = [[NSDate date] timeIntervalSince1970] * 1000;
-        NSLog(@">>>>>> addUserScript to webViewInit = %f", nowTime - _webViewInitTime);
-        
+        [self measure:@"addUserScript" to:@"webViewInit"];
+
         WKWebView *webview = [[WKWebView alloc] initWithFrame:CGRectMake(0, AH_NAVIGATION_BAR_HEIGHT, AH_SCREEN_WIDTH, AH_SCREEN_HEIGHT - AH_NAVIGATION_BAR_HEIGHT) configuration:webViewConfig];
         webview.scrollView.contentSize = CGSizeMake(CGRectGetWidth(webview.frame), CGRectGetHeight(webview.frame));
         webview.navigationDelegate = self;

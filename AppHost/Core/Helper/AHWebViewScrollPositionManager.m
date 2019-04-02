@@ -30,8 +30,8 @@ static NSMutableDictionary *positionHolder = nil;
 
 - (void)cacheURL:(NSURL *)url position:(CGFloat)y
 {
-//    记录50个网站的位置，到底quote，清空
-    if (positionHolder.allKeys.count > 50) {
+//    记录2个网站的位置，到底quote，清空
+    if (positionHolder.allKeys.count > 2) {
         [positionHolder removeAllObjects];
     }
     if (url) {

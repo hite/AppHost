@@ -45,6 +45,8 @@
 		48C8AEA821D5F3B800A6B426 /* AHURLChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 48C8AEA621D5F3B800A6B426 /* AHURLChecker.h */; };
 		48C8AEAD21D5F99E00A6B426 /* appHost_version_1.5.0.js in Resources */ = {isa = PBXBuildFile; fileRef = 48C8AEAB21D5F99E00A6B426 /* appHost_version_1.5.0.js */; };
 		48C8AEDE21D6293500A6B426 /* AppHostEnum.h in Headers */ = {isa = PBXBuildFile; fileRef = 48C8AEA421D5EFCC00A6B426 /* AppHostEnum.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		48CE9FBC2253816E00F3F7B7 /* AppHostViewController+Timing.h in Headers */ = {isa = PBXBuildFile; fileRef = 48CE9FBA2253816E00F3F7B7 /* AppHostViewController+Timing.h */; };
+		48CE9FBD2253816E00F3F7B7 /* AppHostViewController+Timing.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CE9FBB2253816E00F3F7B7 /* AppHostViewController+Timing.m */; };
 		48D888AF21D4CF08006E4279 /* AppHost.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888AD21D4CF08006E4279 /* AppHost.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48D888D721D4D031006E4279 /* AHAppWhiteListParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D888B621D4D030006E4279 /* AHAppWhiteListParser.h */; };
 		48D888D921D4D031006E4279 /* AHAppLoggerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D888B821D4D030006E4279 /* AHAppLoggerResponse.m */; };
@@ -139,6 +141,8 @@
 		48C8AEA521D5F3B800A6B426 /* AHURLChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHURLChecker.m; sourceTree = "<group>"; };
 		48C8AEA621D5F3B800A6B426 /* AHURLChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHURLChecker.h; sourceTree = "<group>"; };
 		48C8AEAB21D5F99E00A6B426 /* appHost_version_1.5.0.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = appHost_version_1.5.0.js; sourceTree = "<group>"; };
+		48CE9FBA2253816E00F3F7B7 /* AppHostViewController+Timing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppHostViewController+Timing.h"; sourceTree = "<group>"; };
+		48CE9FBB2253816E00F3F7B7 /* AppHostViewController+Timing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppHostViewController+Timing.m"; sourceTree = "<group>"; };
 		48D888AA21D4CF08006E4279 /* AppHost.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AppHost.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48D888AD21D4CF08006E4279 /* AppHost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppHost.h; sourceTree = "<group>"; };
 		48D888AE21D4CF08006E4279 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -368,6 +372,8 @@
 				48551BC02246083C00CAC76C /* AppHostViewController+Dispatch.m */,
 				48551BC3224608CE00CAC76C /* AppHostViewController+Utils.h */,
 				48551BC4224608CE00CAC76C /* AppHostViewController+Utils.m */,
+				48CE9FBA2253816E00F3F7B7 /* AppHostViewController+Timing.h */,
+				48CE9FBB2253816E00F3F7B7 /* AppHostViewController+Timing.m */,
 				4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */,
 				4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */,
 				4888F1D42244C91700A933E8 /* Intermediate */,
@@ -474,6 +480,7 @@
 				48551BCA22461C5700CAC76C /* AppHostViewController+Progressor.h in Headers */,
 				48D888F121D4D031006E4279 /* AHScriptMessageDelegate.h in Headers */,
 				48D888E421D4D031006E4279 /* AHNavigationBarResponse.h in Headers */,
+				48CE9FBC2253816E00F3F7B7 /* AppHostViewController+Timing.h in Headers */,
 				48D888AF21D4CF08006E4279 /* AppHost.h in Headers */,
 				483E884B22028FAD00066375 /* HTMLParser.h in Headers */,
 				48D8891A21D4D0AD006E4279 /* GCDWebServerPrivate.h in Headers */,
@@ -620,6 +627,7 @@
 				48D888EE21D4D031006E4279 /* AppHostCookie.m in Sources */,
 				48D888EB21D4D031006E4279 /* AHAppWhiteListParser.m in Sources */,
 				4888F1D82244CA2900A933E8 /* AHRequestMediate.m in Sources */,
+				48CE9FBD2253816E00F3F7B7 /* AppHostViewController+Timing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
