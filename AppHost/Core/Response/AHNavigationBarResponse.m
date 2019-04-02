@@ -104,7 +104,7 @@
 - (void)didTapMore:(id)sender
 {
     if (self.rightActionBarTitle) {
-        [self sendMessageToWebPage:@"navigator.rightbar.click" param:@{}];
+        [self fire:@"navigator.rightbar.click" param:@{}];
     }
 }
 

@@ -36,11 +36,12 @@
 {
     if ([keyPath isEqualToString:@"estimatedProgress"]) {
         double progress = [change[@"new"] doubleValue];
+        NSLog(@"[Timing] progress = %f, %f", progress, [[NSDate date] timeIntervalSince1970] * 1000);
+
         if (progress >= 1) {
             // 0.25s 后消失
             [CATransaction begin];
             [CATransaction setCompletionBlock:^{
-                
                 self.clearProgressorTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(resetProgressor) userInfo:nil repeats:YES];
                 [[NSRunLoop currentRunLoop] addTimer:self.clearProgressorTimer forMode:NSRunLoopCommonModes];
             }];

@@ -76,7 +76,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
         urlStr = self.url;
     }
 
-    [self fireAction:@"pageshow" param:@{ @"url" : urlStr ?: @"null" }];
+    [self fire:@"pageshow" param:@{ @"url" : urlStr ?: @"null" }];
     // 检查是否有上次遗留下来的进度条,避免 webview 在 tabbar 第一屏时出现进度条残留
     if (self.webView.estimatedProgress >= 1.f) {
         [self resetProgressor];
@@ -90,7 +90,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
     if (urlStr.length == 0) {
         urlStr = self.url;
     }
-    [self fireAction:@"pagehide" param:@{ @"url" : urlStr ?: @"null" }];
+    [self fire:@"pagehide" param:@{ @"url" : urlStr ?: @"null" }];
 }
 
 - (void)viewDidLoad
@@ -128,6 +128,9 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAppHostInvokeDebugEvent object:nil];
+    [self stopProgressor];
+    //
     [self.webView.configuration.userContentController removeScriptMessageHandlerForName:kAHScriptHandlerName];
 
     self.webView.navigationDelegate = nil;
@@ -135,9 +138,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
     [self.webView stopLoading];
     [self.webView removeFromSuperview];
     self.webView = nil;
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAppHostInvokeDebugEvent object:nil];
-    [self stopProgressor];
     AHLog(@"AppHostViewController dealloc");
 }
 
@@ -189,6 +189,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
     if ([reachability isReachable]) {
         //
         NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:120];
+        NSLog(@"[Timing] loadRequest, %f", [[NSDate date] timeIntervalSince1970] * 1000);
         [self.webView loadRequest:mutableRequest];
         _loadReqeustTime = [[NSDate date] timeIntervalSince1970] * 1000;
     } else {
@@ -224,18 +225,22 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 #pragma mark - wkwebview navigation delegate
 
+#define TIMING_WK_METHOD \
+NSLog(@"[Timing] %@", NSStringFromSelector(_cmd));\
+NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
+
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
+    TIMING_WK_METHOD
     double nowTime = [[NSDate date] timeIntervalSince1970] * 1000;
     
     NSLog(@">>>>>> navigation start to loadReqeust = %f", nowTime - _loadReqeustTime);
     NSLog(@">>>>>> navigation start to webViewInit = %f", nowTime - _webViewInitTime);
-    NSLog(@">>>>>> nowTime = %f", nowTime);
-    NSLog(@"%@", NSStringFromSelector(_cmd));
 
     NSURLRequest *request = navigationAction.request;
     //此url解析规则自己定义
     NSString *rurl = [[request URL] absoluteString];
+    NSLog(@">>>>>> rurl = %@", rurl);
     WKNavigationActionPolicy policy = WKNavigationActionPolicyAllow;
 
     if ([self isItmsAppsRequest:rurl]) {
@@ -254,13 +259,15 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation
 {
-    AHLog(@"didReceiveServerRedirectForProvisionalNavigation = %@", navigation);
+    TIMING_WK_METHOD
+    NSLog(@">>>>>> rurl = %@", webView.URL);
     [self resetProgressor];
     [self startProgressor];
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(nonnull WKNavigationResponse *)navigationResponse decisionHandler:(nonnull void (^)(WKNavigationResponsePolicy))decisionHandler
 {
+    TIMING_WK_METHOD
     NSURLResponse *resp = navigationResponse.response;
     NSURL *url = [resp URL];
     AHLog(@"navigationResponse.url = %@", url);
@@ -270,31 +277,35 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation
 {
-    AHLog(@"didCommitNavigation = %@", navigation);
+    TIMING_WK_METHOD
 }
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
+    TIMING_WK_METHOD
     if (self.disabledProgressor) {
         self.progressorView.hidden = YES;
     } else {
         [self startProgressor];
     }
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+
+    NSLog(@">>>>>> rurl = %@", webView.URL);
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
+    TIMING_WK_METHOD
     double nowTime = [[NSDate date] timeIntervalSince1970] * 1000;
     NSLog(@">>>>>> FinishNavigation to loadReqeust = %f", nowTime - _loadReqeustTime);
     NSLog(@">>>>>> FinishNavigation to webViewInit = %f", nowTime - _webViewInitTime);
-    NSLog(@">>>>>> nowTime = %f", nowTime);
+    
+    NSLog(@">>>>>> rurl = %@", webView.URL);
     if (webView.isLoading) {
         return;
     }
 
     NSURL *targetURL = webView.URL;
-    // 如果是知名了 kFakeCookieWebPageURLWithQueryString 说明，需要同步此域下 Cookie；
+    // 如果是指明了 kFakeCookieWebPageURLWithQueryString 说明，需要同步此域下 Cookie；
     if (kFakeCookieWebPageURLWithQueryString.length > 0 && [AppHostCookie loginCookieHasBeenSynced] == NO && targetURL.query.length > 0 && [kFakeCookieWebPageURLWithQueryString containsString:targetURL.query]) {
         [AppHostCookie setLoginCookieHasBeenSynced:YES];
         // 加载真正的页面；此时已经有 App 的 cookie 存在了。
@@ -318,10 +329,9 @@ BOOL kGCDWebServer_logging_enabled = YES;
         [self insertData:obj intoPageWithVarName:keyStr];
     }];
 
-    [self fireAction:@"onready" param:@{}];
+    [self fire:@"onready" param:@{}];
     //
     [self dealWithViewHistory];
-    NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
@@ -346,16 +356,15 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+    TIMING_WK_METHOD
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+    TIMING_WK_METHOD
     //    [self showTextTip:@"加载页面内容时出错"];
     AHLog(@"load page error = %@", error);
 }
-
 
 #pragma mark - debug
 

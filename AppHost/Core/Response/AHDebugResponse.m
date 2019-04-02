@@ -22,12 +22,15 @@ static NSString *kLastWeinreScript = nil;
     if ([@"eval" isEqualToString:action]) {
         [self.appHost.webView evaluateJavaScript:[paramDict objectForKey:@"code"] completionHandler:^(id _Nullable result, NSError * _Nullable error) {
             AHLog(@"%@", result);
+            [self fire:@"eval" param:@{
+                                       @"result":[NSString stringWithFormat:@"%@", result]
+                                       }];
         }];
     } else if ([@"list" isEqualToString:action]) {
         // 遍历所有的可用接口和注释和测试用例
         NSString *action = [paramDict objectForKey:@"name"];
         if (action.length == 0) {
-            [self callbackFunctionOnWebPage:@"list" param:[[AHResponseManager defaultManager] allResponseMethods]];
+            [self fire:@"list" param:[[AHResponseManager defaultManager] allResponseMethods]];
         } else {// 如果是具体的某个接口，输出对应的 API 描述
             Class appHostCls = [[AHResponseManager defaultManager] responseForAction:action];
             SEL targetMethod = NSSelectorFromString([NSString stringWithFormat:@"%@%@", ah_doc_log_prefix, action]);
@@ -36,14 +39,14 @@ static NSString *kLastWeinreScript = nil;
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 NSDictionary *doc = [appHostCls performSelector:targetMethod withObject:nil];
 #pragma clang diagnostic pop
-                [self callbackFunctionOnWebPage:[@"list." stringByAppendingString:action] param:doc];
+                [self fire:[@"list." stringByAppendingString:action] param:doc];
             }
         }
     } else if ([@"list" isEqualToString:action]) {
         // 遍历所有的可用接口和注释和测试用例
         NSString *action = [paramDict objectForKey:@"name"];
         if (action.length == 0) {
-            [self callbackFunctionOnWebPage:@"list" param:[[AHResponseManager defaultManager] allResponseMethods]];
+            [self fire:@"list" param:[[AHResponseManager defaultManager] allResponseMethods]];
         } else {// 如果是具体的某个接口，输出对应的 API 描述
             Class appHostCls = [[AHResponseManager defaultManager] responseForAction:action];
             SEL targetMethod = NSSelectorFromString([NSString stringWithFormat:@"%@%@", ah_doc_log_prefix, action]);
@@ -52,7 +55,7 @@ static NSString *kLastWeinreScript = nil;
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 NSDictionary *doc = [appHostCls performSelector:targetMethod withObject:nil];
 #pragma clang diagnostic pop
-                [self callbackFunctionOnWebPage:[@"list." stringByAppendingString:action] param:doc];
+                [self fire:[@"list." stringByAppendingString:action] param:doc];
             }
         }
     }else if ([@"testcase" isEqualToString:action]) {
@@ -69,14 +72,14 @@ static NSString *kLastWeinreScript = nil;
         //
         BOOL disabled = [[paramDict objectForKey:@"disabled"] boolValue];
         if (disabled) {
-            kLastWeinreScript = [paramDict objectForKey:@"url"];
             [self disableWeinreSupport];
         } else {
+            kLastWeinreScript = [paramDict objectForKey:@"url"];
             [self enableWeinreSupport];
         }
     }else if ([@"timing" isEqualToString:action]) {
         //
-        [self.appHost fireAction:@"requestToTiming" param:@{}];
+        [self.appHost fire:@"requestToTiming" param:@{}];
     }else {
         return NO;
     }
@@ -103,7 +106,7 @@ static NSString *kLastWeinreScript = nil;
     if (kLastWeinreScript.length == 0) {
         return;
     }
-    [self.appHost fireAction:@"weinre.enable" param:@{@"jsURL": kLastWeinreScript}];
+    [self.appHost fire:@"weinre.enable" param:@{@"jsURL": kLastWeinreScript}];
 }
 
 - (void)disableWeinreSupport

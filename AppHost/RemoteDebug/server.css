@@ -10,31 +10,26 @@ body {
 #app{
     height: 100%;
     width: 100%;
-}
-.m-output {
-    height: 100%;
-    width: 100%;
-    border-bottom: 70px solid #fff;
-    box-sizing: border-box;
-    font-weight: 200;
     overflow-y: scroll;
     overflow-x: hidden;
 }
+.m-output {
+    width: 100%;
+    box-sizing: border-box;
+    font-weight: 200;
+    
+}
 
 .m-output-result {
-    border-bottom: 1px solid #CCCCCC;
+    /* border-bottom: 1px solid #CCCCCC; */
     font-size: 12px;
     text-indent: 10px;
 }
 
 .m-input {
-    height: 60px;
-    position: fixed;
+    padding: 5px 0;
     background-color: white;
-    left: 0;
-    bottom: 10px;
-    right: 0;
-    border-top: 1px dotted #777
+    position: relative;
 }
 
 .m-input .w-command {
@@ -43,7 +38,8 @@ body {
     padding: 0;
     margin: 0;
     border: none;
-    /* border: 1px solid #ff00ff; */
+    border-top: 2px solid #E3EDFF;
+    border-bottom: 2px solid #E3EDFF;
     border-right: 100px solid #fff;
     overflow: hidden;
     font-size: 24px;
@@ -60,7 +56,7 @@ body {
     right: 5px;
     bottom: 5px;
     font-size: 25px;
-    line-height: 38px;
+    line-height: 50px;
     text-align: center;
 }
 
@@ -69,10 +65,10 @@ body {
     padding: 0;
     margin: 0;
     border-bottom: 1px dotted #CCCCCC;
-    min-height: 36px;
+    min-height: 32px;
     color: #333333;
-    font-size: 18px;
-    line-height: 35px;
+    font-size: 16px;
+    line-height: 32px;
     text-indent: 10px;
 }
 
@@ -113,6 +109,14 @@ pre {
     text-align: center;
     height: 20px;
     line-height: 18px;
+}
+
+.c-welcome-desc{
+    color: #333333;
+    font-size: 14px;
+    text-indent: 15px;
+    padding: 0;
+    margin: 0;
 }
 
 .w-example-title{

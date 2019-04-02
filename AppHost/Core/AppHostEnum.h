@@ -74,7 +74,7 @@ extern long long kWebViewProgressTintColorRGB;
 // 是否打开 debug server 的日志。
 extern BOOL kGCDWebServer_logging_enabled;
 
-static NSString *kAHLogoutNotification = @"kAHLogoutNotification";
-static NSString *kAHLoginSuccessNotification = @"kAHLoginSuccessNotification";
+static NSString * _Nonnull kAHLogoutNotification = @"kAHLogoutNotification";
+static NSString * _Nonnull kAHLoginSuccessNotification = @"kAHLoginSuccessNotification";
 
-static NSString *kAppHostEventDismissalFromPresented = @"kAppHostEventDismissalFromPresented";
+static NSString * _Nonnull kAppHostEventDismissalFromPresented = @"kAppHostEventDismissalFromPresented";

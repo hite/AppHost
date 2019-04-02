@@ -8,7 +8,6 @@
 
 #import <AppHost/AppHost.h>
 
-
 @interface AppHostViewController (Progressor)
 
 @property (nonatomic, strong) NSTimer *clearProgressorTimer;

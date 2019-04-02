@@ -17,6 +17,8 @@
 
 <body>
     <div id="app">
+        <p class="w-welcome-slogan">欢迎使用 AppHost Remote Debugger</p>
+        <p class="c-welcome-desc">** 调试之前，首先打开一个 h5 页面 **</p>
         <command-output></command-output>
         <command-value></command-value>
     </div>
@@ -24,8 +26,7 @@
     <script type="text/x-template" id="command-output-template">
         <div class="m-output" id="output">
             <template v-for="(item, idx) in dataSource">
-                <p v-if="item.type === 'welcome'" class="w-welcome-slogan">{{item.message}}</p>
-                <div v-else-if="item.type === 'log'" class="m-output-result">
+                <div v-if="item.type === 'log'" class="m-output-result">
                     <div class="m-output-type">
                         输出类型：{{item.message}}
                     </div>
@@ -45,6 +46,14 @@
                     <div class="w-help-code">:apropos log</div>
                     <div class='w-example-title'>4. 启动内置的 testcase，测试 API 接口实现是否正常，执行后会在手机端打开一个 测试页面；</div>
                     <div class="w-help-code">:testcase</div>
+                    <div class='w-example-title'>5. 注入 weinre 脚本，在本次启动中，只需要注入一次，后面打开的页面都会支持</div>
+                    <div class="w-help-code">:weinre http://10.0.0/script/ws/0/anonymous-target:0</div>
+                    <div class='w-example-title'>5.1. 取消注入 weinre 脚本</div>
+                    <div class="w-help-code">:weinre disable</div>
+                    <div class='w-example-title'>6. 打开 navigation timlings 统计，用来分析页面加载性能</div>
+                    <div class="w-help-code">:timing</div>
+                    <div class='w-example-title'>7. 在手机端的 webview 页面里执行脚本，</div>
+                    <div class="w-help-code">:eval document.cookie</div>
                 </div>
                 <div v-else-if="item.type === 'list'" class="m-output-result">
                     <template v-for="api in item.apis">

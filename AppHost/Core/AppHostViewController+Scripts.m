@@ -31,12 +31,12 @@
 
 #pragma mark - public
 
-- (void)fireCallback:(NSString *)actionName param:(NSDictionary *)paramDict
+- (void)fireCallback:(NSString *)callbackKey param:(NSDictionary *)paramDict
 {
-    [self __execScript:actionName funcName:@"__callback" param:paramDict];
+    [self __execScript:callbackKey funcName:@"__callback" param:paramDict];
 }
 
-- (void)fireAction:(NSString *)actionName param:(NSDictionary *)paramDict
+- (void)fire:(NSString *)actionName param:(NSDictionary *)paramDict
 {
     [self __execScript:actionName funcName:@"__fire" param:paramDict];
 }
@@ -70,10 +70,15 @@
     if (jsLib.length > 0) {
         WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:jsLib injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
         [userContentController addUserScript:cookieScript];
-        WKUserScript *cookieScript1 = [[WKUserScript alloc] initWithSource:@"console.log('start = ' + (new Date()).getTime())" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+        WKUserScript *cookieScript1 = [[WKUserScript alloc] initWithSource:@"window.DocumentEnd =(new Date()).getTime()" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
         [userContentController addUserScript:cookieScript1];
-        WKUserScript *cookieScript2 = [[WKUserScript alloc] initWithSource:@"console.log('end = ' + (new Date()).getTime())" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+        WKUserScript *cookieScript2 = [[WKUserScript alloc] initWithSource:@"window.DocumentStart = (new Date()).getTime()" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
         [userContentController addUserScript:cookieScript2];
+        WKUserScript *cookieScript2_1 = [[WKUserScript alloc] initWithSource:@"document.addEventListener('readystatechange', function (event) {window['readystate_' + document.readyState] = (new Date()).getTime();});" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+        
+        [userContentController addUserScript:cookieScript2_1];
+        
+        
         // profile
         NSURL *profile = [[bundle bundleURL] URLByAppendingPathComponent:@"/profile/profiler.js"];
         NSString *profileTxt = [NSString stringWithContentsOfURL:profile encoding:NSUTF8StringEncoding error:nil];

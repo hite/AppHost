@@ -33,14 +33,14 @@
     return self;
 }
 
-- (void)callbackFunctionOnWebPage:(NSString *)actionName param:(NSDictionary *)paramDict
+- (void)fireCallback:(NSString *)callbackKey param:(NSDictionary *)paramDict
 {
-    [self.appHost fireCallback:actionName param:paramDict];
+    [self.appHost fireCallback:callbackKey param:paramDict];
 }
 
-- (void)sendMessageToWebPage:(NSString *)actionName param:(NSDictionary *)paramDict
+- (void)fire:(NSString *)actionName param:(NSDictionary *)paramDict
 {
-    [self.appHost fireAction:actionName param:paramDict];
+    [self.appHost fire:actionName param:paramDict];
 }
 
 - (void)dealloc

@@ -102,6 +102,7 @@ function scrollToBottom() {
 
 function _parseCommand(com){
     if(com.indexOf(':') == 0){
+        var args;
         if (com == ':clear') {
             store.state.dataSource.length = 0;
             com = null;
@@ -110,13 +111,39 @@ function _parseCommand(com){
         } else if (com.indexOf(':list') >= 0) {
             com = "window.appHost.invoke('list', {})";
         } else if (com.indexOf(':apropos') >= 0) {
-            var args = com.split(' ');
+            args = com.split(' ');
             if (args.length == 2) {
                 com = "window.appHost.invoke('apropos', {name:'" + args[1] + "'})";
             } else {
                 console.log('参数出错 ' + com);
                 com = null;
             }
+        } else if (com.indexOf(':weinre') >= 0) {
+            args = com.split(' ');
+            if (args.length == 2) {
+                var url = args[1];
+                if (url === 'disable'){
+                    com = "window.appHost.invoke('weinre', {disabled:true})";
+                } else {
+                    com = "window.appHost.invoke('weinre', {url:'" +url + "'})";
+                }
+                
+            } else {
+                console.log('参数出错 ' + com);
+                com = null;
+            }
+        } else if (com.indexOf(':timing') >= 0) {
+            com = "window.appHost.invoke('timing', {})";
+        } else if (com.indexOf(':eval') >= 0) {
+            var code = com.replace(':eval', '');
+            if (code.length > 0) {
+                var p = window.JSON.stringify({code: code})
+                com = "window.appHost.invoke('eval', " + p + ")";
+            } else {
+                console.log('参数出错 ' + com);
+                com = null;
+            }
+            
         } else {
             window.alert('不支持的命令 ' + com);
             com = null;
@@ -129,12 +156,7 @@ function _parseCommand(com){
 var store = {
     debug: true,
     state: {
-        dataSource: [
-            {
-                type:'welcome',
-                message:'欢迎使用 AppHost Remote Debugger'
-            }
-        ] // 各类的信息，分不同的类型，显示不一样的样式；
+        dataSource: []
     },
     setMessageAction: function(newValue) {
       if (this.debug) console.log('setMessageAction triggered with', newValue);
@@ -234,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             window.setInterval(loop, 2000);
         }
     });
-});
+},false);
 
 function jdb(line) {
     // do a thing, possibly async, then…
@@ -250,7 +272,6 @@ document.addEventListener("readystatechange", function (event) {
         // jsdebugger
         window.__bri = -1;
 
-        
         var command = document.getElementById('command');
         // jdb(0);
         // var run = document.getElementById('run');
