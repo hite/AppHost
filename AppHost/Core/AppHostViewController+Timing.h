@@ -10,6 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static NSString *kAppHostTimingLoadRequest = @"loadRequest";
+static NSString *kAppHostTimingWebViewInit = @"webViewInit";
+static NSString *kAppHostTimingDidFinishNavigation = @"didFinishNavigation";
+static NSString *kAppHostTimingDecidePolicyForNavigationAction = @"decidePolicyForNavigationAction";
+static NSString *kAppHostTimingAddUserScript = @"addUserScript";
 @interface AppHostViewController (Timing)
 
 /**

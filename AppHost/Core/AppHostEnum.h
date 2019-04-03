@@ -67,6 +67,7 @@ return @{\
 
 #endif /* AppHostEnum_h */
 
+#define AH_DEBUG 1
 
 #define NOW_TIME [[NSDate date] timeIntervalSince1970] * 1000
 

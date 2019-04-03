@@ -50,7 +50,7 @@
 {
     NSURLRequest *request = urlSchemeTask.request;
     NSString *path = [request.URL path];
-    AHLog(@"allKey = %@", [request.allHTTPHeaderFields allKeys]);
+    AHLog(@"URL = %@, allKey = %@", request.URL, [request.allHTTPHeaderFields allKeys]);
     NSData *data;
     NSString *host = [request.URL host];
     

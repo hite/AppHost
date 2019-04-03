@@ -60,26 +60,33 @@
                                                                  }];
 }
 
+static NSString *kAppHostSource = nil;
 - (void)injectScriptsToUserContent:(WKUserContentController *)userContentController
 {
     // 注入关键 js 文件
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSURL *jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"appHost_version_1.5.0.js"];
+    if (kAppHostSource == nil) {
+        NSBundle *bundle = [NSBundle bundleForClass:AppHostViewController.class];
+        NSURL *jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"appHost_version_1.5.0.js"];
+        kAppHostSource = [NSString stringWithContentsOfURL:jsLibURL encoding:NSUTF8StringEncoding error:nil];
+    }
     
-    NSString *jsLib = [NSString stringWithContentsOfURL:jsLibURL encoding:NSUTF8StringEncoding error:nil];
-    if (jsLib.length > 0) {
-        WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:jsLib injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+    if (kAppHostSource.length > 0) {
+        WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:kAppHostSource injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
         [userContentController addUserScript:cookieScript];
+        
+#ifdef AH_DEBUG
+        // 记录 window.DocumentEnd 的时间
         WKUserScript *cookieScript1 = [[WKUserScript alloc] initWithSource:@"window.DocumentEnd =(new Date()).getTime()" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
         [userContentController addUserScript:cookieScript1];
+        // 记录 DocumentStart 的时间
         WKUserScript *cookieScript2 = [[WKUserScript alloc] initWithSource:@"window.DocumentStart = (new Date()).getTime()" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
         [userContentController addUserScript:cookieScript2];
+        // 记录 readystatechange 的时间
         WKUserScript *cookieScript2_1 = [[WKUserScript alloc] initWithSource:@"document.addEventListener('readystatechange', function (event) {window['readystate_' + document.readyState] = (new Date()).getTime();});" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-        
         [userContentController addUserScript:cookieScript2_1];
-        
-        
+
         // profile
+        NSBundle *bundle = [NSBundle bundleForClass:AppHostViewController.class];
         NSURL *profile = [[bundle bundleURL] URLByAppendingPathComponent:@"/profile/profiler.js"];
         NSString *profileTxt = [NSString stringWithContentsOfURL:profile encoding:NSUTF8StringEncoding error:nil];
         WKUserScript *cookieScript3 = [[WKUserScript alloc] initWithSource:profileTxt injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
@@ -89,6 +96,7 @@
         NSString *timingTxt = [NSString stringWithContentsOfURL:timing encoding:NSUTF8StringEncoding error:nil];
         WKUserScript *cookieScript4 = [[WKUserScript alloc] initWithSource:timingTxt injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
         [userContentController addUserScript:cookieScript4];
+#endif
     } else {
         NSAssert(NO, @"主 JS 文件加载失败");
         AHLog(@"Fatal Error: appHost.js is not loaded.");
