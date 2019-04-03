@@ -11,7 +11,7 @@
 
 @import WebKit;
 
-typedef NSData*(^bSchemeTaskHandler)(WKWebView *, id<WKURLSchemeTask>);
+typedef NSData*_Nonnull(^bSchemeTaskHandler)(WKWebView *_Nonnull, id<WKURLSchemeTask> _Nonnull, NSString *_Nullable * _Nullable mime);
 
 NS_ASSUME_NONNULL_BEGIN
 

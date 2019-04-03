@@ -58,9 +58,10 @@
         return;
     }
     
+    NSString *mime = nil;
     bSchemeTaskHandler handle = [self.customHandles objectForKey:host];
     if (handle) {
-        data = handle(webView, urlSchemeTask);
+        data = handle(webView, urlSchemeTask, &mime);
     }
     
     // 上面没有处理，使用默认逻辑
@@ -68,18 +69,21 @@
         if ([host isEqualToString:kAppHostURLScriptHost]) {
             NSURL *url = [NSURL fileURLWithPath:path];
             data = [NSData dataWithContentsOfURL:url];
+            mime = @"application/javascript";
             if (!data) {
                 AHLog(@"Read script file error. The path is %@", url);
             }
         } else if ([host isEqualToString:kAppHostURLStyleHost]) {
             NSURL *url = [NSURL fileURLWithPath:path];
             data = [NSData dataWithContentsOfURL:url];
+            mime = @"text/css";
             if (!data) {
                 AHLog(@"Read style file error. The path is %@", url);
             }
         } else if ([host isEqualToString:kAppHostURLImageHost]) {
             NSURL *imageURL = [NSURL fileURLWithPath:path];
             data = [NSData dataWithContentsOfURL:imageURL];
+            mime = @"image/png";
             if (!data) {
                 AHLog(@"Read image file error. The path is %@", imageURL);
             }
@@ -90,7 +94,7 @@
         NSError *err = [[NSError alloc] initWithDomain:@"自定义的资源无法解析" code:-4003 userInfo:nil];
         [urlSchemeTask didFailWithError:err];
     } else {
-        NSURLResponse *response = [[NSURLResponse alloc] initWithURL:urlSchemeTask.request.URL MIMEType:@"image/jpeg" expectedContentLength:data.length textEncodingName:nil];
+        NSURLResponse *response = [[NSURLResponse alloc] initWithURL:urlSchemeTask.request.URL MIMEType:mime?:@"image/jpeg" expectedContentLength:data.length textEncodingName:nil];
         [urlSchemeTask didReceiveResponse:response];
         [urlSchemeTask didReceiveData:data];
         [urlSchemeTask didFinish];
