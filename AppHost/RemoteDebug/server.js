@@ -96,7 +96,7 @@ function loop() {
 
 function scrollToBottom() {
     // scroll to bottom
-    var output = document.getElementById('output');
+    var output = document.getElementById('app');
     output.scrollTop = output.scrollHeight;
 }
 
@@ -178,6 +178,45 @@ function addStore(_obj, _domreadyblock){
     });
 }
 // 输入命令和点击按钮区域
+function _run_command(com){
+    if (com.length === 0) {
+        alert('请输入命令');
+        return;
+    }
+
+    command.value = '';
+    if (com == ':help') {
+        addStore({
+            type:'help',
+            message: ''
+        });
+    } else {
+        addStore({
+            type:'command',
+            message: com
+        });
+        try {
+            var newCom = _parseCommand(com);
+            if (newCom && newCom.length > 0){
+                var r = window.eval(newCom);
+                if (r) {
+                    addStore({
+                        type:'evalResult',
+                        'message': r
+                    });
+                }
+            }
+            
+        } catch (error) {
+            if (error) {
+                addStore({
+                    type:'error',
+                    message: error.message
+                });
+            }
+        }
+    }
+}
 Vue.component('command-value', {
     data:function(){
         return {
@@ -191,43 +230,7 @@ Vue.component('command-value', {
         },
         run:function(){
             var com = this.command;
-            if (com.length === 0) {
-                alert('请输入命令');
-                return;
-            }
-
-            command.value = '';
-            if (com == ':help') {
-                addStore({
-                    type:'help',
-                    message: ''
-                });
-            } else {
-                addStore({
-                    type:'command',
-                    message: com
-                });
-                try {
-                    var newCom = _parseCommand(com);
-                    if (newCom && newCom.length > 0){
-                        var r = window.eval(newCom);
-                        if (r) {
-                            addStore({
-                                type:'evalResult',
-                                'message': r
-                            });
-                        }
-                    }
-                    
-                } catch (error) {
-                    if (error) {
-                        addStore({
-                            type:'error',
-                            message: error.message
-                        });
-                    }
-                }
-            }
+            _run_command(com)
         }
     }
 });

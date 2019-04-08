@@ -36,7 +36,7 @@ static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
 @property (nonatomic, copy) NSString *rightActionBarTitle;
 
 //
-@property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong, readonly) WKWebView *webView;
 
 /**
  定制状态栏的配色

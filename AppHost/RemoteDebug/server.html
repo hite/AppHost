@@ -19,8 +19,16 @@
     <div id="app">
         <p class="w-welcome-slogan">欢迎使用 AppHost Remote Debugger</p>
         <p class="c-welcome-desc">** 调试之前，首先打开一个 h5 页面 **</p>
-        <command-output></command-output>
-        <command-value></command-value>
+        <div class="c-garden">
+            <command-output></command-output>
+            <command-value></command-value>
+        </div>
+        <div class="c-tool-panel">
+            <div class="w-tool-item w-tool-switch" title="进入 mobile">Off Mobile</div>
+            <div class="w-tool-item w-tool-help" title="look for help">Help</div>
+            <div class="w-tool-item w-tool-list" title="documents">Docs</div>
+            <div class="w-tool-item w-tool-timing" title="Audit">Timing</div>
+        </div>
     </div>
 
     <script type="text/x-template" id="command-output-template">

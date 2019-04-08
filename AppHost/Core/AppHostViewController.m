@@ -26,6 +26,8 @@
 
 @interface AppHostViewController () <UIScrollViewDelegate, WKUIDelegate, WKScriptMessageHandler>
 
+@property (nonatomic, strong) WKWebView *webView;
+
 @property (nonatomic, strong) AHSchemeTaskDelegate *taskDelegate;
 
 @end
@@ -182,7 +184,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     if ([reachability isReachable]) {
         NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:120];
-        NSLog(@"[Timing] loadRequest, %f", [[NSDate date] timeIntervalSince1970] * 1000);
         [self mark:kAppHostTimingLoadRequest];
         [self.webView loadRequest:mutableRequest];
     } else {

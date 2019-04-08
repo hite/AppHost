@@ -9,6 +9,7 @@
 #import "AppHostResponse.h"
 #import "AppHostViewController.h"
 #import "AppHostViewController+Scripts.h"
+#import <objc/runtime.h>
 
 @interface AppHostResponse ()
 
@@ -45,18 +46,53 @@
 
 - (void)dealloc
 {
-    self.webView = nil;
+    _webView = nil;
     self.navigationController = nil;
     self.appHost = nil;
 }
 
 #pragma mark - protocol
 
-- (BOOL)handleAction:(NSString *)actionName withParam:(NSDictionary *)parameter
+- (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict
 {
-    NSAssert(NO, @"Must implement handleActionFromH5 method");
-    return NO;
+    if (action == nil) {
+        return false;
+    }
+    SEL sel = nil;
+    if (paramDict == nil || paramDict.allKeys.count == 0) {
+        sel = NSSelectorFromString([NSString stringWithFormat:@"%@", action]);
+    } else {
+        sel = NSSelectorFromString([NSString stringWithFormat:@"%@:", action]);
+    }
+    [self runSelector:sel withObjects:[NSArray arrayWithObjects:paramDict, nil]];
+    
+    return YES;
 }
+
+- (id)runSelector:(SEL)aSelector withObjects:(NSArray *)objects {
+    NSMethodSignature *methodSignature = [self methodSignatureForSelector:aSelector];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+    [invocation setTarget:self];
+    [invocation setSelector:aSelector];
+    
+    NSUInteger i = 1;
+    
+    if (objects.count) {
+        for (id object in objects) {
+            id tempObject = object;
+            [invocation setArgument:&tempObject atIndex:++i];
+        }
+    }
+    [invocation invoke];
+    
+    if (methodSignature.methodReturnLength > 0) {
+        id value;
+        [invocation getReturnValue:&value];
+        return value;
+    }
+    return nil;
+}
+
 
 + (BOOL)isSupportedAction:(NSString *)actionName
 {

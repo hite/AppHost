@@ -2,8 +2,9 @@
     window.appHost = {
         version: "1.5.1"
     };
+    
     var callbackPool = {};
-
+    var ack_no = 1;
     window.appHost.invoke = function(_action, _data, _callback) {
         var rndKey = 'cbk_' + new Date().getTime();
         var fullParam = {
@@ -11,8 +12,8 @@
             param: _data
         };
         if (_callback) { //如果有回调函数。
-            var rndKey = 'cbk_' + new Date().getTime();
-            fullParam.param.callbackKey = rndKey;
+            var rndKey = 'cbk_' + ack_no++;
+            fullParam.callbackKey = rndKey;
             callbackPool[rndKey] = _callback;
         }
 

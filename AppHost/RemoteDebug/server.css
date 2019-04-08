@@ -7,17 +7,50 @@ body {
     overflow: hidden;
 }
 
-#app{
+#app {
     height: 100%;
     width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+.c-garden {
+    padding: 0 15px 10px 50px;
+}
+
+.c-tool-panel {
+    position: fixed;
+    left: 3px;
+    top: 40%;
+    width: 40px;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    background: #E3EDFF;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 5px;
+}
+
+.w-tool-item {
+    font-size: 12px;
+    color: #4468b9;
+    /* border: 1px solid gray; */
+    border-radius: 2px;
+    padding: 2px;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .m-output {
     width: 100%;
     box-sizing: border-box;
     font-weight: 200;
-    
+
 }
 
 .m-output-result {
@@ -29,7 +62,8 @@ body {
 .m-input {
     padding: 5px 0;
     background-color: white;
-    position: relative;
+    position: sticky;
+    bottom: 5px;
 }
 
 .m-input .w-command {
@@ -72,8 +106,15 @@ body {
     text-indent: 10px;
 }
 
+.m-output-command-error{
+    color: #dc4848;
+    font-size: 12px;
+    line-height: 24px;
+}
+
 .w-em-seq {
     color: #777777;
+    font-size: 14px;
 }
 
 pre {
@@ -88,11 +129,11 @@ pre {
 }
 
 .w-help-code {
-    background-color: #333333;
-    color: #fff;
+    background-color: #E3EDFF;
+    color: #000;
     font-size: 14px;
     line-height: 20px;
-    padding: 0 12px;
+    padding: 0 5px;
     font-weight: 400;
     font-family: monospace;
     word-wrap: break-word;
@@ -103,63 +144,71 @@ pre {
     font-size: 14px;
 }
 
-.w-welcome-slogan{
+.w-welcome-slogan {
     font-size: 16px;
-    color:#4468b9;
+    color: #4468b9;
     text-align: center;
     height: 20px;
     line-height: 18px;
 }
 
-.c-welcome-desc{
-    color: #333333;
+.c-welcome-desc {
+    color: #999;
     font-size: 14px;
     text-indent: 15px;
     padding: 0;
     margin: 0;
+    text-align: center;
+    text-decoration: underline;
 }
 
-.w-example-title{
+.w-example-title {
     font-size: 14px;
     text-align: left;
     font-weight: bold;
-    padding: 5px 12px;
+    padding: 7px 5px;
+    text-indent: 0;
 }
+
 /* 注释部分 */
-.m-output-doc{
+.m-output-doc {
     font-size: 14px;
     padding: 0 15px
 }
-.w-doc-type_title{
+
+.w-doc-type_title {
     font-weight: bold;
     padding: 5px 0;
 }
-.w-doc-param-container{
+
+.w-doc-param-container {
     list-style-type: circle;
     padding-left: 20px;
     margin: 5px;
 }
 
-.w-doc-param span{
+.w-doc-param span {
     font-weight: bold;
 }
 
-.w-doc-code{
+.w-doc-code {
     background-color: black;
     padding: 10px 5px;
     color: white;
 }
-.w-doc-codeResult{
+
+.w-doc-codeResult {
     padding: 5px 0;
 }
 
-.w-api_list-group{
+.w-api_list-group {
     margin-bottom: 5px;
 }
-.w-api_list-api{
+
+.w-api_list-api {
     display: block;
 }
 
-.w-api_list-other{
+.w-api_list-other {
     padding: 0 5px;
 }
