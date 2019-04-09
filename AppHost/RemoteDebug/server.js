@@ -235,12 +235,11 @@ Vue.component("command-value", {
         run: function () {
             var com = this.command;
             if(window.ah_env.isMobile){
-                _run_command(':eval ' + com);
-            } else {
-                _run_command(com);
-                command.value = '';
-                this.command = '';
+                com = ':eval ' + com;
             }
+            _run_command(com);
+            command.value = '';
+            this.command = '';
         }
     }
 });
