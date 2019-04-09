@@ -37,12 +37,12 @@
                 </div>
                 <p v-else-if="item.type === 'evalResult'" class="m-output-command"> 执行结果: <span class="w-eval-succ">{{item.message}}</span></p>
                 <p v-else-if="item.type === 'command'" class="m-output-command">
-                    <span class="w-em-seq"> &#5580; </span>{{item.message}}
+                    <span class="w-em-seq"> &#8250;&#8250; </span>{{item.message}}
                 </p>
                 <p v-else-if="item.type === 'error'" class="m-output-command"> 输入有误，错误: <span class="w-err-code">{{item.message}}</span></p>
                 <div v-else-if="item.type === 'help'" class="m-output-command">
                     <div class='w-example-title'>1. 调用 appHost 接口方式：</div>
-                    <div class="w-help-code">window.appHost.invoke('startNewPage', {'url': 'http://qian.163.com', 'title': 'title', 'type': 'push','actionTitle':'发布'});</div>
+                    <div class="w-help-code">window.appHost.invoke('startNewPage', {'url': 'http://you.163.com', 'title': 'title', 'type': 'push','actionTitle':'发布'});</div>
                     <div class='w-example-title'>2. 查看所有支持的 native 接口，输入如下；</div>
                     <div class="w-help-code">:list</div>
                     <div class='w-example-title'>3. 查看所有支持的 某个具体的接口，api doc, 如 `log` 接口，输入如下；</div>

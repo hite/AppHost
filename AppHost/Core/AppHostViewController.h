@@ -72,7 +72,7 @@ static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
  加载本地 html 资源，支持发送 xhr 请求
 
  @param url 打开的文件路径
- @param baseDomain 发送 xhr 请求的主域名地址，如 http://qian.163.com
+ @param baseDomain 发送 xhr 请求的主域名地址，如 http://you.163.com
  */
 - (void)loadLocalFile:(NSURL *)url domain:(NSString *)baseDomain;
 
@@ -82,7 +82,7 @@ static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
 
  @param fileName 主 HTML 文件的文件名，是个相对路径。 html 文件里应用的内部 js、css 文件都是相对于 directory 参数的
  @param directory 相对路径，包含 HTML，JS，CSS 文件
- @param baseDomain 为了解决相对路径 发送 xhr 请求的主域名地址，如 http://qian.163.com
+ @param baseDomain 为了解决相对路径 发送 xhr 请求的主域名地址，如 http://you.163.com
  */
 - (void)loadIndexFile:(NSString *)fileName inDirectory:(NSURL *)directory domain:(NSString *)baseDomain;
 @end

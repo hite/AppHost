@@ -48,7 +48,7 @@ static NSString *kLastWeinreScript = nil;
         if (![[NSFileManager defaultManager] fileExistsAtPath:file]) {
             [self generatorHtml];
         }
-        [self.appHost loadLocalFile:[NSURL fileURLWithPath:file] domain:@"http://qian.163.com"];
+        [self.appHost loadLocalFile:[NSURL fileURLWithPath:file] domain:@"http://you.163.com"];
         // 支持 或者关闭 weinre 远程调试
     }else if ([@"weinre" isEqualToString:action]) {
         //
