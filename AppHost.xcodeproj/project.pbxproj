@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4805C81121D4D4D000C058D1 /* AHNavigationBarResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */; };
+		481A0650225C9B9E00DD57BB /* images in Resources */ = {isa = PBXBuildFile; fileRef = 481A064E225C9B9E00DD57BB /* images */; };
+		481A0651225C9B9E00DD57BB /* components in Resources */ = {isa = PBXBuildFile; fileRef = 481A064F225C9B9E00DD57BB /* components */; };
+		481A0653225C9BB700DD57BB /* thirdParty in Resources */ = {isa = PBXBuildFile; fileRef = 481A0652225C9BB700DD57BB /* thirdParty */; };
 		482FF50721F6BBB8005FCD7A /* AHResponseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 482FF50521F6BBB8005FCD7A /* AHResponseManager.h */; };
 		482FF50821F6BBB8005FCD7A /* AHResponseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 482FF50621F6BBB8005FCD7A /* AHResponseManager.m */; };
 		4832C7EE21FB13BA00CD371C /* testcase.tmpl in Resources */ = {isa = PBXBuildFile; fileRef = 4832C7ED21FB13B900CD371C /* testcase.tmpl */; };
@@ -104,6 +107,9 @@
 
 /* Begin PBXFileReference section */
 		4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHNavigationBarResponse.m; sourceTree = "<group>"; };
+		481A064E225C9B9E00DD57BB /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
+		481A064F225C9B9E00DD57BB /* components */ = {isa = PBXFileReference; lastKnownFileType = folder; path = components; sourceTree = "<group>"; };
+		481A0652225C9BB700DD57BB /* thirdParty */ = {isa = PBXFileReference; lastKnownFileType = folder; path = thirdParty; sourceTree = "<group>"; };
 		482FF50521F6BBB8005FCD7A /* AHResponseManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHResponseManager.h; sourceTree = "<group>"; };
 		482FF50621F6BBB8005FCD7A /* AHResponseManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHResponseManager.m; sourceTree = "<group>"; };
 		4832C7ED21FB13B900CD371C /* testcase.tmpl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = testcase.tmpl; sourceTree = "<group>"; };
@@ -266,7 +272,9 @@
 		4885E98321D77B0C0036B1C6 /* RemoteDebug */ = {
 			isa = PBXGroup;
 			children = (
-				4888F1DF2245DFD400A933E8 /* thirdParty */,
+				481A0652225C9BB700DD57BB /* thirdParty */,
+				481A064F225C9B9E00DD57BB /* components */,
+				481A064E225C9B9E00DD57BB /* images */,
 				4888F1DD22453E1D00A933E8 /* profile */,
 				4832C7ED21FB13B900CD371C /* testcase.tmpl */,
 				4837FFC121FA237800D2FE9C /* server.css */,
@@ -290,13 +298,6 @@
 				4888F1D62244CA2900A933E8 /* AHRequestMediate.m */,
 			);
 			path = Intermediate;
-			sourceTree = "<group>";
-		};
-		4888F1DF2245DFD400A933E8 /* thirdParty */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = thirdParty;
 			sourceTree = "<group>";
 		};
 		48B00FF121D4DA380037FABF /* ThirdParty */ = {
@@ -569,15 +570,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				481A0650225C9B9E00DD57BB /* images in Resources */,
 				4888F1DE22453E1D00A933E8 /* profile in Resources */,
 				4837FFC421FA237900D2FE9C /* server.css in Resources */,
 				4832C7EE21FB13BA00CD371C /* testcase.tmpl in Resources */,
 				4837FFC621FA237900D2FE9C /* vue.js in Resources */,
 				48D888DF21D4D031006E4279 /* app-access.txt in Resources */,
+				481A0651225C9B9E00DD57BB /* components in Resources */,
 				4837FFC521FA237900D2FE9C /* server.js in Resources */,
 				4885E98921D885F60036B1C6 /* server.html in Resources */,
 				8476B1AC21E7678000E97B54 /* renderjson.js in Resources */,
 				8476B1AD21E7678000E97B54 /* renderjson.css in Resources */,
+				481A0653225C9BB700DD57BB /* thirdParty in Resources */,
 				48C8AEAD21D5F99E00A6B426 /* appHost_version_1.5.0.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
