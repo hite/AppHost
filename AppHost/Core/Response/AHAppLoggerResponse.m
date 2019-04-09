@@ -10,15 +10,6 @@
 
 @implementation AHAppLoggerResponse
 
-- (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict
-{
-    if ([@"log" isEqualToString:action]) {
-        [self log:paramDict];
-    }
-    
-    return YES;
-}
-
 + (NSDictionary<NSString *, NSString *> *)supportActionList
 {
     return @{

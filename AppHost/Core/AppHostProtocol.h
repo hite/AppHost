@@ -38,9 +38,10 @@ static NSString *const kAppHostURLStyleHost = @"css.apphost.hite.me";
 
  @param action h5 的 actionName
  @param paramDict 本次请求的参数
+ @param callbackKey js 端匿名回调
  @return YES 表示可以处理，已处理；
  */
-- (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict;
+- (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict callbackKey:(NSString *)callbackKey;
 
 /**
  类方法。表示当前请类型是否支持

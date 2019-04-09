@@ -11,25 +11,6 @@
 
 @implementation AHBuiltInResponse
 
-- (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict
-{
-    if ([@"toast" isEqualToString:action]) {
-        CGFloat delay = [[paramDict objectForKey:@"delay"] floatValue];
-        [self showTextTip:[paramDict objectForKey:@"text"] delay:delay];
-    } else if ([@"showLoading" isEqualToString:action]) {
-        [self showLoading:[paramDict objectForKey:@"text"]];
-    } else if ([@"hideLoading" isEqualToString:action]) {
-        [self hideHUD];
-    } else if ([@"pageBounceEnabled" isEqualToString:action]) {
-        BOOL bounce = [[paramDict objectForKey:@"enabled"] boolValue];
-        [self enablePageBounce:bounce];
-    } else {
-        return NO;
-    }
-    
-    return YES;
-}
-
 + (NSDictionary<NSString *, NSString *> *)supportActionList
 {
     return @{
@@ -41,14 +22,21 @@
 }
 
 #pragma mark - inner
-- (void)hideHUD
+- (void)hideLoading
 {
     NSLog(@"Info: 关闭显示 HUD ，请使用本 App 的的 HUD 接口实现，以保持一致体验");
 }
 
-- (void)showLoading:(NSString *)tip
+- (void)showLoading:(NSDictionary *)paramDict
 {
+    NSString *tip = [paramDict objectForKey:@"text"];
     NSLog(@"Info: 正在显示 Loading 提示: %@，请使用本 App 的的 HUD 接口实现，以保持一致体验", tip);
+}
+
+- (void)toast:(NSDictionary *)paramDict
+{
+    CGFloat delay = [[paramDict objectForKey:@"delay"] floatValue];
+    [self showTextTip:[paramDict objectForKey:@"text"] delay:delay];
 }
 
 - (void)showTextTip:(NSString *)tip delay:(CGFloat)delay
@@ -56,8 +44,9 @@
     NSLog(@"Info: 正在显示 Toast 提示: %@, %f秒消失，请使用本 App 的的 HUD 接口实现，以保持一致体验", tip, delay);
 }
 
-- (void)enablePageBounce:(BOOL)bounce
+- (void)enablePageBounce:(NSDictionary *)paramDict
 {
+    BOOL bounce = [[paramDict objectForKey:@"enabled"] boolValue];
     self.webView.scrollView.bounces = bounce;
 }
 

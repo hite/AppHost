@@ -53,19 +53,30 @@
 
 #pragma mark - protocol
 
-- (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict
+- (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict callbackKey:(NSString *)callbackKey;
 {
     if (action == nil) {
         return false;
     }
     SEL sel = nil;
     if (paramDict == nil || paramDict.allKeys.count == 0) {
-        sel = NSSelectorFromString([NSString stringWithFormat:@"%@", action]);
+        if (callbackKey.length == 0) {
+            sel = NSSelectorFromString([NSString stringWithFormat:@"%@", action]);
+        } else {
+            sel = NSSelectorFromString([NSString stringWithFormat:@"%@WithCallback:", action]);
+        }
     } else {
-        sel = NSSelectorFromString([NSString stringWithFormat:@"%@:", action]);
+        if (callbackKey.length == 0) {
+            sel = NSSelectorFromString([NSString stringWithFormat:@"%@:", action]);
+        } else {
+            sel = NSSelectorFromString([NSString stringWithFormat:@"%@:callback:", action]);
+        }
     }
-    [self runSelector:sel withObjects:[NSArray arrayWithObjects:paramDict, nil]];
     
+    if (![self respondsToSelector:sel]) {
+        return NO;
+    }
+    [self runSelector:sel withObjects:[NSArray arrayWithObjects:paramDict, callbackKey, nil]];
     return YES;
 }
 

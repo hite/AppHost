@@ -28,35 +28,17 @@ static NSString *kLastWeinreScript = nil;
         }];
     } else if ([@"list" isEqualToString:action]) {
         // 遍历所有的可用接口和注释和测试用例
-        NSString *action = [paramDict objectForKey:@"name"];
-        if (action.length == 0) {
-            [self fire:@"list" param:[[AHResponseManager defaultManager] allResponseMethods]];
-        } else {// 如果是具体的某个接口，输出对应的 API 描述
-            Class appHostCls = [[AHResponseManager defaultManager] responseForAction:action];
-            SEL targetMethod = NSSelectorFromString([NSString stringWithFormat:@"%@%@", ah_doc_log_prefix, action]);
-            if ([appHostCls respondsToSelector:targetMethod]) {
+        //TODO 分页
+        [self fire:@"list" param:[[AHResponseManager defaultManager] allResponseMethods]];
+    } else if ([@"apropos" isEqualToString:action]) {
+        Class appHostCls = [[AHResponseManager defaultManager] responseForAction:action];
+        SEL targetMethod = NSSelectorFromString([NSString stringWithFormat:@"%@%@", ah_doc_log_prefix, action]);
+        if ([appHostCls respondsToSelector:targetMethod]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                NSDictionary *doc = [appHostCls performSelector:targetMethod withObject:nil];
+            NSDictionary *doc = [appHostCls performSelector:targetMethod withObject:nil];
 #pragma clang diagnostic pop
-                [self fire:[@"list." stringByAppendingString:action] param:doc];
-            }
-        }
-    } else if ([@"list" isEqualToString:action]) {
-        // 遍历所有的可用接口和注释和测试用例
-        NSString *action = [paramDict objectForKey:@"name"];
-        if (action.length == 0) {
-            [self fire:@"list" param:[[AHResponseManager defaultManager] allResponseMethods]];
-        } else {// 如果是具体的某个接口，输出对应的 API 描述
-            Class appHostCls = [[AHResponseManager defaultManager] responseForAction:action];
-            SEL targetMethod = NSSelectorFromString([NSString stringWithFormat:@"%@%@", ah_doc_log_prefix, action]);
-            if ([appHostCls respondsToSelector:targetMethod]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                NSDictionary *doc = [appHostCls performSelector:targetMethod withObject:nil];
-#pragma clang diagnostic pop
-                [self fire:[@"list." stringByAppendingString:action] param:doc];
-            }
+            [self fire:[@"apropos." stringByAppendingString:action] param:doc];
         }
     }else if ([@"testcase" isEqualToString:action]) {
         // 检查是否有文件生成，如果没有则遍历
@@ -94,8 +76,11 @@ static NSString *kLastWeinreScript = nil;
   return @{
 #ifdef DEBUG
     @"eval" : @"1",
-    @"api_list" : @"1",
-    @"testcase" : @"1"
+    @"list" : @"1",
+    @"apropos": @"1",
+    @"testcase" : @"1",
+    @"weinre" : @"1",
+    @"timing" : @"1"
 #endif
   };
 }
