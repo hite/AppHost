@@ -13,25 +13,6 @@
 
 @implementation AHNavigationResponse
 
-- (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict
-{
-    if ([@"startNewPage" isEqualToString:action]) {
-        [self startNewPageWithParameter:paramDict];
-    } else if ([@"openUrl" isEqualToString:action]) {
-        NSString *urlTxt = [paramDict objectForKey:@"url"];
-        BOOL forceOpenInSafari = [[paramDict objectForKey:@"openInBrowser"] boolValue];
-        if (forceOpenInSafari) {
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlTxt] options:@{} completionHandler:nil];
-        } else {
-            [self openUrl:urlTxt];
-        }
-    } else if ([@"openExternalUrl" isEqualToString:action]) {
-        [self openExternalUrl:[paramDict objectForKey:@"url"]];
-    }
-    
-    return YES;
-}
-
 + (NSDictionary<NSString *, NSString *> *)supportActionList
 {
     return @{
@@ -44,8 +25,20 @@
 
 #pragma mark - inner
 
-- (void)openExternalUrl:(NSString *)url
+- (void)openUrl:(NSDictionary *)paramDict
 {
+    NSString *urlTxt = [paramDict objectForKey:@"url"];
+    BOOL forceOpenInSafari = [[paramDict objectForKey:@"openInBrowser"] boolValue];
+    if (forceOpenInSafari) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlTxt] options:@{} completionHandler:nil];
+    } else {
+        [self openUrl:urlTxt];
+    }
+}
+
+- (void)openExternalUrl:(NSDictionary *)paramDict
+{
+    NSString *url = [paramDict objectForKey:@"url"];
     SFSafariViewController *safari = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
     [self.navigationController presentViewController:safari animated:YES completion:nil];
 }

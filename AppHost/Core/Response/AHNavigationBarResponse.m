@@ -18,20 +18,6 @@
 
 @implementation AHNavigationBarResponse
 
-- (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict
-{
-    if ([@"goBack" isEqualToString:action]) {
-        [self onMKCustomBackAction:nil]; //调用返回的动作
-    } else if ([@"setNavRight" isEqualToString:action]) {
-        // 定制导航栏文字
-        [self setRight:[paramDict objectForKey:@"text"]];
-    } else if ([@"setNavTitle" isEqualToString:action]) {
-        // 定制导航栏文字
-        [self setTitle:[paramDict objectForKey:@"text"]];
-    }
-    return YES;
-}
-
 + (NSDictionary<NSString *, NSString *> *)supportActionList
 {
     return @{
@@ -43,7 +29,7 @@
 
 #pragma mark - inner
 
-- (void)onMKCustomBackAction:(id)sender
+- (void)onMKCustomBackAction
 {
     if ([self.webView canGoBack]) {
         [self.webView goBack];
@@ -78,8 +64,9 @@
 
 #pragma mark - nav
 
-- (void)setRight:(NSString *)title
+- (void)setRight:(NSDictionary *)paramDict
 {
+    NSString *title = [paramDict objectForKey:@"text"];
     self.rightActionBarTitle = title;
     UIBarButtonItem *rightBarButton = nil;
     
@@ -95,8 +82,9 @@
     self.appHost.navigationItem.rightBarButtonItem = rightBarButton;
 }
 
-- (void)setTitle:(NSString *)title
+- (void)setTitle:(NSDictionary *)paramDict
 {
+    NSString *title = [paramDict objectForKey:@"text"];
     self.appHost.navigationItem.title = title;
 }
 
