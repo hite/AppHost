@@ -137,7 +137,7 @@ function _parseCommand(com){
         } else if (com.indexOf(':eval') >= 0) {
             var code = com.replace(':eval', '');
             if (code.length > 0) {
-                var p = window.JSON.stringify({code: code})
+                var p = window.JSON.stringify({code: code});
                 com = "window.appHost.invoke('eval', " + p + ")";
             } else {
                 console.log('参数出错 ' + com);
@@ -230,7 +230,7 @@ Vue.component('command-value', {
         },
         run:function(){
             var com = this.command;
-            _run_command(com)
+            _run_command(com);
         }
     }
 });
