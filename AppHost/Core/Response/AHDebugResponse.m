@@ -15,7 +15,7 @@
 static NSString *kLastWeinreScript = nil;
 
 @implementation AHDebugResponse
-- (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict
+- (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict callbackKey:(NSString *)callbackKey
 {
 
 #ifdef DEBUG

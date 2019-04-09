@@ -132,10 +132,10 @@ body {
 
 .w-em-seq {
     color: #333333;
-    font-size: 14px;
-    line-height: 14px;
-    vertical-align: text-bottom;
-    text-indent: 0;
+font-size: 14px;
+line-height: 20px;
+vertical-align: text-bottom;
+text-indent: 0;
 }
 
 pre {

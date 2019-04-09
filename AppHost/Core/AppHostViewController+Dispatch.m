@@ -16,11 +16,11 @@
 #pragma mark - core
 - (void)dispatchParsingParameter:(NSDictionary *)contentJSON
 {
-    NSMutableDictionary *paramDict = [[contentJSON objectForKey:@"param"] mutableCopy];
-    
     // 增加对异常参数的catch
     @try {
-        [self callNative:[contentJSON objectForKey:@"action"] parameter:paramDict];
+        NSDictionary *paramDict = [contentJSON objectForKey:@"param"];
+        NSString *callbackKey = [contentJSON objectForKey:@"callbackKey"];
+        [self callNative:[contentJSON objectForKey:@"action"] parameter:paramDict callbackKey:callbackKey];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeRequestEvent object:contentJSON];
     } @catch (NSException *exception) {
@@ -30,8 +30,17 @@
     }
 }
 
+#pragma mark - public
 // 延迟初始化； 短路判断
+
 - (BOOL)callNative:(NSString *)action parameter:(NSDictionary *)paramDict
+{
+    return [self callNative:action parameter:paramDict callbackKey:nil];
+}
+
+#pragma mark - private
+
+- (BOOL)callNative:(NSString *)action parameter:(NSDictionary *)paramDict callbackKey:(NSString *)key
 {
     id<AppHostProtocol> vc = [[AHResponseManager defaultManager] responseForAction:action withAppHost:self];
     //
@@ -39,11 +48,11 @@
         NSString *errMsg = [NSString stringWithFormat:@"action (%@) not supported yet.", action];
         AHLog(@"action (%@) not supported yet.", action);
         [self fire:@"NotSupported" param:@{
-                                                           @"error": errMsg
-                                                           }];
+                                           @"error": errMsg
+                                           }];
         return NO;
     } else {
-        [vc handleAction:action withParam:paramDict];
+        [vc handleAction:action withParam:paramDict callbackKey:key];
         return YES;
     }
 }

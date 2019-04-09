@@ -32,7 +32,8 @@
     if (forceOpenInSafari) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlTxt] options:@{} completionHandler:nil];
     } else {
-        [self openUrl:urlTxt];
+        NSURL *actualUrl = [NSURL URLWithString:urlTxt];
+        [[UIApplication sharedApplication] openURL:actualUrl options:@{} completionHandler:nil];
     }
 }
 
@@ -93,12 +94,5 @@
         [self.navigationController pushViewController:freshOne animated:YES];
     }
 }
-
-- (void)openUrl:(NSString *)urlTxt
-{
-    NSURL *actualUrl = [NSURL URLWithString:urlTxt];
-    [[UIApplication sharedApplication] openURL:actualUrl options:@{} completionHandler:nil];
-}
-
 
 @end

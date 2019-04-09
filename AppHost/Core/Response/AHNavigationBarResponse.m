@@ -29,14 +29,14 @@
 
 #pragma mark - inner
 
-- (void)onMKCustomBackAction
+- (void)goBack
 {
     if ([self.webView canGoBack]) {
         [self.webView goBack];
         //
         [self initNavigationBarButtons];
     }else{
-        [self didTapClose:sender];
+        [self didTapClose:nil];
     }
 }
 
