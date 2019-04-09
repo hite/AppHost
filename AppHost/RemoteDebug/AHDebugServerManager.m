@@ -155,27 +155,29 @@ CGFloat kDebugWinInitHeight = 46.f;
 
                                   NSBundle *bundle = [NSBundle bundleForClass:[weakSelf class]];
 
-                                  NSString *fileName = [request.URL lastPathComponent];
+                                  NSString *filePath = request.URL.path;
 
-                                  if ([fileName isEqualToString:@"/"]) {
-                                      fileName = @"server.html";
+                                  if ([filePath isEqualToString:@"/"]) {
+                                      filePath = @"server.html";
                                   }
 
-                                  NSString *contentType = nil;
-                                  if ([fileName hasSuffix:@".html"]) {
+                                  NSString *dataType = @"text";
+                                  NSString *contentType = @"text/plain";
+                                  if ([filePath hasSuffix:@".html"]) {
                                       contentType = @"text/html; charset=utf-8";
-                                  } else if ([fileName hasSuffix:@".js"]) {
+                                  } else if ([filePath hasSuffix:@".js"]) {
                                       contentType = @"application/javascript";
-                                  } else if ([fileName hasSuffix:@".css"]) {
+                                  } else if ([filePath hasSuffix:@".css"]) {
                                       contentType = @"text/css";
+                                  } else if ([filePath hasSuffix:@".png"]) {
+                                      contentType = @"image/png";
+                                      dataType = @"data";
                                   }
 
-                                  NSURL *htmlURL = [[bundle bundleURL] URLByAppendingPathComponent:fileName];
-
-                                  NSString *htmlStr = [NSString stringWithContentsOfURL:htmlURL encoding:NSUTF8StringEncoding error:nil];
-                                  if (htmlStr.length > 0) {
-                                      //                                      htmlStr = [htmlStr stringByReplacingOccurrencesOfString:@"{{ReactLoopURL}}" withString:@"/react_log.do"];
-                                      return [GCDWebServerDataResponse responseWithText:htmlStr contentType:contentType];
+                                  NSURL *htmlURL = [[bundle bundleURL] URLByAppendingPathComponent:filePath];
+                                  NSData *contentData = [NSData dataWithContentsOfURL:htmlURL];
+                                  if (contentData.length > 0) {
+                                      return [GCDWebServerDataResponse responseWithData:contentData contentType:contentType];
                                   }
                                   return [GCDWebServerDataResponse responseWithHTML:@"<html><body><p>Error </p></body></html>"];
 

@@ -1,151 +1,156 @@
 window.appHost = {
     invoke: function (action, param) {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/command.do', true);
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.open("POST", "/command.do", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.onload = function () {
             console.log(xhr.responseURL); // http://example.com/test
         };
 
-        xhr.send('action=' + action + '&param=' + encodeURI(window.JSON.stringify(param)));
+        xhr.send(
+            "action=" + action + "&param=" + encodeURI(window.JSON.stringify(param))
+        );
     }
 };
 
+function _renderLogs(logs) {
+    if (!logs) return;
+
+    for (var i = 0; i < logs.length; i++) {
+        var log = window.JSON.parse(logs[i]);
+        var logType = log.type;
+        var logVal = log.value;
+
+        //  查询所有的接口，显示需要特殊处理下
+        if (logVal.action === "list") {
+            var apis = [];
+            for (var key in logVal.param) {
+                if (logVal.param.hasOwnProperty(key)) {
+                    var response = logVal.param[key];
+                    if (response.length > 0) {
+                        apis.push({
+                            type: "group",
+                            value: key + " 的方法包括;"
+                        });
+                        for (var k = 0; k < response.length; k++) {
+                            apis.push({
+                                type: "api",
+                                value: "  -  " + response[k]
+                            });
+                        }
+                    }
+                }
+            }
+            addStore({
+                type: "list",
+                apis: apis
+            });
+        } else if (logVal.action.indexOf("apropos.") >= 0) {
+            // 特殊处理 API 接口的显示
+            var doc = logVal.param;
+            addStore({
+                type: "apropos_item",
+                doc: doc
+            });
+        } else {
+            // 先显示日志类型，
+            var eleId = "eid" + window.kLogIndex++;
+            /**
+             * 先初始化一个带 id 的 div，然后在确认渲染成功后，使用 dom 原生的方法，把 renderjson 对象加上去.
+             * 注意 renderjson 对象是带事件的，如果直接渲染为 HTML 会出现丢失事件的情况
+             *
+             * */
+
+            var preEle = renderjson.set_icons("+", "-").set_show_to_level(2)(logVal);
+
+            var metaFunc = function (_id, e, d) {
+                return function () {
+                    var ele = d.getElementById(_id);
+                    ele.appendChild(e);
+                };
+            };
+            addStore(
+                {
+                    type: "log",
+                    message: logType.toLocaleUpperCase(),
+                    eid: eleId
+                },
+                metaFunc(eleId, preEle, document)
+            );
+        }
+    }
+}
 
 window.kLogIndex = 1;
 function loop() {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/react_log.do', true);
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
+    xhr.open("POST", "/react_log.do", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.responseType = "json";
     xhr.onload = function () {
         console.log(xhr.response);
         var json = xhr.response;
-        if (json.code == 'OK') {
+        if (json.code == "OK") {
             var data = json.data;
-            if (data) {
-                var logs = data.logs;
-                if (logs.length > 0) {
-                    for (var i = 0; i < logs.length; i++) {
-                        var log = window.JSON.parse(logs[i]);
-                        var logType = log.type;
-                        var logVal = log.value;
-                        
-                        //  查询所有的接口，显示需要特殊处理下
-                        if (logVal.action === 'list') {
-                            var apis = [];
-                            for (var key in logVal.param) {
-                                if (logVal.param.hasOwnProperty(key)) {
-                                    var response = logVal.param[key];
-                                    if (response.length > 0){
-                                        apis.push({
-                                            type: 'group',
-                                            value: key + ' 的方法包括;'
-                                        });
-                                        for (var k = 0; k < response.length; k++){
-                                            apis.push({
-                                                type:'api',
-                                                value: '  -  ' + response[k]
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-                            addStore({
-                                type:'list',
-                                apis: apis
-                            });
-                        }else if (logVal.action.indexOf('apropos.') >= 0) {
-                            // 特殊处理 API 接口的显示
-                            var doc = logVal.param;
-                            addStore({
-                                type:'apropos_item',
-                                doc: doc
-                            });
-                        } else {
-                            // 先显示日志类型，
-                            var eleId = 'eid' + window.kLogIndex++;
-                            /**
-                             * 先初始化一个带 id 的 div，然后在确认渲染成功后，使用 dom 原生的方法，把 renderjson 对象加上去.
-                             * 注意 renderjson 对象是带事件的，如果直接渲染为 HTML 会出现丢失事件的情况
-                             *  
-                             * */ 
-                            var preEle = renderjson.set_icons('+', '-').set_show_to_level(2)(logVal);
-
-                            var metaFunc = function(_id, e, d){
-                                return function(){
-                                    var ele = d.getElementById(_id);
-                                    ele.appendChild(e);
-                                };
-                            };
-                            addStore({
-                                type:'log',
-                                message:logType.toLocaleUpperCase(),
-                                eid:eleId
-                            }, metaFunc(eleId, preEle, document));
-
-                        }
-  
-                    }
-                }
-            }
+            var logs = data ? data.logs : [];
+            _renderLogs(logs);
         }
     };
-    xhr.send('');
+    xhr.send("");
 }
 
 function scrollToBottom() {
     // scroll to bottom
-    var output = document.getElementById('app');
+    var output = document.getElementById("app");
     output.scrollTop = output.scrollHeight;
 }
 
-function _parseCommand(com){
-    if(com.indexOf(':') == 0){
+// 如果可以处理，且已经处理完毕，则返回 null
+// 无法处理的则抛到外部
+function _parseCommand(com) {
+    if (com.indexOf(":") == 0) {
         var args;
-        if (com == ':clear') {
+        if (com == ":clear") {
             store.state.dataSource.length = 0;
             com = null;
-        } else if (com == ':testcase') {
+        } else if (com == ":testcase") {
             com = "window.appHost.invoke('testcase', {})";
-        } else if (com.indexOf(':list') >= 0) {
+        } else if (com.indexOf(":list") >= 0) {
             com = "window.appHost.invoke('list', {})";
-        } else if (com.indexOf(':apropos') >= 0) {
-            args = com.split(' ');
+        } else if (com.indexOf(":apropos") >= 0) {
+            args = com.split(" ");
             if (args.length == 2) {
                 com = "window.appHost.invoke('apropos', {name:'" + args[1] + "'})";
             } else {
-                console.log('参数出错 ' + com);
+                console.log("参数出错 " + com);
                 com = null;
             }
-        } else if (com.indexOf(':weinre') >= 0) {
-            args = com.split(' ');
+        } else if (com.indexOf(":weinre") >= 0) {
+            args = com.split(" ");
             if (args.length == 2) {
                 var url = args[1];
-                if (url === 'disable'){
+                if (url === "disable") {
                     com = "window.appHost.invoke('weinre', {disabled:true})";
                 } else {
-                    com = "window.appHost.invoke('weinre', {url:'" +url + "'})";
+                    com = "window.appHost.invoke('weinre', {url:'" + url + "'})";
                 }
-                
             } else {
-                console.log('参数出错 ' + com);
+                console.log("参数出错 " + com);
                 com = null;
             }
-        } else if (com.indexOf(':timing') >= 0) {
+        } else if (com.indexOf(":timing") >= 0) {
             com = "window.appHost.invoke('timing', {})";
-        } else if (com.indexOf(':eval') >= 0) {
-            var code = com.replace(':eval', '');
+        } else if (com.indexOf(":eval") >= 0) {
+            var code = com.replace(":eval", "");
             if (code.length > 0) {
-                var p = window.JSON.stringify({code: code});
+                var p = window.JSON.stringify({ code: code });
                 com = "window.appHost.invoke('eval', " + p + ")";
             } else {
-                console.log('参数出错 ' + com);
+                console.log("参数出错 " + com);
                 com = null;
             }
-            
         } else {
-            window.alert('不支持的命令 ' + com);
+            window.alert("不支持的命令 " + com);
             com = null;
         }
     }
@@ -158,124 +163,131 @@ var store = {
     state: {
         dataSource: []
     },
-    setMessageAction: function(newValue) {
-      if (this.debug) console.log('setMessageAction triggered with', newValue);
-      this.state.message = newValue;
+    setMessageAction: function (newValue) {
+        if (this.debug) console.log("setMessageAction triggered with", newValue);
+        this.state.message = newValue;
     },
     clearMessageAction: function () {
-      if (this.debug) console.log('clearMessageAction triggered');
-      this.state.message = '';
+        if (this.debug) console.log("clearMessageAction triggered");
+        this.state.message = "";
     }
 };
 
-function addStore(_obj, _domreadyblock){
+function addStore(_obj, _domreadyblock) {
     store.state.dataSource.push(_obj);
-    Vue.nextTick(function() {
-        if(_domreadyblock && typeof _domreadyblock === 'function'){
+    Vue.nextTick(function () {
+        if (_domreadyblock && typeof _domreadyblock === "function") {
             _domreadyblock();
         }
         scrollToBottom();
     });
 }
 // 输入命令和点击按钮区域
-function _run_command(com){
+function _run_command(com) {
     if (com.length === 0) {
-        alert('请输入命令');
+        alert("请输入命令");
         return;
     }
 
-    command.value = '';
-    if (com == ':help') {
+    if (com == ":help") {
         addStore({
-            type:'help',
-            message: ''
+            type: "help",
+            message: ""
         });
     } else {
         addStore({
-            type:'command',
+            type: "command",
             message: com
         });
         try {
             var newCom = _parseCommand(com);
-            if (newCom && newCom.length > 0){
+            if (newCom && newCom.length > 0) {
                 var r = window.eval(newCom);
                 if (r) {
                     addStore({
-                        type:'evalResult',
-                        'message': r
+                        type: "evalResult",
+                        message: r
                     });
                 }
             }
-            
         } catch (error) {
             if (error) {
                 addStore({
-                    type:'error',
+                    type: "error",
                     message: error.message
                 });
             }
         }
     }
 }
-Vue.component('command-value', {
-    data:function(){
+
+Vue.component("command-value", {
+    data: function () {
         return {
-            command: ':help'
+            command: ":help"
         };
     },
-    template:'#command-value-template',
+    template: "#command-value-template",
     methods: {
-        submit: function(){
+        submit: function () {
             this.$refs.run.click();
         },
-        run:function(){
+        run: function () {
             var com = this.command;
-            _run_command(com);
+            if(window.ah_env.isMobile){
+                _run_command(':eval ' + com);
+            } else {
+                _run_command(com);
+                command.value = '';
+                this.command = '';
+            }
         }
     }
 });
 
 // 执行结果或者服务器推送的结果区域
-Vue.component('command-output',{
-    data: function(){
+Vue.component("command-output", {
+    data: function () {
         return {
             dataSource: store.state.dataSource
         };
     },
-    methods: {
-
-    },
-    template:'#command-output-template'
+    methods: {},
+    template: "#command-output-template"
 });
 
-document.addEventListener("DOMContentLoaded", function (event) {
-    console.log("DOM ready!");
-    var app = new Vue({
-        el: '#app',
-        created: function(){
-            console.log('App goes');
-        },
-        mounted: function(){
-            window.setInterval(loop, 2000);
-        }
-    });
-},false);
+document.addEventListener(
+    "DOMContentLoaded",
+    function (event) {
+        console.log("DOM ready!");
+        var app = new Vue({
+            el: "#app",
+            created: function () {
+                console.log("App goes");
+            },
+            mounted: function () {
+                window.setInterval(loop, 2000);
+            }
+        });
+    },
+    false
+);
 
 function jdb(line) {
     // do a thing, possibly async, then…
     if (window.__bri == line) {
-        window.alert('Stop at Debugger;');
+        window.alert("Stop at Debugger;");
     } else {
-        console.log('Skip at line ' + line);
+        console.log("Skip at line " + line);
     }
 }
 document.addEventListener("readystatechange", function (event) {
     console.log("readystatechange!" + document.readyState);
-    if (document.readyState == 'complete') {
+    if (document.readyState == "complete") {
         // jsdebugger
         window.__bri = -1;
 
-        var command = document.getElementById('command');
+        var command = document.getElementById("command");
         // jdb(0);
         // var run = document.getElementById('run');
         // jdb(1);

@@ -23,12 +23,7 @@
             <command-output></command-output>
             <command-value></command-value>
         </div>
-        <div class="c-tool-panel">
-            <div class="w-tool-item w-tool-switch" title="进入 mobile">Off Mobile</div>
-            <div class="w-tool-item w-tool-help" title="look for help">Help</div>
-            <div class="w-tool-item w-tool-list" title="documents">Docs</div>
-            <div class="w-tool-item w-tool-timing" title="Audit">Timing</div>
-        </div>
+        <tool-panel></tool-panel>
     </div>
 
     <script type="text/x-template" id="command-output-template">
@@ -40,9 +35,9 @@
                     </div>
                     <div v-bind:id="item.eid"></div>
                 </div>
-                <p v-else-if="item.type === 'evalResult'" class="m-output-command"> 执行结果是: {{item.message}}</p>
+                <p v-else-if="item.type === 'evalResult'" class="m-output-command"> 执行结果: <span class="w-eval-succ">{{item.message}}</span></p>
                 <p v-else-if="item.type === 'command'" class="m-output-command">
-                    <span class="w-em-seq">&gt;&gt; {{idx}}: </span>{{item.message}}
+                    <span class="w-em-seq"> &#5580; </span>{{item.message}}
                 </p>
                 <p v-else-if="item.type === 'error'" class="m-output-command"> 输入有误，错误: <span class="w-err-code">{{item.message}}</span></p>
                 <div v-else-if="item.type === 'help'" class="m-output-command">
@@ -93,13 +88,24 @@
     
     <script type="text/x-template" id="command-value-template">
         <div class="m-input">
+            <img class="w-env-icon j-mobile2pc" title="你现在输入的命令，全部在 webview 里执行，就像你能直接本地浏览器调试一样" style="display:none" src="./images/mobile to pc.png">
+            <img class="w-env-icon j-pc2mobile" title="现在处于远程调试模式，可接收特殊命令" src="./images/pc to mobile.png">
             <input id="command" v-model="command" v-on:keyup.enter="submit" class="w-command" type="text" name="command" placeholder="输入命令，如. :help" />
             <a id="run" class="w-command-run" ref="run" v-on:click="run" value="Run">Run</a>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="tool-panel-template">
+        <div class="c-tool-panel">
+            <template v-for="(item, idx) in dataSource">
+                <div v-on:click="useTool" v-bind:data-action="item.action" v-bind:class="item.clsName" title="item.title">{{item.text}}</div>
+            </template>
         </div>
     </script>
     
     <script type="text/javascript" src="./renderjson.js" charset="utf-8"></script>
     <script type="text/javascript" src="./vue.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./components/tool-panel.js" charset="utf-8"></script>
     <script type="text/javascript" src="./server.js" charset="utf-8"></script>
 </body>
 

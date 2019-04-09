@@ -1,3 +1,8 @@
+/** widget **/
+.f-hide{
+    display: none;
+}
+/** global**/
 html,
 body {
     width: 100%;
@@ -15,14 +20,14 @@ body {
 }
 
 .c-garden {
-    padding: 0 15px 10px 50px;
+    padding: 0 30px 10px 80px;
 }
 
 .c-tool-panel {
     position: fixed;
-    left: 3px;
+    left: 15px;
     top: 40%;
-    width: 40px;
+    width: 50px;
     height: 180px;
     display: flex;
     flex-direction: column;
@@ -35,7 +40,7 @@ body {
 .w-tool-item {
     font-size: 12px;
     color: #4468b9;
-    /* border: 1px solid gray; */
+    font-weight: bold;
     border-radius: 2px;
     padding: 2px;
     box-sizing: border-box;
@@ -45,7 +50,7 @@ body {
     text-decoration: underline;
     cursor: pointer;
 }
-
+/** 下面命令行区域 **/
 .m-output {
     width: 100%;
     box-sizing: border-box;
@@ -64,6 +69,13 @@ body {
     background-color: white;
     position: sticky;
     bottom: 5px;
+}
+.m-input .w-env-icon{
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 14px;
+    left: -35px;
 }
 
 .m-input .w-command {
@@ -98,7 +110,7 @@ body {
     width: 100%;
     padding: 5px 0;
     margin: 0;
-    border-bottom: 1px dotted #CCCCCC;
+    /* border-bottom: 1px dotted #CCCCCC; */
     min-height: 32px;
     color: #333333;
     font-size: 16px;
@@ -107,14 +119,23 @@ body {
 }
 
 .m-output-command-error{
-    color: #dc4848;
+    color: #333333;
+    font-size: 12px;
+    line-height: 24px;
+}
+
+.w-eval-succ{
+    color: #333333;
     font-size: 12px;
     line-height: 24px;
 }
 
 .w-em-seq {
-    color: #777777;
+    color: #333333;
     font-size: 14px;
+    line-height: 14px;
+    vertical-align: text-bottom;
+    text-indent: 0;
 }
 
 pre {
