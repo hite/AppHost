@@ -11,6 +11,7 @@
 		481A0650225C9B9E00DD57BB /* images in Resources */ = {isa = PBXBuildFile; fileRef = 481A064E225C9B9E00DD57BB /* images */; };
 		481A0651225C9B9E00DD57BB /* components in Resources */ = {isa = PBXBuildFile; fileRef = 481A064F225C9B9E00DD57BB /* components */; };
 		481A0653225C9BB700DD57BB /* thirdParty in Resources */ = {isa = PBXBuildFile; fileRef = 481A0652225C9BB700DD57BB /* thirdParty */; };
+		481A0655225DC23600DD57BB /* eval.js in Resources */ = {isa = PBXBuildFile; fileRef = 481A0654225DC23600DD57BB /* eval.js */; };
 		482FF50721F6BBB8005FCD7A /* AHResponseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 482FF50521F6BBB8005FCD7A /* AHResponseManager.h */; };
 		482FF50821F6BBB8005FCD7A /* AHResponseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 482FF50621F6BBB8005FCD7A /* AHResponseManager.m */; };
 		4832C7EE21FB13BA00CD371C /* testcase.tmpl in Resources */ = {isa = PBXBuildFile; fileRef = 4832C7ED21FB13B900CD371C /* testcase.tmpl */; };
@@ -110,6 +111,7 @@
 		481A064E225C9B9E00DD57BB /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		481A064F225C9B9E00DD57BB /* components */ = {isa = PBXFileReference; lastKnownFileType = folder; path = components; sourceTree = "<group>"; };
 		481A0652225C9BB700DD57BB /* thirdParty */ = {isa = PBXFileReference; lastKnownFileType = folder; path = thirdParty; sourceTree = "<group>"; };
+		481A0654225DC23600DD57BB /* eval.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = eval.js; sourceTree = "<group>"; };
 		482FF50521F6BBB8005FCD7A /* AHResponseManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHResponseManager.h; sourceTree = "<group>"; };
 		482FF50621F6BBB8005FCD7A /* AHResponseManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHResponseManager.m; sourceTree = "<group>"; };
 		4832C7ED21FB13B900CD371C /* testcase.tmpl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = testcase.tmpl; sourceTree = "<group>"; };
@@ -322,6 +324,7 @@
 		48C8AEA921D5F96A00A6B426 /* html */ = {
 			isa = PBXGroup;
 			children = (
+				481A0654225DC23600DD57BB /* eval.js */,
 				48C8AEAB21D5F99E00A6B426 /* appHost_version_1.5.0.js */,
 			);
 			path = html;
@@ -578,6 +581,7 @@
 				48D888DF21D4D031006E4279 /* app-access.txt in Resources */,
 				481A0651225C9B9E00DD57BB /* components in Resources */,
 				4837FFC521FA237900D2FE9C /* server.js in Resources */,
+				481A0655225DC23600DD57BB /* eval.js in Resources */,
 				4885E98921D885F60036B1C6 /* server.html in Resources */,
 				8476B1AC21E7678000E97B54 /* renderjson.js in Resources */,
 				8476B1AD21E7678000E97B54 /* renderjson.css in Resources */,

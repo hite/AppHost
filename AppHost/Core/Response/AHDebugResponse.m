@@ -19,7 +19,7 @@ static NSString *kLastWeinreScript = nil;
 {
 #ifdef DEBUG
     if ([@"eval" isEqualToString:action]) {
-        [self.appHost.webView evaluateJavaScript:[paramDict objectForKey:@"code"] completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        [self.appHost evalExpression:[paramDict objectForKey:@"code"] completion:^(id  _Nonnull result, NSString * _Nonnull error) {
             AHLog(@"%@, error = %@", result, error);
             NSDictionary *r = nil;
             if (result) {

@@ -144,6 +144,7 @@ CGFloat kDebugWinInitHeight = 46.f;
 {
     // Create server
     _webServer = [[GCDWebServer alloc] initWithLogServer:kGCDWebServer_logging_enabled];
+    [GCDWebServer setLogLevel:2/*kGCDWebServerLoggingLevel_Warning*/];
 
     NSLog(@"Document = %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]);
 
@@ -208,7 +209,6 @@ CGFloat kDebugWinInitHeight = 46.f;
                                           [strongSelf->_eventLogs removeAllObjects];
                                       });
                                   } else if ([url.path hasPrefix:@"/command.do"]) {
-                                      NSLog(@"command");
                                       NSString *action = [request.arguments objectForKey:@"action"];
                                       NSString *param = [request.arguments objectForKey:@"param"] ?: @"";
 

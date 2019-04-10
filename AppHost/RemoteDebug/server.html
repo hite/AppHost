@@ -90,7 +90,7 @@
         <div class="m-input">
             <img class="w-env-icon j-mobile2pc" title="你现在输入的命令，全部在 webview 里执行，就像你能直接本地浏览器调试一样" style="display:none" src="./images/mobile to pc.png">
             <img class="w-env-icon j-pc2mobile" title="现在处于远程调试模式，可接收特殊命令" src="./images/pc to mobile.png">
-            <input id="command" v-model="command" v-on:keyup.enter="submit" class="w-command" type="text" name="command" placeholder="输入命令，如. :help" />
+            <input id="command" v-model="command" v-on:keyup.up="history(true);" v-on:keyup.down="history(false);" v-on:keyup.enter="submit" class="w-command" type="text" name="command" placeholder="输入命令，如. :help" />
             <a id="run" class="w-command-run" ref="run" v-on:click="run" value="Run">Run</a>
         </div>
     </script>

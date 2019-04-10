@@ -28,9 +28,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)insertData:(NSDictionary *)json intoPageWithVarName:(NSString *)appProperty;
 
+/**
+ 无返回值的执行 js 代码
+
+ @param javaScriptString 可执行的 js 代码
+ */
 - (void)executeJavaScriptString:(NSString *)javaScriptString;
 
 - (void)injectScriptsToUserContent:(WKUserContentController *)userContent;
+
+/**
+ 需要返回值的 js 代码。可以返回例如 document 之类的，JSValue 无法映射的数据对象
+
+ @param jsCode 可执行的 js 代码，注意：如果有引号，需要使用双引号。
+ @param completion 返回的回调
+ */
+- (void)evalExpression:(NSString *)jsCode completion:(void (^)(id result, NSString *err))completion;
 
 @end
 

@@ -8,7 +8,7 @@ window.appHost = {
         };
 
         xhr.send(
-            "action=" + action + "&param=" + encodeURI(window.JSON.stringify(param))
+            "action=" + action + "&param=" + encodeURIComponent(window.JSON.stringify(param))
         );
     }
 };
@@ -52,6 +52,15 @@ function _renderLogs(logs) {
                 type: "apropos_item",
                 doc: doc
             });
+        } else if (logVal.action == 'eval') {
+            var r = '';
+            if (logVal.param){
+                r = logVal.param.result || logVal.param.err;
+            }
+            addStore({
+                type: "evalResult",
+                message: r
+            });
         } else {
             // 先显示日志类型，
             var eleId = "eid" + window.kLogIndex++;
@@ -88,7 +97,7 @@ function loop() {
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.responseType = "json";
     xhr.onload = function () {
-        console.log(xhr.response);
+        // console.log(xhr.response);
         var json = xhr.response;
         if (json.code == "OK") {
             var data = json.data;
@@ -143,7 +152,7 @@ function _parseCommand(com) {
         } else if (com.indexOf(":eval") >= 0) {
             var code = com.replace(":eval", "");
             if (code.length > 0) {
-                var p = window.JSON.stringify({ code: code });
+                var p = window.JSON.stringify({ code: code.trim() });
                 com = "window.appHost.invoke('eval', " + p + ")";
             } else {
                 console.log("参数出错 " + com);
@@ -221,6 +230,11 @@ function _run_command(com) {
     }
 }
 
+var clientStorage = window.localStorage;
+var COMMOND_HISTORY = 'command_history';
+var history_search_cursor = 0;
+var history_header_cursor = 0;
+var MAX_HISTORY = 100;
 Vue.component("command-value", {
     data: function () {
         return {
@@ -232,14 +246,34 @@ Vue.component("command-value", {
         submit: function () {
             this.$refs.run.click();
         },
+        history: function(up){
+            if (up){
+                history_search_cursor++;
+            } else {
+                history_search_cursor--;
+            }
+            history_search_cursor = Math.max(0, history_search_cursor);
+            history_search_cursor = Math.min(history_header_cursor, history_search_cursor);
+            var n = clientStorage.getItem(COMMOND_HISTORY + history_search_cursor);
+            if (n){
+                document.getElementById('command').value = n;
+                this.command = n;
+            }
+        },
         run: function () {
             var com = this.command;
+            var oldCom = com;
+
             if(window.ah_env.isMobile){
                 com = ':eval ' + com;
             }
             _run_command(com);
             command.value = '';
             this.command = '';
+            //
+            history_search_cursor = 0;
+            history_header_cursor++;
+            clientStorage.setItem(COMMOND_HISTORY + history_header_cursor, oldCom);
         }
     }
 });

@@ -29,6 +29,17 @@
     [self.webView evaluateJavaScript:javaScriptString completionHandler:nil];
 }
 
+- (void)evalExpression:(NSString *)jsCode completion:(void (^)(id result, NSString *err))completion
+{
+    [self.webView evaluateJavaScript:[NSString stringWithFormat:@"window.ah_eval('%@')", jsCode] completionHandler:^(NSDictionary *data, NSError * _Nullable error) {
+        if (completion) {
+            completion([data objectForKey:@"result"], [data objectForKey:@"err"]);
+        } else {
+            NSLog(@"evalExpression result = %@", data);
+        }
+    }];
+}
+
 #pragma mark - public
 
 - (void)fireCallback:(NSString *)callbackKey param:(NSDictionary *)paramDict
@@ -63,9 +74,9 @@
 static NSString *kAppHostSource = nil;
 - (void)injectScriptsToUserContent:(WKUserContentController *)userContentController
 {
-    // 注入关键 js 文件
+    NSBundle *bundle = [NSBundle bundleForClass:AppHostViewController.class];
+    // 注入关键 js 文件, 有缓存
     if (kAppHostSource == nil) {
-        NSBundle *bundle = [NSBundle bundleForClass:AppHostViewController.class];
         NSURL *jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"appHost_version_1.5.0.js"];
         kAppHostSource = [NSString stringWithContentsOfURL:jsLibURL encoding:NSUTF8StringEncoding error:nil];
     }
@@ -86,7 +97,6 @@ static NSString *kAppHostSource = nil;
         [userContentController addUserScript:cookieScript2_1];
 
         // profile
-        NSBundle *bundle = [NSBundle bundleForClass:AppHostViewController.class];
         NSURL *profile = [[bundle bundleURL] URLByAppendingPathComponent:@"/profile/profiler.js"];
         NSString *profileTxt = [NSString stringWithContentsOfURL:profile encoding:NSUTF8StringEncoding error:nil];
         WKUserScript *cookieScript3 = [[WKUserScript alloc] initWithSource:profileTxt injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
@@ -96,6 +106,13 @@ static NSString *kAppHostSource = nil;
         NSString *timingTxt = [NSString stringWithContentsOfURL:timing encoding:NSUTF8StringEncoding error:nil];
         WKUserScript *cookieScript4 = [[WKUserScript alloc] initWithSource:timingTxt injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
         [userContentController addUserScript:cookieScript4];
+        
+        // 注入脚本，用来代替 self.webView evaluateJavaScript:javaScriptString completionHandler:nil
+        // 因为 evaluateJavaScript 的返回值不支持那么多的序列化结构的数据结构，还有内存泄漏的问题
+        NSURL *jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"eval.js"];
+        NSString *evalJS = [NSString stringWithContentsOfURL:jsLibURL encoding:NSUTF8StringEncoding error:nil];
+        WKUserScript *cookieScript5 = [[WKUserScript alloc] initWithSource:evalJS injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+        [userContentController addUserScript:cookieScript5];
 #endif
     } else {
         NSAssert(NO, @"主 JS 文件加载失败");
