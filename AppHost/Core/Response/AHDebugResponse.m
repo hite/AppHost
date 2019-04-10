@@ -17,14 +17,21 @@ static NSString *kLastWeinreScript = nil;
 @implementation AHDebugResponse
 - (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict callbackKey:(NSString *)callbackKey
 {
-
 #ifdef DEBUG
     if ([@"eval" isEqualToString:action]) {
         [self.appHost.webView evaluateJavaScript:[paramDict objectForKey:@"code"] completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-            AHLog(@"%@", result);
-            [self fire:@"eval" param:@{
-                                       @"result":[NSString stringWithFormat:@"%@", result]
-                                       }];
+            AHLog(@"%@, error = %@", result, error);
+            NSDictionary *r = nil;
+            if (result) {
+                r = @{
+                      @"result":[NSString stringWithFormat:@"%@", result]
+                      };
+            } else {
+                r = @{
+                      @"error":[NSString stringWithFormat:@"%@", error]
+                      };
+            }
+            [self fire:@"eval" param:r];
         }];
     } else if ([@"list" isEqualToString:action]) {
         // 遍历所有的可用接口和注释和测试用例

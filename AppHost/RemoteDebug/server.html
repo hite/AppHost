@@ -31,13 +31,13 @@
             <template v-for="(item, idx) in dataSource">
                 <div v-if="item.type === 'log'" class="m-output-result">
                     <div class="m-output-type">
-                        <span class="w-em-seq">&#8249;&#8249;</span> {{item.message}}
+                        <span class="w-em-seq">⭀</span> {{item.message}}
                     </div>
                     <div v-bind:id="item.eid"></div>
                 </div>
                 <p v-else-if="item.type === 'evalResult'" class="m-output-command"> 执行结果: <span class="w-eval-succ">{{item.message}}</span></p>
                 <p v-else-if="item.type === 'command'" class="m-output-command">
-                    <span class="w-em-seq"> &#8250;&#8250; </span>{{item.message}}
+                    <span class="w-em-seq"> ➤ </span>{{item.message}}
                 </p>
                 <p v-else-if="item.type === 'error'" class="m-output-command"> 输入有误，错误: <span class="w-err-code">{{item.message}}</span></p>
                 <div v-else-if="item.type === 'help'" class="m-output-command">
@@ -98,7 +98,7 @@
     <script type="text/x-template" id="tool-panel-template">
         <div class="c-tool-panel">
             <template v-for="(item, idx) in dataSource">
-                <div v-on:click="useTool" v-bind:data-action="item.action" v-bind:class="item.clsName" title="item.title">{{item.text}}</div>
+                <div v-on:click="useTool" v-bind:data-action="item.action" v-bind:class="item.clsName" v-bind:title="item.title">{{item.text}}</div>
             </template>
         </div>
     </script>

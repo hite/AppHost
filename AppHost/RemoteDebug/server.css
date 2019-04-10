@@ -132,8 +132,8 @@ body {
 
 .w-em-seq {
     color: #333333;
-font-size: 14px;
-line-height: 20px;
+/* font-size: 14px; */
+line-height: 14px;
 vertical-align: text-bottom;
 text-indent: 0;
 }
@@ -145,7 +145,7 @@ pre {
 
 .m-output-type {
     margin-top: 5px;
-    text-indent: 5px;
+    /* text-indent: 5px; */
     text-decoration: underline;
 }
 

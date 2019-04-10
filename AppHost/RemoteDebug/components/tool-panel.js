@@ -69,7 +69,7 @@ Vue.component("tool-panel", {
                     {
                         window.ah_env.isMobile = false;
                         _real_switch_env();
-                        _run_command(':' + action)
+                        _run_command(':' + action);
                     }
                     break;
             }
