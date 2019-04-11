@@ -58,6 +58,13 @@
                     <div class='w-example-title'>7. 在手机端的 webview 页面里执行脚本，</div>
                     <div class="w-help-code">:eval document.cookie</div>
                 </div>
+                <div v-else-if="item.type === 'history'" class="m-output-result">
+                    <ol v-if="item.data.length > 0" class="c-command-history">
+                    <template v-for="(command, index) in item.data">
+                        <li v-on:click="useHistoryCommand" v-bind:data-command="command" class="w-history-item">&#9656; {{command}}</li>
+                    </template>
+                </ol>
+                </div>
                 <div v-else-if="item.type === 'list'" class="m-output-result">
                     <template v-for="api in item.apis">
                         <p v-if="api.type === 'group'" class="w-api_list-group">{{api.value}}</p>

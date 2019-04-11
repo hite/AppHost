@@ -119,10 +119,7 @@ function scrollToBottom() {
 function _parseCommand(com) {
     if (com.indexOf(":") == 0) {
         var args;
-        if (com == ":clear") {
-            store.state.dataSource.length = 0;
-            com = null;
-        } else if (com == ":testcase") {
+        if (com == ":testcase") {
             com = "window.appHost.invoke('testcase', {})";
         } else if (com.indexOf(":list") >= 0) {
             com = "window.appHost.invoke('list', {})";
@@ -192,13 +189,32 @@ function addStore(_obj, _domreadyblock) {
     });
 }
 // 输入命令和点击按钮区域
+var clientStorage = window.localStorage;
+var COMMOND_HISTORY = 'command_history';
+var history_header_cursor = clientStorage.length;
+var history_search_cursor = history_header_cursor;
+var MAX_HISTORY = 100;
+
 function _run_command(com) {
     if (com.length === 0) {
         alert("请输入命令");
         return;
     }
-
-    if (com == ":help") {
+    // 先处理对控制台的控制的命令，然后处理需要获取业务数据的命令
+    if (com == ":clear") {
+        store.state.dataSource.length = 0;
+        com = null;
+    } else if (com == ":history") {
+        var cm = [];
+        var len = clientStorage.length;
+        for (var i = len - 1; i >= 0; i--){
+            cm.push(clientStorage.getItem(COMMOND_HISTORY + i));
+        }
+        addStore({
+            type: "history",
+            data: cm
+        });
+    } else if (com == ":help") {
         addStore({
             type: "help",
             message: ""
@@ -230,11 +246,6 @@ function _run_command(com) {
     }
 }
 
-var clientStorage = window.localStorage;
-var COMMOND_HISTORY = 'command_history';
-var history_header_cursor = clientStorage.length;
-var history_search_cursor = history_header_cursor;
-var MAX_HISTORY = 100;
 Vue.component("command-value", {
     data: function () {
         return {
@@ -285,7 +296,13 @@ Vue.component("command-output", {
             dataSource: store.state.dataSource
         };
     },
-    methods: {},
+    methods: {
+        useHistoryCommand: function(e){
+            var ele = e.target;
+            var com = ele.dataset.command;
+            _run_command(com);
+        }
+    },
     template: "#command-output-template"
 });
 

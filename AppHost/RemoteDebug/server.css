@@ -110,7 +110,7 @@ body {
     width: 100%;
     padding: 5px 0;
     margin: 0;
-    /* border-bottom: 1px dotted #CCCCCC; */
+    border-top: 1px dotted #CCCCCC;
     min-height: 32px;
     color: #333333;
     font-size: 16px;
@@ -190,7 +190,21 @@ pre {
     padding: 7px 5px;
     text-indent: 0;
 }
-
+/** 命令历史部分**/
+.c-command-history{
+    padding: 2px 0;
+    margin: 0;
+    list-style: upper-roman;
+    background-color: #E3EDFF;
+    border-radius: 2px;
+}
+.w-history-item{
+    line-height: 16px;
+    font-size: 14px;
+    padding: 4px 0;
+    cursor: pointer;
+    text-decoration: underline;
+}
 /* 注释部分 */
 .m-output-doc {
     font-size: 14px;
