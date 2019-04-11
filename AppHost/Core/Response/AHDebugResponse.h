@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 static NSString *kAppHostTestCaseFileName = @"testcase.html";
 @interface AHDebugResponse : AppHostResponse
 
++ (void)setupDebugger;
+
 @end
 
 NS_ASSUME_NONNULL_END

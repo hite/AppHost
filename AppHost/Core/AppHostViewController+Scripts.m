@@ -71,6 +71,59 @@
                                                                  }];
 }
 
+static NSMutableArray *kAppHostCustomJavscripts = nil;
++ (void)prepareJavaScript:(id)script when:(WKUserScriptInjectionTime)injectTime key:(NSString *)key
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        kAppHostCustomJavscripts = [NSMutableArray arrayWithCapacity:4];
+    });
+    
+    if ([script isKindOfClass:NSString.class]) {
+        [self _addJavaScript:script when:injectTime forKey:key];
+    } else if ([script isKindOfClass:NSURL.class]){
+        NSString * result = NULL;
+        NSError *err = nil;
+        NSURL * urlToRequest = (NSURL*)script;
+        if(urlToRequest)
+        {
+            result = [NSString stringWithContentsOfURL: urlToRequest
+                                              encoding:NSUTF8StringEncoding error:&err];
+        }
+        
+        if(err){
+            NSLog(@"Err::%@",err);
+        } else {
+            [self _addJavaScript:result when:injectTime forKey:key];
+        }
+    } else {
+        AHLog(@"fail to inject javascript");
+    }
+}
+
++ (void)_addJavaScript:(NSString *)script when:(WKUserScriptInjectionTime)injectTime forKey:(NSString *)key
+{
+    @synchronized (kAppHostCustomJavscripts) {
+        [kAppHostCustomJavscripts addObject:@{
+                                              @"script": script,
+                                              @"when": @(injectTime),
+                                              @"key":key
+                                              }];
+    }
+}
+
++ (void)removeJavaScriptForKey:(NSString *)key
+{
+    @synchronized (kAppHostCustomJavscripts) {
+        [kAppHostCustomJavscripts enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj objectForKey:key]) {
+                [kAppHostCustomJavscripts removeObject:obj];
+                *stop = YES;
+            }
+        }];
+    }
+}
+
 static NSString *kAppHostSource = nil;
 - (void)injectScriptsToUserContent:(WKUserContentController *)userContentController
 {
@@ -79,45 +132,18 @@ static NSString *kAppHostSource = nil;
     if (kAppHostSource == nil) {
         NSURL *jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"appHost_version_1.5.0.js"];
         kAppHostSource = [NSString stringWithContentsOfURL:jsLibURL encoding:NSUTF8StringEncoding error:nil];
-    }
-    
-    if (kAppHostSource.length > 0) {
-        WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:kAppHostSource injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-        [userContentController addUserScript:cookieScript];
-        
-#ifdef AH_DEBUG
-        // 记录 window.DocumentEnd 的时间
-        WKUserScript *cookieScript1 = [[WKUserScript alloc] initWithSource:@"window.DocumentEnd =(new Date()).getTime()" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
-        [userContentController addUserScript:cookieScript1];
-        // 记录 DocumentStart 的时间
-        WKUserScript *cookieScript2 = [[WKUserScript alloc] initWithSource:@"window.DocumentStart = (new Date()).getTime()" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-        [userContentController addUserScript:cookieScript2];
-        // 记录 readystatechange 的时间
-        WKUserScript *cookieScript2_1 = [[WKUserScript alloc] initWithSource:@"document.addEventListener('readystatechange', function (event) {window['readystate_' + document.readyState] = (new Date()).getTime();});" injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-        [userContentController addUserScript:cookieScript2_1];
-
-        // profile
-        NSURL *profile = [[bundle bundleURL] URLByAppendingPathComponent:@"/profile/profiler.js"];
-        NSString *profileTxt = [NSString stringWithContentsOfURL:profile encoding:NSUTF8StringEncoding error:nil];
-        WKUserScript *cookieScript3 = [[WKUserScript alloc] initWithSource:profileTxt injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
-        [userContentController addUserScript:cookieScript3];
-        
-        NSURL *timing = [[bundle bundleURL] URLByAppendingPathComponent:@"/profile/pageTiming.js"];
-        NSString *timingTxt = [NSString stringWithContentsOfURL:timing encoding:NSUTF8StringEncoding error:nil];
-        WKUserScript *cookieScript4 = [[WKUserScript alloc] initWithSource:timingTxt injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
-        [userContentController addUserScript:cookieScript4];
+        [self.class _addJavaScript:kAppHostSource when:WKUserScriptInjectionTimeAtDocumentStart forKey:@"appHost.js"];
         
         // 注入脚本，用来代替 self.webView evaluateJavaScript:javaScriptString completionHandler:nil
         // 因为 evaluateJavaScript 的返回值不支持那么多的序列化结构的数据结构，还有内存泄漏的问题
-        NSURL *jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"eval.js"];
+        jsLibURL = [[bundle bundleURL] URLByAppendingPathComponent:@"eval.js"];
         NSString *evalJS = [NSString stringWithContentsOfURL:jsLibURL encoding:NSUTF8StringEncoding error:nil];
-        WKUserScript *cookieScript5 = [[WKUserScript alloc] initWithSource:evalJS injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
-        [userContentController addUserScript:cookieScript5];
-#endif
-    } else {
-        NSAssert(NO, @"主 JS 文件加载失败");
-        AHLog(@"Fatal Error: appHost.js is not loaded.");
+        [self.class _addJavaScript:evalJS when:WKUserScriptInjectionTimeAtDocumentEnd forKey:@"eval.js"];
     }
+    [kAppHostCustomJavscripts enumerateObjectsUsingBlock:^(NSDictionary *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:[obj objectForKey:@"script"] injectionTime:[[obj objectForKey:@"when"] integerValue] forMainFrameOnly:YES];
+        [userContentController addUserScript:cookieScript];
+    }];
 }
 
 @end

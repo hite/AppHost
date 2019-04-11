@@ -211,7 +211,6 @@ CGFloat kDebugHeadeHeight = 46.f;
 
 - (UITableView *)tableView{
     if (_tableView == nil) {
-        
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
         _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
         _tableView.dataSource = self;

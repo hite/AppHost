@@ -15,6 +15,53 @@
 static NSString *kLastWeinreScript = nil;
 
 @implementation AHDebugResponse
+
++ (void)setupDebugger
+{
+#ifdef AH_DEBUG
+    NSBundle *bundle = [NSBundle bundleForClass:AppHostViewController.class];
+    NSMutableArray *scripts = [NSMutableArray arrayWithObjects:
+                         @{// 记录 window.DocumentEnd 的时间
+                             @"code": @"window.DocumentEnd =(new Date()).getTime()",
+                             @"when": @(WKUserScriptInjectionTimeAtDocumentEnd),
+                             @"key": @"documentEndTime.js"
+                             },
+                         @{// 记录 DocumentStart 的时间
+                             @"code": @"window.DocumentStart = (new Date()).getTime()",
+                             @"when": @(WKUserScriptInjectionTimeAtDocumentStart),
+                             @"key": @"documentStartTime.js"
+                             },
+                         @{// 记录 readystatechange 的时间
+                             @"code": @"document.addEventListener('readystatechange', function (event) {window['readystate_' + document.readyState] = (new Date()).getTime();});",
+                             @"when": @(WKUserScriptInjectionTimeAtDocumentStart),
+                             @"key": @"readystatechange.js"
+                             },nil
+                         ];
+
+    NSURL *profile = [[bundle bundleURL] URLByAppendingPathComponent:@"/profile/profiler.js"];
+    NSString *profileTxt = [NSString stringWithContentsOfURL:profile encoding:NSUTF8StringEncoding error:nil];
+    // profile
+    [scripts addObject:@{
+                         @"code": profileTxt,
+                         @"when": @(WKUserScriptInjectionTimeAtDocumentEnd),
+                         @"key": @"profile.js"
+                         }];
+    
+    NSURL *timing = [[bundle bundleURL] URLByAppendingPathComponent:@"/profile/pageTiming.js"];
+    NSString *timingTxt = [NSString stringWithContentsOfURL:timing encoding:NSUTF8StringEncoding error:nil];
+    // timing
+    [scripts addObject:@{
+                         @"code": timingTxt,
+                         @"when": @(WKUserScriptInjectionTimeAtDocumentEnd),
+                         @"key": @"timing.js"
+                         }];
+    
+    [scripts enumerateObjectsUsingBlock:^(NSDictionary  * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [AppHostViewController prepareJavaScript:[obj objectForKey:@"code"] when:[[obj objectForKey:@"when"] integerValue] key:[obj objectForKey:@"key"]];
+    }];
+#endif
+}
+
 - (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict callbackKey:(NSString *)callbackKey
 {
 #ifdef DEBUG
@@ -98,6 +145,7 @@ static NSString *kLastWeinreScript = nil;
     if (kLastWeinreScript.length == 0) {
         return;
     }
+    [AppHostViewController prepareJavaScript:[NSURL URLWithString:kLastWeinreScript] when:WKUserScriptInjectionTimeAtDocumentEnd key:@"weinre.js"];
     [self.appHost fire:@"weinre.enable" param:@{@"jsURL": kLastWeinreScript}];
 }
 

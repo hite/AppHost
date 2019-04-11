@@ -132,9 +132,8 @@ function _parseCommand(com) {
                 com = null;
             }
         } else if (com.indexOf(":weinre") >= 0) {
-            args = com.split(" ");
-            if (args.length == 2) {
-                var url = args[1];
+            var url = com.replace(':weinre','').trim();
+            if (url.length > 0) {
                 if (url === "disable") {
                     com = "window.appHost.invoke('weinre', {disabled:true})";
                 } else {

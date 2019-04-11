@@ -1,8 +1,8 @@
 //
-//  AHUtil.h
+//  AHJSCoreManager.h
 //  AppHost
 //
-//  Created by liang on 2019/3/22.
+//  Created by liang on 2019/4/11.
 //  Copyright © 2019 liang. All rights reserved.
 //
 
@@ -10,11 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AHUtil : NSObject
+@interface AHJSCoreManager : NSObject
 
-+ (BOOL)isNetworkUrl:(NSString *)url;
++(instancetype)defaultManager;
 
-+ (NSString *)traceId;
 @end
 
 NS_ASSUME_NONNULL_END

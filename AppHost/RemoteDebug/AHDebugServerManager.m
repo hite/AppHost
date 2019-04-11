@@ -12,6 +12,7 @@
 #import "AppHostViewController.h"
 #import "GCDWebServerURLEncodedFormRequest.h"
 #import "AHDebugViewController.h"
+#import "AHDebugResponse.h"
 
 @interface AHDebugServerManager () <AHDebugViewDelegate>
 
@@ -55,6 +56,8 @@ static off_t _log_offset = 0;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestEventOccur:) name:kAppHostInvokeRequestEvent object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(responseEventOccur:) name:kAppHostInvokeResponseEvent object:nil];
+        
+        [AHDebugResponse setupDebugger];
     }
     return self;
 }
