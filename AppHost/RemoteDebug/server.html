@@ -31,7 +31,7 @@
             <template v-for="(item, idx) in dataSource">
                 <div v-if="item.type === 'log'" class="m-output-result">
                     <div class="m-output-type">
-                        <span class="w-em-seq">⭀</span> {{item.message}}
+                        <span class="w-em-seq">&#182;</span> {{item.message}}
                     </div>
                     <div v-bind:id="item.eid"></div>
                 </div>
@@ -50,7 +50,7 @@
                     <div class='w-example-title'>4. 启动内置的 testcase，测试 API 接口实现是否正常，执行后会在手机端打开一个 测试页面；</div>
                     <div class="w-help-code">:testcase</div>
                     <div class='w-example-title'>5. 注入 weinre 脚本，在本次启动中，只需要注入一次，后面打开的页面都会支持</div>
-                    <div class="w-help-code">:weinre http://10.0.0/script/ws/0/anonymous-target:0</div>
+                    <div class="w-help-code">:weinre http://10.12.0.0:8888/target/target-script-min.js#anonymous</div>
                     <div class='w-example-title'>5.1. 取消注入 weinre 脚本</div>
                     <div class="w-help-code">:weinre disable</div>
                     <div class='w-example-title'>6. 打开 navigation timlings 统计，用来分析页面加载性能</div>
@@ -86,6 +86,7 @@
                         </div>
                         <div v-if="item.doc.code" class="w-doc-type_title">可执行代码示例：</div>
                         <div v-if="item.doc.code" class="w-doc-code">{{item.doc.code}}</div>
+                        <div v-if="item.doc.error"class="w-err-code">{{item.doc.error}}</div>
                         <div v-if="item.doc.codeResult" class="w-doc-codeResult"><span  class="w-doc-type_title">代码执行后期望：</span>{{item.doc.codeResult}}</div>
                 </div>
                 <p v-else> 未知参数</p>
@@ -114,6 +115,8 @@
     <script type="text/javascript" src="./vue.js" charset="utf-8"></script>
     <script type="text/javascript" src="./components/tool-panel.js" charset="utf-8"></script>
     <script type="text/javascript" src="./server.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./profile/profiler_for_mac.js" async="true"></script>
+    <script type="text/javascript" src="./profile/pageTiming_for_mac.js" async="true"></script>
 </body>
 
 </html>

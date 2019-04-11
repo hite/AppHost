@@ -85,14 +85,19 @@ static NSString *kLastWeinreScript = nil;
         //TODO 分页
         [self fire:@"list" param:[[AHResponseManager defaultManager] allResponseMethods]];
     } else if ([@"apropos" isEqualToString:action]) {
-        Class appHostCls = [[AHResponseManager defaultManager] responseForAction:action];
-        SEL targetMethod = NSSelectorFromString([NSString stringWithFormat:@"%@%@", ah_doc_log_prefix, action]);
+        NSString *name = [paramDict objectForKey:@"name"];
+        Class appHostCls = [[AHResponseManager defaultManager] responseForAction:name];
+        SEL targetMethod = NSSelectorFromString([NSString stringWithFormat:@"%@%@", ah_doc_log_prefix, name]);
+        NSString *funcName = [@"apropos." stringByAppendingString:name];
         if ([appHostCls respondsToSelector:targetMethod]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             NSDictionary *doc = [appHostCls performSelector:targetMethod withObject:nil];
 #pragma clang diagnostic pop
-            [self fire:[@"apropos." stringByAppendingString:action] param:doc];
+            
+            [self fire:funcName param:doc];
+        } else {
+            [self fire:funcName param:@{@"error":[NSString stringWithFormat:@"method (%@) not found!",name]}];
         }
     }else if ([@"testcase" isEqualToString:action]) {
         // 检查是否有文件生成，如果没有则遍历
@@ -114,8 +119,15 @@ static NSString *kLastWeinreScript = nil;
             [self enableWeinreSupport];
         }
     }else if ([@"timing" isEqualToString:action]) {
+        BOOL mobile = [[paramDict objectForKey:@"mobile"] boolValue];
+        if (mobile) {
+            [self.appHost fire:@"requestToTiming" param:@{}];
+        } else {
+            [self.appHost.webView evaluateJavaScript:@"window.performance.timing.toJSON()" completionHandler:^(NSDictionary *_Nullable r, NSError * _Nullable error) {
+                [self fire:@"requestToTiming_on_mac" param:r];
+            }];
+        }
         //
-        [self.appHost fire:@"requestToTiming" param:@{}];
     }else {
         return NO;
     }
@@ -152,6 +164,7 @@ static NSString *kLastWeinreScript = nil;
 - (void)disableWeinreSupport
 {
     kLastWeinreScript = nil;
+    [AppHostViewController removeJavaScriptForKey:@"weinre.js"];
 }
 
 #pragma mark - generate html file

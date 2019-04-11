@@ -22,7 +22,9 @@ function _renderLogs(logs) {
         var logVal = log.value;
 
         //  查询所有的接口，显示需要特殊处理下
-        if (logVal.action === "list") {
+        if (logVal.action === "requestToTiming_on_mac"){
+            ah_timing(logVal.param);
+        } else if (logVal.action === "list") {
             var apis = [];
             for (var key in logVal.param) {
                 if (logVal.param.hasOwnProperty(key)) {
@@ -81,7 +83,7 @@ function _renderLogs(logs) {
             addStore(
                 {
                     type: "log",
-                    message: logType.toLocaleUpperCase(),
+                    message: logType,
                     eid: eleId
                 },
                 metaFunc(eleId, preEle, document)
@@ -144,9 +146,14 @@ function _parseCommand(com) {
                 com = null;
             }
         } else if (com.indexOf(":timing") >= 0) {
-            com = "window.appHost.invoke('timing', {})";
+            var mobile = com.replace(":timing", "").trim();
+            if (mobile.length > 0){
+                com = "window.appHost.invoke('timing', {mobile:true})";
+            } else {
+                com = "window.appHost.invoke('timing', {})";
+            }
         } else if (com.indexOf(":eval") >= 0) {
-            var code = com.replace(":eval", "");
+            var code = com.replace(":eval", "").trim();
             if (code.length > 0) {
                 var p = window.JSON.stringify({ code: code.trim() });
                 com = "window.appHost.invoke('eval', " + p + ")";
@@ -230,7 +237,7 @@ function _run_command(com) {
                 if (r) {
                     addStore({
                         type: "evalResult",
-                        message: r
+                        message: r.toString()
                     });
                 }
             }

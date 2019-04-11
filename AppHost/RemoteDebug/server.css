@@ -88,7 +88,7 @@ body {
     border-bottom: 2px solid #E3EDFF;
     border-right: 100px solid #fff;
     overflow: hidden;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 200;
     text-indent: 10px;
     box-sizing: border-box;
@@ -115,7 +115,7 @@ body {
     color: #333333;
     font-size: 16px;
     line-height: 32px;
-    text-indent: 10px;
+    /* text-indent: 10px; */
 }
 
 .m-output-command-error{
@@ -237,7 +237,9 @@ pre {
 }
 
 .w-api_list-group {
-    margin-bottom: 5px;
+    margin: 8px 0 4px;
+    color: #4468b9;
+    font-weight: bold;
 }
 
 .w-api_list-api {

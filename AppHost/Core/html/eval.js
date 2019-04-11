@@ -63,22 +63,22 @@
                 };
             break;
             default:
-            r = 'Unsupported Type: ' + obj;
+                if(typeof obj.toJSON === 'function'){
+                    r = obj.toJSON();
+                } else {
+                    r = 'Unsupported Type: ' + obj;
+                }
+            
         }
         return r;
     };
     // https://weblogs.asp.net/yuanjian/json-performance-comparison-of-eval-new-function-and-json
-    window.ah_eval = function (_exp) {
+    window.ah_eval = function (r) {
         var err = null;
-        var r = null;
-        try {
-            r = eval(_exp);
-        } catch (e) {
-            err = e.message;
-        }
+
         r = serialize(r);
         if (err == null && r == null){
-            return null;
+            return {};
         } else if (err == null && r != null){
             return {'result': r};
         } else if (err != null && r == null){

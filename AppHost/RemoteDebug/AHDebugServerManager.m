@@ -65,14 +65,14 @@ static off_t _log_offset = 0;
 - (void)requestEventOccur:(NSNotification *)notification
 {
     dispatch_async(_logQueue, ^{
-        [self->_eventLogs addObject:@{ @"type" : @"callNative", @"value" : notification.object }];
+        [self->_eventLogs addObject:@{ @"type" : @".invoke", @"value" : notification.object }];
     });
 }
 
 - (void)responseEventOccur:(NSNotification *)notification
 {
     dispatch_async(_logQueue, ^{
-        [self->_eventLogs addObject:@{ @"type" : @"callJS", @"value" : notification.object }];
+        [self->_eventLogs addObject:@{ @"type" : @".on", @"value" : notification.object }];
     });
 }
 

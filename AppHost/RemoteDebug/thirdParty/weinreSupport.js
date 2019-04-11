@@ -4,5 +4,5 @@ if (window.appHost) {
         window.location.reload();
     });
 } else {
-    console.log('无 AppHost 对象')
+    console.log('无 AppHost 对象');
 }
