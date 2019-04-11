@@ -232,8 +232,8 @@ function _run_command(com) {
 
 var clientStorage = window.localStorage;
 var COMMOND_HISTORY = 'command_history';
-var history_search_cursor = 0;
-var history_header_cursor = 0;
+var history_header_cursor = clientStorage.length;
+var history_search_cursor = history_header_cursor;
 var MAX_HISTORY = 100;
 Vue.component("command-value", {
     data: function () {
@@ -248,10 +248,11 @@ Vue.component("command-value", {
         },
         history: function(up){
             if (up){
-                history_search_cursor++;
-            } else {
                 history_search_cursor--;
+            } else {
+                history_search_cursor++;
             }
+            history_search_cursor = history_search_cursor % MAX_HISTORY;
             history_search_cursor = Math.max(0, history_search_cursor);
             history_search_cursor = Math.min(history_header_cursor, history_search_cursor);
             var n = clientStorage.getItem(COMMOND_HISTORY + history_search_cursor);
@@ -270,10 +271,9 @@ Vue.component("command-value", {
             _run_command(com);
             command.value = '';
             this.command = '';
-            //
-            history_search_cursor = 0;
-            history_header_cursor++;
-            clientStorage.setItem(COMMOND_HISTORY + history_header_cursor, oldCom);
+            //            
+            clientStorage.setItem(COMMOND_HISTORY + (history_header_cursor++), oldCom);
+            history_search_cursor = history_header_cursor;
         }
     }
 });
