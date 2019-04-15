@@ -13,7 +13,6 @@
 
 // 保存 weinre 注入脚本的地址，方便在加载其它页面时也能自动注入。
 static NSString *kLastWeinreScript = nil;
-
 @implementation AHDebugResponse
 
 + (void)setupDebugger
@@ -30,6 +29,11 @@ static NSString *kLastWeinreScript = nil;
                              @"code": @"window.DocumentStart = (new Date()).getTime()",
                              @"when": @(WKUserScriptInjectionTimeAtDocumentStart),
                              @"key": @"documentStartTime.js"
+                             },
+                           @{// 重写 console.log 方法
+                             @"code": @"window.__ah_consolelog = console.log; console.log = function(_msg){window.__ah_consolelog(_msg);appHost.invoke('console.log', {'text':_msg})}",
+                             @"when": @(WKUserScriptInjectionTimeAtDocumentStart),
+                             @"key": @"console.log.js"
                              },
                          @{// 记录 readystatechange 的时间
                              @"code": @"document.addEventListener('readystatechange', function (event) {window['readystate_' + document.readyState] = (new Date()).getTime();});",
@@ -128,7 +132,10 @@ static NSString *kLastWeinreScript = nil;
             }];
         }
         //
-    }else {
+    } else if ([@"console.log" isEqualToString:action]) {
+        // 正常的日志输出时，不需要做特殊处理。
+        // 因为在 invoke 的时候，已经向 debugger Server 发送过日志数据，已经打印过了
+    } else {
         return NO;
     }
     return YES;
@@ -146,7 +153,8 @@ static NSString *kLastWeinreScript = nil;
     @"apropos": @"1",
     @"testcase" : @"1",
     @"weinre" : @"1",
-    @"timing" : @"1"
+    @"timing" : @"1",
+    @"console.log": @"1"
 #endif
   };
 }

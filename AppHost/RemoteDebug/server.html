@@ -35,6 +35,7 @@
                     </div>
                     <div v-bind:id="item.eid"></div>
                 </div>
+                <p v-else-if="item.type === 'console.log'" class="m-output-command"> console.log: <span class="w-eval-succ">{{item.message}}</span></p>
                 <p v-else-if="item.type === 'evalResult'" class="m-output-command"> 执行结果: <span class="w-eval-succ">{{item.message}}</span></p>
                 <p v-else-if="item.type === 'command'" class="m-output-command">
                     <span class="w-em-seq"> ➤ </span>{{item.message}}

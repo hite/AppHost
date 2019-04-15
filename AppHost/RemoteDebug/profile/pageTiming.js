@@ -30,4 +30,4 @@
     } else if (window.__profiler instanceof __Profiler) {
         window.__profiler.init();
     }
-}();
+}(this);

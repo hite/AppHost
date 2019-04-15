@@ -63,6 +63,11 @@ function _renderLogs(logs) {
                 type: "evalResult",
                 message: r
             });
+        } else if (logVal.action == 'console.log') {
+            addStore({
+                type: "console.log",
+                message: logVal.param.text
+            });
         } else {
             // 先显示日志类型，
             var eleId = "eid" + window.kLogIndex++;

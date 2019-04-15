@@ -31,7 +31,7 @@
 
 - (void)evalExpression:(NSString *)jsCode completion:(void (^)(id result, NSString *err))completion
 {
-    [self.webView evaluateJavaScript:[NSString stringWithFormat:@"window.ah_eval(\"%@\")", jsCode] completionHandler:^(NSDictionary *data, NSError * _Nullable error) {
+    [self.webView evaluateJavaScript:[NSString stringWithFormat:@"window.ah_eval(%@)", jsCode] completionHandler:^(NSDictionary *data, NSError * _Nullable error) {
         if (completion) {
             completion([data objectForKey:@"result"], [data objectForKey:@"err"]);
         } else {

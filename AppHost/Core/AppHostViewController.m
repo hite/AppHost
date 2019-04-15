@@ -105,7 +105,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
     if (kFakeCookieWebPageURLWithQueryString.length > 0 && [AppHostCookie loginCookieHasBeenSynced] == NO) { // 此时需要同步 Cookie，走同步 Cookie 的流程
         //
         NSURL *cookieURL = [NSURL URLWithString:kFakeCookieWebPageURLWithQueryString];
-        NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:cookieURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:120];
+        NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:cookieURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:120];
         WKWebView *cookieWebview = [self getCookieWebview];
         [self.view addSubview:cookieWebview];
         [self mark:kAppHostTimingLoadRequest];
