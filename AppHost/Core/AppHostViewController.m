@@ -138,6 +138,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
 }
 
 #pragma mark - public
+//https://stackoverflow.com/questions/49826107/wkwebview-custom-url-scheme-doesnt-work-with-https-mixed-content-blocked
 - (void)loadLocalFile:(NSURL *)url domain:(NSString *)domain;
 {
     NSError *err;
@@ -313,12 +314,14 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     TIMING_WK_METHOD
+    [self stopProgressor];
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     TIMING_WK_METHOD
     AHLog(@"load page error = %@", error);
+    [self stopProgressor];
 }
 
 #pragma mark -
@@ -385,7 +388,6 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
 - (WKWebView *)webView
 {
     if (_webView == nil) {
-        // 设置加载页面完毕后，里面的后续请求，如 xhr 请求使用的cookie
         [self mark:kAppHostTimingWebViewInit];
         WKUserContentController *userContentController = [WKUserContentController new];
         [userContentController addScriptMessageHandler:[[AHScriptMessageDelegate alloc] initWithDelegate:self] name:kAHScriptHandlerName];

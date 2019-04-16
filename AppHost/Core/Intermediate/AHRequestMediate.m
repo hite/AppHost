@@ -59,10 +59,10 @@ static NSString *kFilePrefix = @"file://";
         }
         
         NSString *originalStyle = inputNode.rawContents;
-        NSLog(@"style src = %@, rawContents = %@", linkedCss, originalStyle);
+        AHLog(@"style src = %@, rawContents = %@", linkedCss, originalStyle);
         if (originalStyle.length > 0) {
             NSString *path = [[[directory URLByAppendingPathComponent:linkedCss] absoluteString] stringByReplacingOccurrencesOfString:kFilePrefix withString:AppHostURLStyleServer];
-            NSString *styleTxt = [NSString stringWithFormat:@"<link rel='stylesheet' href='%@'>", path];
+            NSString *styleTxt = [NSString stringWithFormat:@"<link rel=\"stylesheet\" href=\"%@\">", path];
             [replacements setObject:styleTxt forKey:originalStyle];
         } else {
             ext = -2;
@@ -79,10 +79,10 @@ static NSString *kFilePrefix = @"file://";
         }
         if (linkedScript.length > 0) {
             NSString *originalScript = spanNode.rawContents;
-            NSLog(@"script src = %@, rawContents = %@", linkedScript, originalScript);
+            AHLog(@"script src = %@, rawContents = %@", linkedScript, originalScript);
             if (originalScript.length > 0) {
                 NSString *path = [[[directory URLByAppendingPathComponent:linkedScript] absoluteString] stringByReplacingOccurrencesOfString:kFilePrefix withString:AppHostURLScriptServer];
-                NSString *scriptTxt = [NSString stringWithFormat:@"<script type='text/javascript' src='%@'></script>", path];
+                NSString *scriptTxt = [NSString stringWithFormat:@"<script type=\"text/javascript\" src=\"%@\"></script>", path];
                 [replacements setObject:scriptTxt forKey:originalScript];
             } else {
                 ext = -3;
@@ -100,12 +100,12 @@ static NSString *kFilePrefix = @"file://";
         }
         if (imgSrc.length > 0) {
             NSString *originalSrc = spanNode.rawContents;
-            NSLog(@"image src = %@, rawContents = %@", imgSrc,originalSrc);
+            AHLog(@"image src = %@, rawContents = %@", imgSrc,originalSrc);
             if (imgSrc.length > 0) {
                 NSError *error = nil;
                 NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"src=['\"](.)+['\"]" options:NSRegularExpressionCaseInsensitive error:&error];
                 NSString *path = [[[directory URLByAppendingPathComponent:imgSrc] absoluteString] stringByReplacingOccurrencesOfString:kFilePrefix withString:AppHostURLImageServer];
-                NSString *modifiedString = [regex stringByReplacingMatchesInString:originalSrc options:0 range:NSMakeRange(0, [originalSrc length]) withTemplate:[NSString stringWithFormat:@"src='%@'", path]];
+                NSString *modifiedString = [regex stringByReplacingMatchesInString:originalSrc options:0 range:NSMakeRange(0, [originalSrc length]) withTemplate:[NSString stringWithFormat:@"src=\"%@\"", path]];
                 
                 [replacements setObject:modifiedString forKey:originalSrc];
             } else {

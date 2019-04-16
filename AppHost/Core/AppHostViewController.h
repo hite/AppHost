@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AppHostProtocol.h"
 #import "AHSchemeTaskDelegate.h"
+#import "AppHostEnum.h"
 
 static NSString *kAppHostInvokeRequestEvent = @"kAppHostInvokeRequestEvent";
 static NSString *kAppHostInvokeResponseEvent = @"kAppHostInvokeResponseEvent";
@@ -25,10 +26,13 @@ static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
 
 @end
 
-@interface AppHostViewController : UIViewController <WKNavigationDelegate>
+@interface AppHostViewController : AH_VC_BASE_NAME <WKNavigationDelegate>
 
 @property (nonatomic, copy) NSString *pageTitle;
 
+/**
+ 当使用 url 地址加载页面时，url 代表了初始的 url。当载入初始  url 后，页面的地址还可能发生变化，此时不等于此 url。
+ */
 @property (nonatomic, copy) NSString *url;
 /**
  *  右上角的文案
@@ -85,4 +89,5 @@ static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
  @param baseDomain 为了解决相对路径 发送 xhr 请求的主域名地址，如 http://you.163.com
  */
 - (void)loadIndexFile:(NSString *)fileName inDirectory:(NSURL *)directory domain:(NSString *)baseDomain;
+
 @end

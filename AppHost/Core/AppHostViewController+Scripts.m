@@ -60,7 +60,6 @@
     objectOfJSON = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&contentParseError];
     
     NSString *jsCode = [NSString stringWithFormat:@"window.appHost.%@('%@',%@);", funcName, actionName, [[NSString alloc] initWithData:objectOfJSON encoding:NSUTF8StringEncoding]];
-    [self logRequestAndResponse:jsCode type:@"response"];
     jsCode = [jsCode stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     [self executeJavaScriptString:jsCode];
     

@@ -70,7 +70,7 @@
 
 #pragma mark - public
 
-- (void)addCustomResponse:(id<AppHostProtocol>)cls
+- (void)addCustomResponse:(Class<AppHostProtocol>)cls
 {
     if (cls) {
         [self.customResponseClasses addObject:cls];

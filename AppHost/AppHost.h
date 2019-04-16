@@ -20,5 +20,6 @@ FOUNDATION_EXPORT const unsigned char AppHostVersionString[];
 #import <AppHost/AppHostProtocol.h>
 #import <AppHost/AppHostResponse.h>
 #import <AppHost/AppHostViewController.h>
-#import <AppHost/AppHostCookie.h>
+#import <AppHost/AppHostViewController+Extend.h>
+#import <AppHost/AHResponseManager.h>
 #import <AppHost/AHDebugServerManager.h>

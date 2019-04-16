@@ -94,7 +94,7 @@
         NSError *err = [[NSError alloc] initWithDomain:@"自定义的资源无法解析" code:-4003 userInfo:nil];
         [urlSchemeTask didFailWithError:err];
     } else {
-        NSURLResponse *response = [[NSURLResponse alloc] initWithURL:urlSchemeTask.request.URL MIMEType:mime?:@"image/jpeg" expectedContentLength:data.length textEncodingName:nil];
+        NSURLResponse *response = [[NSURLResponse alloc] initWithURL:urlSchemeTask.request.URL MIMEType:mime?:@"text/plain" expectedContentLength:data.length textEncodingName:nil];
         [urlSchemeTask didReceiveResponse:response];
         [urlSchemeTask didReceiveData:data];
         [urlSchemeTask didFinish];
@@ -103,6 +103,7 @@
 
 - (void)webView:(nonnull WKWebView *)webView stopURLSchemeTask:(nonnull id<WKURLSchemeTask>)urlSchemeTask {
     //
+    AHLog(@"%@", NSStringFromSelector(_cmd));
 }
 
 

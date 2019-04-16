@@ -17,7 +17,7 @@ static NSString *kLastWeinreScript = nil;
 
 + (void)setupDebugger
 {
-#ifdef AH_DEBUG
+#ifdef DEBUG
     NSBundle *bundle = [NSBundle bundleForClass:AppHostViewController.class];
     NSMutableArray *scripts = [NSMutableArray arrayWithObjects:
                          @{// 记录 window.DocumentEnd 的时间
@@ -190,7 +190,7 @@ static NSString *kLastWeinreScript = nil;
  */
 - (void)generatorHtml
 {
-//    {{ALL_DOCS}}
+
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     NSURL *url = [bundle URLForResource:@"testcase" withExtension:@"tmpl"];
     // 获取模板

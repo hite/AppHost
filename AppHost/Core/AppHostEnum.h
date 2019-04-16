@@ -67,7 +67,11 @@ return @{\
 
 #endif /* AppHostEnum_h */
 
-#define AH_DEBUG 1
+#ifdef AH_VIEWCONTROLLER_BASE
+    #define AH_VC_BASE_NAME AH_VIEWCONTROLLER_BASE
+#else
+    #define AH_VC_BASE_NAME UIViewController
+#endif
 
 #define NOW_TIME [[NSDate date] timeIntervalSince1970] * 1000
 

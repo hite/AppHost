@@ -11,7 +11,7 @@
 
 @implementation AppHostViewController (Timing)
 
-#ifdef AH_DEBUG
+#ifdef DEBUG
 
 - (void)mark:(NSString *)markName
 {

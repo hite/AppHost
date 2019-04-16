@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param cls 可以处理响应的子类 class，其符合 AppHostProtocol
  */
-- (void)addCustomResponse:(id<AppHostProtocol>)cls;
+- (void)addCustomResponse:(Class<AppHostProtocol>)cls;
 
 - (id<AppHostProtocol>)responseForAction:(NSString *)action withAppHost:(AppHostViewController * _Nonnull)appHost;
 
