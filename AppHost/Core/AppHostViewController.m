@@ -161,7 +161,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
         return;
     }
     NSString *htmlContent = nil;
-    [AHRequestMediate interMediateFile:fileName inDirectory:directory output:&htmlContent];
+    [AHRequestMediate interMediateFile:fileName inDirectory:directory domain:domain output:&htmlContent];
     
     if (htmlContent.length > 0 && domain.length > 0) {
         [self mark:kAppHostTimingLoadRequest];
