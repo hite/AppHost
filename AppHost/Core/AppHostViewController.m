@@ -218,8 +218,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
 #pragma mark - wkwebview navigation delegate
 
 #define TIMING_WK_METHOD \
-NSLog(@"[Timing] %@", NSStringFromSelector(_cmd));\
-NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
+NSLog(@"[Timing] %@, nowTime = %f", NSStringFromSelector(_cmd), [[NSDate date] timeIntervalSince1970] * 1000);
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
@@ -238,7 +237,7 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
         [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(popOutImmediately) userInfo:nil repeats:NO];
         [[UIApplication sharedApplication] openURL:[request URL] options:@{} completionHandler:nil];
         policy = WKNavigationActionPolicyCancel;
-    } else if ([self isExternalSchemeRequest:rurl]) {
+    } else if ([self isExternalSchemeRequest:rurl]) { // 非 http，https 协议的请求，走默认逻辑，容许广告页面之间唤起响应的 App
         [[UIApplication sharedApplication] openURL:[request URL] options:@{} completionHandler:nil];
         policy = WKNavigationActionPolicyCancel;
     }

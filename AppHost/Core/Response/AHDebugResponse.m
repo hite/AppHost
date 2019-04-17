@@ -114,7 +114,7 @@ static NSString *kLastWeinreScript = nil;
         [self.appHost loadLocalFile:[NSURL fileURLWithPath:file] domain:@"http://you.163.com"];
         // 支持 或者关闭 weinre 远程调试
     }else if ([@"weinre" isEqualToString:action]) {
-        //
+        // $ weinre --boundHost 10.242.24.59 --httpPort 9090
         BOOL disabled = [[paramDict objectForKey:@"disabled"] boolValue];
         if (disabled) {
             [self disableWeinreSupport];
@@ -138,8 +138,10 @@ static NSString *kLastWeinreScript = nil;
     } else if ([@"clearCookie" isEqualToString:action]) {
         // 清理 WKWebview 的 Cookie，和 NSHTTPCookieStorage 是独立的
         WKHTTPCookieStore * _Nonnull cookieStorage = [WKWebsiteDataStore defaultDataStore].httpCookieStore;
-        [cookieStorage getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull cookie) {
-            [cookieStorage deleteCookie:cookie completionHandler:nil];
+        [cookieStorage getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull cookies) {
+            [cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * _Nonnull cookie, NSUInteger idx, BOOL * _Nonnull stop) {
+                [cookieStorage deleteCookie:cookie completionHandler:nil];
+            }];
         }];
     } else {
         return NO;

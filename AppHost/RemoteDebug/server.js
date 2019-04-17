@@ -213,7 +213,7 @@ function _run_command(com) {
     }
     // 先处理对控制台的控制的命令，然后处理需要获取业务数据的命令
     if (com == ":clear") {
-        store.state.dataSource.length = 0;
+        store.state.dataSource.splice(0);
         com = null;
     } else if (com == ":history") {
         var cm = [];
