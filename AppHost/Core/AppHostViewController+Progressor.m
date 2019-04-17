@@ -13,11 +13,10 @@
 
 - (void)startProgressor
 {
+    [self stopProgressor];
     if (self.progressorView == nil) {
         [self addWebviewProgressor];
     }
-
-    [self resetProgressor];
 }
 
 - (void)addWebviewProgressor
@@ -28,8 +27,6 @@
     self.progressorView.progressTintColor = kWebViewProgressTintColorRGB > 0? AHColorFromRGB(kWebViewProgressTintColorRGB):[UIColor grayColor];
     self.progressorView.trackTintColor = [UIColor whiteColor];
     [self.view addSubview:self.progressorView];
-    
-    [self.webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -42,7 +39,7 @@
             // 0.25s 后消失
             [CATransaction begin];
             [CATransaction setCompletionBlock:^{
-                self.clearProgressorTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(resetProgressor) userInfo:nil repeats:YES];
+                self.clearProgressorTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(stopProgressor) userInfo:nil repeats:YES];
                 [[NSRunLoop currentRunLoop] addTimer:self.clearProgressorTimer forMode:NSRunLoopCommonModes];
             }];
             [self.progressorView setProgress:1 animated:YES];
@@ -58,14 +55,18 @@
 
 - (void)stopProgressor
 {
-    [self.webView removeObserver:self forKeyPath:@"estimatedProgress"];
-    [self resetProgressor];
-}
-
-- (void)resetProgressor
-{
     [self.progressorView setProgress:0];
     [self.clearProgressorTimer invalidate];
+}
+
+- (void)setupProgressor
+{
+    [self.webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)teardownProgressor
+{
+    [self.webView removeObserver:self forKeyPath:@"estimatedProgress"];
 }
 
 #pragma mark - setter, setter

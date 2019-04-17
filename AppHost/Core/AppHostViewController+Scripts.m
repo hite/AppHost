@@ -65,8 +65,8 @@
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeResponseEvent
                                                         object:@{
-                                                                 @"action": actionName,
-                                                                 @"param": paramDict
+                                                                 kAHActionKey: actionName,
+                                                                 kAHParamKey: paramDict
                                                                  }];
 }
 

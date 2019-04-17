@@ -59,7 +59,7 @@
                 r = {
                     nodeType: obj.nodeType,
                     nodeName: obj.nodeName,
-                    html: obj.outerHTML
+                    html: obj.outerHTML.length > 100 ? obj.outerHTML.substring(0,100): obj.outerHTML
                 };
             break;
             default:

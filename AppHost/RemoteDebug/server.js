@@ -61,7 +61,7 @@ function _renderLogs(logs) {
             }
             addStore({
                 type: "evalResult",
-                message: r
+                message: r?r:'(空)'
             });
         } else if (logVal.action == 'console.log') {
             addStore({

@@ -18,9 +18,9 @@
 {
     // 增加对异常参数的catch
     @try {
-        NSDictionary *paramDict = [contentJSON objectForKey:@"param"];
+        NSDictionary *paramDict = [contentJSON objectForKey:kAHParamKey];
         NSString *callbackKey = [contentJSON objectForKey:@"callbackKey"];
-        [self callNative:[contentJSON objectForKey:@"action"] parameter:paramDict callbackKey:callbackKey];
+        [self callNative:[contentJSON objectForKey:kAHActionKey] parameter:paramDict callbackKey:callbackKey];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeRequestEvent object:contentJSON];
     } @catch (NSException *exception) {

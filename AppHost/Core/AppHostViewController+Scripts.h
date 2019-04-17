@@ -46,8 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)prepareJavaScript:(id)script when:(WKUserScriptInjectionTime)injectTime key:(NSString *)key;
 + (void)removeJavaScriptForKey:(NSString *)key;
-#pragma mark - like private
 
+#pragma mark - like private
 - (void)insertData:(NSDictionary *)json intoPageWithVarName:(NSString *)appProperty;
 
 - (void)injectScriptsToUserContent:(WKUserContentController *)userContent;

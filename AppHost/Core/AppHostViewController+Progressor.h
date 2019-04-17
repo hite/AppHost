@@ -17,8 +17,9 @@
 - (void)startProgressor;
 
 - (void)stopProgressor;
-
-- (void)resetProgressor;
+#pragma mark - lifecycle
+- (void)setupProgressor;
+- (void)teardownProgressor;
 
 @end
 

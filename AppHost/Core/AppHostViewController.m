@@ -79,7 +79,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
     [self fire:@"pageshow" param:@{ @"url" : urlStr ?: @"null" }];
     // 检查是否有上次遗留下来的进度条,避免 webview 在 tabbar 第一屏时出现进度条残留
     if (self.webView.estimatedProgress >= 1.f) {
-        [self resetProgressor];
+        [self stopProgressor];
     }
 }
 
@@ -97,6 +97,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    [self setupProgressor];
 }
 
 - (void)setUrl:(NSString *)url
@@ -125,7 +126,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAppHostInvokeDebugEvent object:nil];
-    [self stopProgressor];
+    [self teardownProgressor];
     //
     [_webView.configuration.userContentController removeScriptMessageHandlerForName:kAHScriptHandlerName];
 
@@ -212,7 +213,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
         completionHandler();
     }])];
     [self presentViewController:alertController animated:YES completion:nil];
-    
 }
 
 #pragma mark - wkwebview navigation delegate
@@ -244,12 +244,16 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
     }
     //
     decisionHandler(policy);
+    if (self.disabledProgressor) {
+        self.progressorView.hidden = YES;
+    } else if(policy == WKNavigationActionPolicyAllow){
+        [self startProgressor];
+    }
 }
 
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation
 {
     TIMING_WK_METHOD
-    [self resetProgressor];
     [self startProgressor];
 }
 
@@ -267,11 +271,6 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
     TIMING_WK_METHOD
-    if (self.disabledProgressor) {
-        self.progressorView.hidden = YES;
-    } else {
-        [self startProgressor];
-    }
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
@@ -347,8 +346,8 @@ NSLog(@"[Timing] nowTime = %f", [[NSDate date] timeIntervalSince1970] * 1000);
 
 - (void)debugCommand:(NSNotification *)notif
 {
-    NSString *action = [notif.object objectForKey:@"action"];
-    NSDictionary *param = [notif.object objectForKey:@"param"];
+    NSString *action = [notif.object objectForKey:kAHActionKey];
+    NSDictionary *param = [notif.object objectForKey:kAHParamKey];
     
     if (action.length > 0) {
         dispatch_async(dispatch_get_main_queue(), ^{

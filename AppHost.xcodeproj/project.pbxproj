@@ -29,9 +29,9 @@
 		483E884B22028FAD00066375 /* HTMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 483E884722028FAD00066375 /* HTMLParser.h */; };
 		483E884C22028FAD00066375 /* HTMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 483E884822028FAD00066375 /* HTMLNode.m */; };
 		483E884F22028FD500066375 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 483E884E22028FD500066375 /* libxml2.tbd */; };
-		48551BB92245E2BA00CAC76C /* AppHostViewController+Scripts.h in Headers */ = {isa = PBXBuildFile; fileRef = 48551BB72245E2BA00CAC76C /* AppHostViewController+Scripts.h */; };
+		48551BB92245E2BA00CAC76C /* AppHostViewController+Scripts.h in Headers */ = {isa = PBXBuildFile; fileRef = 48551BB72245E2BA00CAC76C /* AppHostViewController+Scripts.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48551BBA2245E2BA00CAC76C /* AppHostViewController+Scripts.m in Sources */ = {isa = PBXBuildFile; fileRef = 48551BB82245E2BA00CAC76C /* AppHostViewController+Scripts.m */; };
-		48551BC12246083C00CAC76C /* AppHostViewController+Dispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 48551BBF2246083C00CAC76C /* AppHostViewController+Dispatch.h */; };
+		48551BC12246083C00CAC76C /* AppHostViewController+Dispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 48551BBF2246083C00CAC76C /* AppHostViewController+Dispatch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48551BC22246083C00CAC76C /* AppHostViewController+Dispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 48551BC02246083C00CAC76C /* AppHostViewController+Dispatch.m */; };
 		48551BC5224608CE00CAC76C /* AppHostViewController+Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 48551BC3224608CE00CAC76C /* AppHostViewController+Utils.h */; };
 		48551BC6224608CE00CAC76C /* AppHostViewController+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 48551BC4224608CE00CAC76C /* AppHostViewController+Utils.m */; };
@@ -482,23 +482,24 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48C8AEDE21D6293500A6B426 /* AppHostEnum.h in Headers */,
+				48D888AF21D4CF08006E4279 /* AppHost.h in Headers */,
 				48D888F421D4D031006E4279 /* AppHostProtocol.h in Headers */,
 				48D8892821D4D0AD006E4279 /* GCDWebServerDataResponse.h in Headers */,
 				48D888E621D4D031006E4279 /* AppHostViewController.h in Headers */,
 				48D888DA21D4D031006E4279 /* AppHostResponse.h in Headers */,
 				482FF50721F6BBB8005FCD7A /* AHResponseManager.h in Headers */,
-				4888F1D72244CA2900A933E8 /* AHRequestMediate.h in Headers */,
 				4839FE0221D746BE008EB0DF /* AHSchemeTaskDelegate.h in Headers */,
 				4885E98621D77CAE0036B1C6 /* AHDebugServerManager.h in Headers */,
+				4888F1D72244CA2900A933E8 /* AHRequestMediate.h in Headers */,
+				48551BC12246083C00CAC76C /* AppHostViewController+Dispatch.h in Headers */,
+				48551BB92245E2BA00CAC76C /* AppHostViewController+Scripts.h in Headers */,
 				481A06E22265C37600DD57BB /* AppHostViewController+Extend.h in Headers */,
 				48D888F221D4D031006E4279 /* AppHostCookie.h in Headers */,
-				48C8AEDE21D6293500A6B426 /* AppHostEnum.h in Headers */,
-				48551BB92245E2BA00CAC76C /* AppHostViewController+Scripts.h in Headers */,
 				48551BCA22461C5700CAC76C /* AppHostViewController+Progressor.h in Headers */,
 				48D888F121D4D031006E4279 /* AHScriptMessageDelegate.h in Headers */,
 				48D888E421D4D031006E4279 /* AHNavigationBarResponse.h in Headers */,
 				48CE9FBC2253816E00F3F7B7 /* AppHostViewController+Timing.h in Headers */,
-				48D888AF21D4CF08006E4279 /* AppHost.h in Headers */,
 				483E884B22028FAD00066375 /* HTMLParser.h in Headers */,
 				48D8891A21D4D0AD006E4279 /* GCDWebServerPrivate.h in Headers */,
 				48D8892421D4D0AD006E4279 /* GCDWebServerRequest.h in Headers */,
@@ -508,7 +509,6 @@
 				48D888EF21D4D031006E4279 /* AHWebViewScrollPositionManager.h in Headers */,
 				48D888EA21D4D031006E4279 /* AHBuiltInResponse.h in Headers */,
 				48D8892B21D4D0AD006E4279 /* GCDWebServerErrorResponse.h in Headers */,
-				48551BC12246083C00CAC76C /* AppHostViewController+Dispatch.h in Headers */,
 				48D8893421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h in Headers */,
 				483E884A22028FAD00066375 /* HTMLNode.h in Headers */,
 				48C8AEA821D5F3B800A6B426 /* AHURLChecker.h in Headers */,

@@ -86,3 +86,6 @@ static NSString * _Nonnull kAHLogoutNotification = @"kAHLogoutNotification";
 static NSString * _Nonnull kAHLoginSuccessNotification = @"kAHLoginSuccessNotification";
 
 static NSString * _Nonnull kAppHostEventDismissalFromPresented = @"kAppHostEventDismissalFromPresented";
+// core
+static NSString * _Nonnull kAHActionKey = @"action";
+static NSString * _Nonnull kAHParamKey = @"param";

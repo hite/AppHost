@@ -212,8 +212,8 @@ CGFloat kDebugWinInitHeight = 46.f;
                                           [strongSelf->_eventLogs removeAllObjects];
                                       });
                                   } else if ([url.path hasPrefix:@"/command.do"]) {
-                                      NSString *action = [request.arguments objectForKey:@"action"];
-                                      NSString *param = [request.arguments objectForKey:@"param"] ?: @"";
+                                      NSString *action = [request.arguments objectForKey:kAHActionKey];
+                                      NSString *param = [request.arguments objectForKey:kAHParamKey] ?: @"";
 
                                       NSDictionary *contentJSON = nil;
                                       NSError *contentParseError;
@@ -222,7 +222,7 @@ CGFloat kDebugWinInitHeight = 46.f;
                                           contentJSON = [NSJSONSerialization JSONObjectWithData:[param dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&contentParseError];
                                       }
                                       if (action.length > 0) {
-                                          [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeDebugEvent object:@{ @"action" : action, @"param" : contentJSON }];
+                                          [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeDebugEvent object:@{ kAHActionKey : action, kAHParamKey : contentJSON }];
                                       } else {
                                           AHLog(@"command.do arguments error");
                                       }
