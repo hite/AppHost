@@ -162,7 +162,8 @@ static NSString *kLastWeinreScript = nil;
     @"testcase" : @"1",
     @"weinre" : @"1",
     @"timing" : @"1",
-    @"console.log": @"1"
+    @"console.log": @"1",
+    @"clearCookie": @"1"
 #endif
   };
 }
