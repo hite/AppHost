@@ -54,10 +54,12 @@
                     <div class="w-help-code">:weinre http://10.12.0.0:8888/target/target-script-min.js#anonymous</div>
                     <div class='w-example-title'>5.1. 取消注入 weinre 脚本</div>
                     <div class="w-help-code">:weinre disable</div>
-                    <div class='w-example-title'>6. 打开 navigation timlings 统计，用来分析页面加载性能</div>
+                    <div class='w-example-title'>6. 打开 navigation time line 统计，用来分析页面加载性能</div>
                     <div class="w-help-code">:timing</div>
-                    <div class='w-example-title'>7. 在手机端的 webview 页面里执行脚本，</div>
+                    <div class='w-example-title'>7. 在手机端的 webview 页面里执行脚本</div>
                     <div class="w-help-code">:eval document.cookie</div>
+                    <div class='w-example-title'>8. 清除 WKWebview 里的 Cookie</div>
+                    <div class="w-help-code">:clearCookie</div>
                 </div>
                 <div v-else-if="item.type === 'history'" class="m-output-result">
                     <ol v-if="item.data.length > 0" class="c-command-history">

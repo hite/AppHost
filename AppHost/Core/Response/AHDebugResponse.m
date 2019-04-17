@@ -135,6 +135,12 @@ static NSString *kLastWeinreScript = nil;
     } else if ([@"console.log" isEqualToString:action]) {
         // 正常的日志输出时，不需要做特殊处理。
         // 因为在 invoke 的时候，已经向 debugger Server 发送过日志数据，已经打印过了
+    } else if ([@"clearCookie" isEqualToString:action]) {
+        // 清理 WKWebview 的 Cookie，和 NSHTTPCookieStorage 是独立的
+        WKHTTPCookieStore * _Nonnull cookieStorage = [WKWebsiteDataStore defaultDataStore].httpCookieStore;
+        [cookieStorage getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull cookie) {
+            [cookieStorage deleteCookie:cookie completionHandler:nil];
+        }];
     } else {
         return NO;
     }
