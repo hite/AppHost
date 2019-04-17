@@ -6,6 +6,20 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		48FF4F7B22674F1E00D71D56 /* AppHost.aggregate */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 48FF4F7C22674F1E00D71D56 /* Build configuration list for PBXAggregateTarget "AppHost.aggregate" */;
+			buildPhases = (
+				48FF4F7F22674F2500D71D56 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = AppHost.aggregate;
+			productName = AppHost.aggregate;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		4805C81121D4D4D000C058D1 /* AHNavigationBarResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */; };
 		481A0650225C9B9E00DD57BB /* images in Resources */ = {isa = PBXBuildFile; fileRef = 481A064E225C9B9E00DD57BB /* images */; };
@@ -563,6 +577,9 @@
 					48D888A921D4CF08006E4279 = {
 						CreatedOnToolsVersion = 10.1;
 					};
+					48FF4F7B22674F1E00D71D56 = {
+						CreatedOnToolsVersion = 10.2;
+					};
 				};
 			};
 			buildConfigurationList = 48D888A421D4CF08006E4279 /* Build configuration list for PBXProject "AppHost" */;
@@ -578,6 +595,7 @@
 			projectRoot = "";
 			targets = (
 				48D888A921D4CF08006E4279 /* AppHost */,
+				48FF4F7B22674F1E00D71D56 /* AppHost.aggregate */,
 			);
 		};
 /* End PBXProject section */
@@ -605,6 +623,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		48FF4F7F22674F2500D71D56 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Sets the target folders and the finalframework product.\n# 如果工程名称和Framework的Target名称不一样的话，要自定义FMKNAME\n# 例如: FMK_NAME = \"MyFramework\"\nFMK_NAME=${PROJECT_NAME}\n# Install dir will be the final output tothe framework.\n# The following line create it in the rootfolder of the current project.\nINSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework\n# Working dir will be deleted after theframework creation.\nBUILD_DIR = $()/Build/Products\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework\n# -configuration ${CONFIGURATION}\n# Clean and Building both architectures.\nxcodebuild -configuration \"Release\" -scheme \"${FMK_NAME}\" -sdk iphoneos clean build -UseModernBuildSystem=NO\nxcodebuild -configuration \"Release\" -scheme \"${FMK_NAME}\" -sdk iphonesimulator clean build -UseModernBuildSystem=NO\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\nmkdir -p \"${INSTALL_DIR}\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/\"\n# Uses the Lipo Tool to merge both binaryfiles (i386 + armv6/armv7) into one      Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\nrm -r \"${WRK_DIR}\"\nopen \"${INSTALL_DIR}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		48D888A621D4CF08006E4279 /* Sources */ = {
@@ -789,6 +827,7 @@
 				HEADER_SEARCH_PATHS = "$(SDK_DIR)/usr/include/libxml2";
 				INFOPLIST_FILE = AppHost/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -814,6 +853,7 @@
 				HEADER_SEARCH_PATHS = "$(SDK_DIR)/usr/include/libxml2";
 				INFOPLIST_FILE = AppHost/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -823,6 +863,24 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		48FF4F7D22674F1E00D71D56 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5F3P75AV37;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		48FF4F7E22674F1E00D71D56 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5F3P75AV37;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -843,6 +901,15 @@
 			buildConfigurations = (
 				48D888B321D4CF08006E4279 /* Debug */,
 				48D888B421D4CF08006E4279 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48FF4F7C22674F1E00D71D56 /* Build configuration list for PBXAggregateTarget "AppHost.aggregate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48FF4F7D22674F1E00D71D56 /* Debug */,
+				48FF4F7E22674F1E00D71D56 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

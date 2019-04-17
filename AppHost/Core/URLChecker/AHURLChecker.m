@@ -47,10 +47,10 @@ static NSDictionary *_authorizedTable = nil;
     }
 
     NSString *key = nil;
-    if (authType == MKAuthorizationTypeMoneyKeeperSchema) {
+    if (authType == AHAuthorizationTypeSchema) {
         key = @"schema-open-url";
     }
-    else if (authType == MKAuthorizationTypeAppHost) {
+    else if (authType == AHAuthorizationTypeAppHost) {
         key = @"apphost";
     }
     if (key) {
