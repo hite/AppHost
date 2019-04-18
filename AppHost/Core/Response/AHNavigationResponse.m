@@ -64,9 +64,8 @@
     }
 }
 
-- (void)startNewPageWithParameter:(NSDictionary *)paramDict
+- (void)startNewPage:(NSDictionary *)paramDict
 {
-
     AppHostViewController *freshOne = [[AppHostViewController alloc] init];
     freshOne.url = [paramDict objectForKey:@"url"];
     freshOne.pageTitle = [paramDict objectForKey:@"title"];
@@ -94,5 +93,4 @@
         [self.navigationController pushViewController:freshOne animated:YES];
     }
 }
-
 @end

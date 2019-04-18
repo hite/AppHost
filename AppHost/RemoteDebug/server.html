@@ -18,7 +18,6 @@
 <body>
     <div id="app">
         <p class="w-welcome-slogan">欢迎使用 AppHost Remote Debugger</p>
-        <p class="c-welcome-desc">** 调试之前，首先打开一个 h5 页面 **</p>
         <div class="c-garden">
             <command-output></command-output>
             <command-value></command-value>
@@ -50,7 +49,7 @@
                     <div class="w-help-code">:apropos log</div>
                     <div class='w-example-title'>4. 启动内置的 testcase，测试 API 接口实现是否正常，执行后会在手机端打开一个 测试页面；</div>
                     <div class="w-help-code">:testcase</div>
-                    <div class='w-example-title'>5. 注入 weinre 脚本，需要重新打开页面。在本次启动中，只需要注入一次，后面打开的页面都会支持，即使这些页面不是你控制的</div>
+                    <div class='w-example-title'>5. 注入 weinre 脚本，需要重新打开页面。注入一次，后面打开的页面都会支持，即使是外部页面。如果需要调试 https，你可能需要安装 ngrok，输入类似命令，:weinre https://3c2c9d94.ngrok.io/target/target-script-min.js#anonymous</div>
                     <div class="w-help-code">:weinre http://10.12.0.0:8888/target/target-script-min.js#anonymous</div>
                     <div class='w-example-title'>5.1. 取消注入 weinre 脚本</div>
                     <div class="w-help-code">:weinre disable</div>

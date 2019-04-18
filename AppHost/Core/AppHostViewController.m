@@ -58,10 +58,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
         // 注意：此时还没有 navigationController。
         self.taskDelegate = [AHSchemeTaskDelegate new];
         [self.view addSubview:self.webView];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(debugCommand:) name:kAppHostInvokeDebugEvent object:nil];
     }
-
     return self;
 }
 
@@ -125,7 +122,6 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAppHostInvokeDebugEvent object:nil];
     [self teardownProgressor];
     //
     [_webView.configuration.userContentController removeScriptMessageHandlerForName:kAHScriptHandlerName];
@@ -338,20 +334,6 @@ NSLog(@"[Timing] %@, nowTime = %f", NSStringFromSelector(_cmd), [[NSDate date] t
         [self showTextTip:@"没有实现的接口"];
 #endif
         AHLog(@"unknown methods : %@", message.name);
-    }
-}
-
-#pragma mark - debug
-
-- (void)debugCommand:(NSNotification *)notif
-{
-    NSString *action = [notif.object objectForKey:kAHActionKey];
-    NSDictionary *param = [notif.object objectForKey:kAHParamKey];
-    
-    if (action.length > 0) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self callNative:action parameter:param];
-        });
     }
 }
 

@@ -13,6 +13,7 @@
 #import "GCDWebServerURLEncodedFormRequest.h"
 #import "AHDebugViewController.h"
 #import "AHDebugResponse.h"
+#import "AppHostViewController+Dispatch.h"
 
 @interface AHDebugServerManager () <AHDebugViewDelegate>
 
@@ -75,6 +76,51 @@ static off_t _log_offset = 0;
         [self->_eventLogs addObject:@{ @"type" : @".on", @"value" : notification.object }];
     });
 }
+    
+#pragma mark - debug
+    
+- (void)debugCommand:(NSString *)action param:(NSDictionary *)param {
+    if (action.length > 0) {
+        // 检查当前是否有 AppHostViewController 正在展示，如果有则使用此界面，如果没有新开一个页面
+        UIViewController *topViewController = [self visibleViewController];
+        if (![topViewController isKindOfClass:AppHostViewController.class]) {
+            AppHostViewController *sam = [AppHostViewController new];
+            sam.title = @"AppHost 容器";
+            sam.url = @"about:blank";// 广告位
+            if (!topViewController.navigationController) {
+                UIWindow *win = [UIApplication sharedApplication].keyWindow;
+                win.rootViewController = sam;
+                AHLog(@"Warning, 连 navigation 都没有？");
+            } else {
+                [topViewController.navigationController pushViewController:sam animated:YES];
+            }
+            topViewController = sam;
+        }
+        [(AppHostViewController *)topViewController callNative:action parameter:param];
+     } else {
+         AHLog(@"irregular param %@",param);
+     }
+}
+ // https://stackoverflow.com/questions/11637709/get-the-current-displaying-uiviewcontroller-on-the-screen-in-appdelegate-m/40760970#40760970
+- (UIViewController *)visibleViewController {
+    UIWindow *win = [UIApplication sharedApplication].keyWindow;
+    UIViewController *rootViewController = win.rootViewController;
+    return [self getVisibleViewControllerFrom:rootViewController];
+}
+    
+- (UIViewController *)getVisibleViewControllerFrom:(UIViewController *) vc {
+    if ([vc isKindOfClass:[UINavigationController class]]) {
+        return [self getVisibleViewControllerFrom:[((UINavigationController *) vc) visibleViewController]];
+    } else if ([vc isKindOfClass:[UITabBarController class]]) {
+        return [self getVisibleViewControllerFrom:[((UITabBarController *) vc) selectedViewController]];
+    } else {
+        if (vc.presentedViewController) {
+            return [self getVisibleViewControllerFrom:vc.presentedViewController];
+        } else {
+            return vc;
+        }
+    }
+}
 
 #pragma mark - public
 CGFloat kDebugWinInitWidth = 55.f;
@@ -94,7 +140,6 @@ CGFloat kDebugWinInitHeight = 46.f;
     window.hidden = NO;
     window.clipsToBounds = YES;
     self.debugWindow = window;
-
     //    // 为 window 增加拖拽功能
     //    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDragFpsWin:)]; //创建手势
     //    window.userInteractionEnabled = YES;
@@ -192,8 +237,8 @@ CGFloat kDebugWinInitHeight = 46.f;
 
                                   NSURL *url = request.URL;
                                   NSDictionary __block *result = @{};
+                                  typeof(weakSelf) __strong strongSelf = weakSelf;
                                   if ([url.path hasPrefix:@"/react_log.do"]) {
-                                      typeof(weakSelf) __strong strongSelf = weakSelf;
                                       dispatch_sync(strongSelf->_logQueue, ^{
                                           NSMutableArray *logStrs = [NSMutableArray arrayWithCapacity:10];
                                           [strongSelf->_eventLogs enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
@@ -222,7 +267,14 @@ CGFloat kDebugWinInitHeight = 46.f;
                                           contentJSON = [NSJSONSerialization JSONObjectWithData:[param dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&contentParseError];
                                       }
                                       if (action.length > 0) {
-                                          [[NSNotificationCenter defaultCenter] postNotificationName:kAppHostInvokeDebugEvent object:@{ kAHActionKey : action, kAHParamKey : contentJSON }];
+                                          if ([NSThread isMainThread]) {
+                                              [strongSelf debugCommand:action param:contentJSON];
+                                          } else {
+                                              AHLog(@"Jump to main thread");
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  [strongSelf debugCommand:action param:contentJSON];
+                                              });
+                                          }
                                       } else {
                                           AHLog(@"command.do arguments error");
                                       }

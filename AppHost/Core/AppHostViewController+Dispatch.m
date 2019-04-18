@@ -52,8 +52,7 @@
                                            }];
         return NO;
     } else {
-        [vc handleAction:action withParam:paramDict callbackKey:key];
-        return YES;
+        return [vc handleAction:action withParam:paramDict callbackKey:key];;
     }
 }
 

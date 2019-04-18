@@ -64,7 +64,7 @@
 
 #pragma mark - nav
 
-- (void)setRight:(NSDictionary *)paramDict
+- (void)setNavRight:(NSDictionary *)paramDict
 {
     NSString *title = [paramDict objectForKey:@"text"];
     self.rightActionBarTitle = title;
@@ -82,7 +82,7 @@
     self.appHost.navigationItem.rightBarButtonItem = rightBarButton;
 }
 
-- (void)setTitle:(NSDictionary *)paramDict
+- (void)setNavTitle:(NSDictionary *)paramDict
 {
     NSString *title = [paramDict objectForKey:@"text"];
     self.appHost.navigationItem.title = title;

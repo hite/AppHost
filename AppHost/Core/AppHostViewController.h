@@ -13,7 +13,6 @@
 
 static NSString *kAppHostInvokeRequestEvent = @"kAppHostInvokeRequestEvent";
 static NSString *kAppHostInvokeResponseEvent = @"kAppHostInvokeResponseEvent";
-static NSString *kAppHostInvokeDebugEvent = @"kAppHostInvokeDebugEvent";
 
 @class AppHostViewController;
 
