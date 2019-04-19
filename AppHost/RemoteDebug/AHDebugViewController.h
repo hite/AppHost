@@ -15,11 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol AHDebugViewDelegate <NSObject>
 
-- (void)tryExpandWindow:(AHDebugViewController *)viewController;
-
-- (void)tryCollapseWindow:(AHDebugViewController *)viewController;
+- (void)onCloseWindow:(AHDebugViewController *)viewController;
 
 - (void)fetchData:(AHDebugViewController *)viewController completion:(void (^)(NSArray<NSString *> *))completion;
+
 @end
 
 @interface AHDebugViewController : UIViewController
@@ -27,6 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<AHDebugViewDelegate> debugViewDelegate;
 
 - (void)showNewLine:(NSArray<NSString *> *)line;
+
+- (void)onWindowHide;
+- (void)onWindowShow;
+
 @end
 
 NS_ASSUME_NONNULL_END

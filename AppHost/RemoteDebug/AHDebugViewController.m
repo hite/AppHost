@@ -35,57 +35,41 @@ CGFloat kDebugHeadeHeight = 46.f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    self.title = @"控制台";
+    self.view.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.tableView];
-    self.tableView.hidden = YES;
+    
+    UIBarButtonItem *closeBar = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
+    self.navigationItem.leftBarButtonItem = closeBar;
+    
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:kDebugHeadeHeight].active = YES;
+    [self.tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:0].active = YES;
     [self.tableView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
-    [self.tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:kDebugHeadeHeight].active = YES;
+    [self.tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:0].active = YES;
     [self.tableView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
-    
-    UIButton *toggle = [UIButton new];
-    toggle.contentEdgeInsets = UIEdgeInsetsMake(2, 5, 2, 5);
-    [toggle setTitle:@"展开" forState:UIControlStateNormal];
-    [toggle setTitle:@"收起" forState:UIControlStateSelected];
-    [toggle setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    toggle.backgroundColor = [UIColor grayColor];
-    [toggle addTarget:self action:@selector(toggleWin:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:toggle];
-    
-    toggle.translatesAutoresizingMaskIntoConstraints = NO;
-    [toggle.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:10].active = YES;
-    [toggle.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
-    [toggle.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
+
     // 导出文件按钮在下面的右边
-    UIButton *export = [UIButton new];
-    export.contentEdgeInsets = UIEdgeInsetsMake(2, 5, 2, 5);
-    [export setTitle:@"导出服务器日志" forState:UIControlStateNormal];
-    [export setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    export.backgroundColor = [UIColor grayColor];
-    [export addTarget:self action:@selector(export:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:export];
-    export.hidden = YES;
-    self.export = export;
-    
-    export.translatesAutoresizingMaskIntoConstraints = NO;
-    [export.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-5].active = YES;
-    [export.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:-15].active = YES;
+    UIBarButtonItem *exportBar = [[UIBarButtonItem alloc] initWithTitle:@"日志导出" style:UIBarButtonItemStylePlain target:self action:@selector(export:)];
     // 刷新日志按钮在左边
-    UIButton *refresh = [UIButton new];
-    refresh.contentEdgeInsets = UIEdgeInsetsMake(2, 5, 2, 5);
-    [refresh setTitle:@"刷新" forState:UIControlStateNormal];
-    [refresh setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    refresh.backgroundColor = [UIColor grayColor];
-    [refresh addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:refresh];
-    refresh.hidden = YES;
-    self.refresh = refresh;
-    
-    refresh.translatesAutoresizingMaskIntoConstraints = NO;
-    [refresh.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-5].active = YES;
-    [refresh.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:15].active = YES;
+    UIBarButtonItem *refreshBar = [[UIBarButtonItem alloc] initWithTitle:@"刷新" style:UIBarButtonItemStylePlain target:self action:@selector(refresh:)];
+    self.navigationItem.rightBarButtonItems = @[exportBar, refreshBar];
+}
+
+#pragma mark -
+
+- (void)onWindowHide
+{
+    self.navigationController.navigationBarHidden = YES;
+    self.view.hidden = YES;
+}
+
+- (void)onWindowShow
+{
+    self.navigationController.navigationBarHidden = NO;
+    self.view.hidden = NO;
+    if (self.dataSource.count == 0) {
+        [self refresh:nil];
+    }
 }
 
 - (void)showNewLine:(NSArray<NSString *> *)line
@@ -96,6 +80,13 @@ CGFloat kDebugHeadeHeight = 46.f;
     });
 }
 #pragma mark - event
+- (void)close:(UIButton *)button
+{
+    if ([self.debugViewDelegate respondsToSelector:@selector(onCloseWindow:)]){
+        [self.debugViewDelegate onCloseWindow:self];
+    }
+}
+
 - (void)export:(UIButton *)button
 {
     NSLog(@"Export access file");
@@ -120,28 +111,6 @@ CGFloat kDebugHeadeHeight = 46.f;
         [self.debugViewDelegate fetchData:self completion:^(NSArray<NSString *> * _Nonnull lines) {
             [self showNewLine:lines];
         }];
-    }
-}
-
-- (void)toggleWin:(UIButton *)sender
-{
-    sender.selected = !sender.selected;
-    if (sender.selected && [self.debugViewDelegate respondsToSelector:@selector(tryExpandWindow:)]) {
-        [self.debugViewDelegate tryExpandWindow:self];
-        self.export.hidden = NO;
-        self.refresh.hidden = NO;
-        self.tableView.hidden = NO;
-        
-        if (self.dataSource.count == 0) {
-            [self refresh:nil];
-        }
-    }
-    
-    if (!sender.selected && [self.debugViewDelegate respondsToSelector:@selector(tryCollapseWindow:)]) {
-        [self.debugViewDelegate tryCollapseWindow:self];
-        self.export.hidden = YES;
-        self.refresh.hidden = YES;
-        self.tableView.hidden = YES;
     }
 }
 

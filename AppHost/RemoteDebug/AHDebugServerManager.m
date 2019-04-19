@@ -21,6 +21,8 @@
 
 @property (nonatomic, strong) UIWindow *debugWindow;
 
+@property (nonatomic, strong) AHDebugViewController *debugVC;
+@property (nonatomic, strong) UIButton *toggleButton;
 /**
  记录上次拖动的位移，两者做差值，来计算此次拖动的距离。
  */
@@ -125,25 +127,38 @@ static off_t _log_offset = 0;
 #pragma mark - public
 CGFloat kDebugWinInitWidth = 55.f;
 CGFloat kDebugWinInitHeight = 46.f;
+#define kOldWindowPostion CGRectMake(AH_SCREEN_WIDTH - 60, 150, kDebugWinInitWidth, kDebugWinInitHeight)
 - (void)showDebugWindow
 {
     if (self.debugWindow) {
         return;
     }
 
-    UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(AH_SCREEN_WIDTH - 60, 150, kDebugWinInitWidth, kDebugWinInitHeight)];
-    AHDebugViewController *vc = [[AHDebugViewController alloc] init];
-    vc.debugViewDelegate = self;
-    window.rootViewController = vc;
-    window.backgroundColor = [UIColor grayColor];
+    UIWindow *window = [[UIWindow alloc] initWithFrame:kOldWindowPostion];
+    window.backgroundColor = [UIColor clearColor];
     window.windowLevel = UIWindowLevelStatusBar + 14;
     window.hidden = NO;
     window.clipsToBounds = YES;
     self.debugWindow = window;
-    //    // 为 window 增加拖拽功能
-    //    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDragFpsWin:)]; //创建手势
-    //    window.userInteractionEnabled = YES;
-    //    [window addGestureRecognizer:pan];
+    // 增加显示隐藏按钮， 切换按钮，展开时，隐藏；收起时显示
+    UIButton *toggle = [UIButton new];
+    NSBundle *bundle = [NSBundle bundleForClass:self.class];
+    
+    UIImage *ico = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"logo" ofType:@"png"]];
+    [toggle setImage:ico forState:UIControlStateNormal];
+    [toggle addTarget:self action:@selector(toggleWin:) forControlEvents:UIControlEventTouchUpInside];
+    [window addSubview:toggle];
+    self.toggleButton = toggle;
+    
+    toggle.translatesAutoresizingMaskIntoConstraints = NO;
+    [toggle.topAnchor constraintEqualToAnchor:window.topAnchor constant:0].active = YES;
+    [toggle.rightAnchor constraintEqualToAnchor:window.rightAnchor].active = YES;
+    [toggle.widthAnchor constraintEqualToConstant:40].active = YES;
+    [toggle.heightAnchor constraintEqualToConstant:40].active = YES;
+    // 为 window 增加拖拽功能
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDragFpsWin:)]; //创建手势
+    window.userInteractionEnabled = YES;
+    [window addGestureRecognizer:pan];
 }
 
 - (void)handleDragFpsWin:(UIPanGestureRecognizer *)pan
@@ -157,29 +172,44 @@ CGFloat kDebugWinInitHeight = 46.f;
     CGRect newFrame = CGRectOffset(self.debugWindow.frame, offset.x - self.lastOffset.x, offset.y - self.lastOffset.y);
     //    SELog(@"drag new %@", NSStringFromCGRect(newFrame));
     self.debugWindow.frame = newFrame;
-
     self.lastOffset = offset;
 
     if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateCancelled || pan.state == UIGestureRecognizerStateFailed) {
         self.lastOffset = CGPointZero;
     }
 }
-#pragma mark - delegate
-
-- (void)tryExpandWindow:(AHDebugViewController *)viewController
+    
+#pragma mark - event
+- (void)toggleWin:(UIButton *)sender
 {
-    [UIView animateWithDuration:0.4
-                     animations:^{
-                         self.debugWindow.frame = CGRectMake(0, 150, AH_SCREEN_WIDTH, AH_SCREEN_HEIGHT - 150 - 100);
-                     }];
+    [self expandWindow];
 }
 
-- (void)tryCollapseWindow:(AHDebugViewController *)viewController
+- (void)expandWindow
 {
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         self.debugWindow.frame = CGRectMake(AH_SCREEN_WIDTH - 60, 150, kDebugWinInitWidth, kDebugWinInitHeight);
-                     }];
+    if (self.debugVC == nil) {
+        AHDebugViewController *vc = [[AHDebugViewController alloc] init];
+        self.debugVC = vc;
+        vc.debugViewDelegate = self;
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+        self.debugWindow.rootViewController = nav;
+    }
+    self.debugWindow.frame = [[UIScreen mainScreen] bounds];
+    [self.debugVC onWindowShow];
+    self.toggleButton.hidden = YES;
+}
+
+- (void)collapseWindow
+{
+    self.debugWindow.frame = kOldWindowPostion;
+    [self.debugVC onWindowHide];
+    self.toggleButton.hidden = NO;
+    [self.debugWindow bringSubviewToFront:self.toggleButton];
+}
+#pragma mark - delegate
+- (void)onCloseWindow:(AHDebugViewController *)viewController
+{
+    [self collapseWindow];
 }
 
 - (void)fetchData:(AHDebugViewController *)viewController completion:(void (^)(NSArray<NSString *> *))completion
@@ -195,7 +225,7 @@ CGFloat kDebugWinInitHeight = 46.f;
     [GCDWebServer setLogLevel:2/*kGCDWebServerLoggingLevel_Warning*/];
 
     NSLog(@"Document = %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]);
-
+    
     // Add a handler to respond to GET requests on any URL
     typeof(self) __weak weakSelf = self;
     [_webServer addDefaultHandlerForMethod:@"GET"
@@ -218,8 +248,11 @@ CGFloat kDebugWinInitHeight = 46.f;
                                       contentType = @"application/javascript";
                                   } else if ([filePath hasSuffix:@".css"]) {
                                       contentType = @"text/css";
-                                  } else if ([filePath hasSuffix:@".png"]) {
+                                  } else if ([filePath hasSuffix:@".png"] || [filePath hasSuffix:@".ico"]) {
                                       contentType = @"image/png";
+                                      dataType = @"data";
+                                  } else if ([filePath hasSuffix:@".jpg"] || [filePath hasSuffix:@".jpeg"]) {
+                                      contentType = @"image/jpeg";
                                       dataType = @"data";
                                   }
 
@@ -357,7 +390,6 @@ CGFloat kDebugWinInitHeight = 46.f;
         });
     }
 }
-
 
 - (NSString *)stringDecodeURIComponent:(NSString *)encoded
 {
