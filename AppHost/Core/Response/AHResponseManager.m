@@ -69,6 +69,10 @@
 }
 
 #pragma mark - public
+- (NSString *)actionSignature:(NSString *)action withParam:(BOOL)hasParamDict withCallback:(BOOL)hasCallback
+{
+    return [NSString stringWithFormat:@"%@%@%@", action, (hasParamDict?@"_":@""), (hasCallback?@"$":@"")];
+}
 
 - (void)addCustomResponse:(Class<AppHostProtocol>)cls
 {
@@ -77,9 +81,8 @@
     }
 }
 
-- (id<AppHostProtocol>)responseForAction:(NSString *)action withAppHost:(AppHostViewController * _Nonnull)appHost
+- (id<AppHostProtocol>)responseForActionSignature:(NSString *)signature withAppHost:(AppHostViewController * _Nonnull)appHost
 {
-    
     if (self.customResponseClasses.count == 0) {
         return nil;
     }
@@ -88,7 +91,7 @@
     // 逆序遍历，让后添加的 Response 能够覆盖内置的方法；
     for (NSInteger i = self.customResponseClasses.count - 1; i >= 0; i--) {
         Class responseClass = [self.customResponseClasses objectAtIndex:i];
-        if ([responseClass isSupportedAction:action]) {
+        if ([responseClass isSupportedActionSignature:signature]) {
             // 先判断是否可以响应，再决定初始化。
             if (appHost) {
                 NSString *key = NSStringFromClass(responseClass);
@@ -109,13 +112,13 @@
     return vc;
 }
 
-- (Class)responseForAction:(NSString *)action
+- (Class)responseForActionSignature:(NSString *)action
 {
     // 逆序遍历，让后添加的 Response 能够覆盖内置的方法；
     Class r = nil;
     for (NSInteger i = self.customResponseClasses.count - 1; i >= 0; i--) {
         Class responseClass = [self.customResponseClasses objectAtIndex:i];
-        if ([responseClass isSupportedAction:action]) {
+        if ([responseClass isSupportedActionSignature:action]) {
             r = responseClass;
             break;
         }

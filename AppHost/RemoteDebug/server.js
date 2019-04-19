@@ -129,11 +129,11 @@ function _parseCommand(com) {
         if (com == ":testcase") {
             com = "window.appHost.invoke('testcase', {})";
         } else if (com.indexOf(":list") >= 0) {
-            com = "window.appHost.invoke('list', {})";
+            com = "window.appHost.invoke('list')";
         } else if (com.indexOf(":apropos") >= 0) {
-            args = com.split(" ");
-            if (args.length == 2) {
-                com = "window.appHost.invoke('apropos', {name:'" + args[1] + "'})";
+            var api = com.replace(':apropos','').trim();
+            if (api.length > 0) {
+                com = "window.appHost.invoke('apropos', {signature:'" + api + "'})";
             } else {
                 console.log("参数出错 " + com);
                 com = null;
@@ -166,6 +166,8 @@ function _parseCommand(com) {
                 console.log("参数出错 " + com);
                 com = null;
             }
+        } else if (com.indexOf(":clearCookie") >= 0) {
+            com = "window.appHost.invoke('clearCookie')";
         } else {
             window.alert("不支持的命令 " + com);
             com = null;

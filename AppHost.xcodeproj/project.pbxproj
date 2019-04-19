@@ -51,6 +51,7 @@
 		48551BC6224608CE00CAC76C /* AppHostViewController+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 48551BC4224608CE00CAC76C /* AppHostViewController+Utils.m */; };
 		48551BCA22461C5700CAC76C /* AppHostViewController+Progressor.h in Headers */ = {isa = PBXBuildFile; fileRef = 48551BC822461C5700CAC76C /* AppHostViewController+Progressor.h */; };
 		48551BCB22461C5700CAC76C /* AppHostViewController+Progressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 48551BC922461C5700CAC76C /* AppHostViewController+Progressor.m */; };
+		485614A022684DD400E9BB89 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4856149F22684DD400E9BB89 /* logo.png */; };
 		486C3EE921F6F2E800BE582F /* AHDebugResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 486C3EE721F6F2E800BE582F /* AHDebugResponse.h */; };
 		486C3EEA21F6F2E800BE582F /* AHDebugResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 486C3EE821F6F2E800BE582F /* AHDebugResponse.m */; };
 		4885E98621D77CAE0036B1C6 /* AHDebugServerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -118,6 +119,7 @@
 		48D8893221D4D0AD006E4279 /* GCDWebServerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8891621D4D0AD006E4279 /* GCDWebServerDataRequest.m */; };
 		48D8893321D4D0AD006E4279 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8891721D4D0AD006E4279 /* GCDWebServerFileRequest.m */; };
 		48D8893421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8891821D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h */; };
+		48EF7DEA2269BDAF00BBBD76 /* favicon.ico in Resources */ = {isa = PBXBuildFile; fileRef = 48EF7DE92269BDAE00BBBD76 /* favicon.ico */; };
 		8415243F21EC578700203C2D /* AHDebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8415243D21EC578700203C2D /* AHDebugViewController.h */; };
 		8415244021EC578700203C2D /* AHDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8415243E21EC578700203C2D /* AHDebugViewController.m */; };
 		8476B1AC21E7678000E97B54 /* renderjson.js in Resources */ = {isa = PBXBuildFile; fileRef = 8476B1AA21E7677F00E97B54 /* renderjson.js */; };
@@ -155,6 +157,7 @@
 		48551BC4224608CE00CAC76C /* AppHostViewController+Utils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppHostViewController+Utils.m"; sourceTree = "<group>"; };
 		48551BC822461C5700CAC76C /* AppHostViewController+Progressor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppHostViewController+Progressor.h"; sourceTree = "<group>"; };
 		48551BC922461C5700CAC76C /* AppHostViewController+Progressor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppHostViewController+Progressor.m"; sourceTree = "<group>"; };
+		4856149F22684DD400E9BB89 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		486C3EE721F6F2E800BE582F /* AHDebugResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDebugResponse.h; sourceTree = "<group>"; };
 		486C3EE821F6F2E800BE582F /* AHDebugResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHDebugResponse.m; sourceTree = "<group>"; };
 		4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDebugServerManager.h; sourceTree = "<group>"; };
@@ -225,6 +228,7 @@
 		48D8891621D4D0AD006E4279 /* GCDWebServerDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataRequest.m; sourceTree = "<group>"; };
 		48D8891721D4D0AD006E4279 /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileRequest.m; sourceTree = "<group>"; };
 		48D8891821D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
+		48EF7DE92269BDAE00BBBD76 /* favicon.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = favicon.ico; sourceTree = "<group>"; };
 		8415243D21EC578700203C2D /* AHDebugViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDebugViewController.h; sourceTree = "<group>"; };
 		8415243E21EC578700203C2D /* AHDebugViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHDebugViewController.m; sourceTree = "<group>"; };
 		8476B1AA21E7677F00E97B54 /* renderjson.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = renderjson.js; sourceTree = "<group>"; };
@@ -307,6 +311,8 @@
 				8476B1AB21E7678000E97B54 /* renderjson.css */,
 				8476B1AA21E7677F00E97B54 /* renderjson.js */,
 				4885E98821D885F60036B1C6 /* server.html */,
+				48EF7DE92269BDAE00BBBD76 /* favicon.ico */,
+				4856149F22684DD400E9BB89 /* logo.png */,
 				4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */,
 				4885E98521D77CAE0036B1C6 /* AHDebugServerManager.m */,
 				8415243D21EC578700203C2D /* AHDebugViewController.h */,
@@ -615,7 +621,9 @@
 				4837FFC521FA237900D2FE9C /* server.js in Resources */,
 				481A0655225DC23600DD57BB /* eval.js in Resources */,
 				4885E98921D885F60036B1C6 /* server.html in Resources */,
+				48EF7DEA2269BDAF00BBBD76 /* favicon.ico in Resources */,
 				8476B1AC21E7678000E97B54 /* renderjson.js in Resources */,
+				485614A022684DD400E9BB89 /* logo.png in Resources */,
 				8476B1AD21E7678000E97B54 /* renderjson.css in Resources */,
 				481A0653225C9BB700DD57BB /* thirdParty in Resources */,
 				48C8AEAD21D5F99E00A6B426 /* appHost_version_1.5.0.js in Resources */,

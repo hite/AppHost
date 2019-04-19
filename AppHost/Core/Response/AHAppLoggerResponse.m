@@ -13,14 +13,14 @@
 + (NSDictionary<NSString *, NSString *> *)supportActionList
 {
     return @{
-             @"log" : @"1"
+             @"log_" : @"1"
              };
 }
 
-ah_doc_begin(log, "在 xcode 控制台输出日志")
-@ah_doc_param(logData, "日志字段，通常是json 对象")
-@ah_doc_code(window.appHost.invoke("log",{"text":"Error"}))
-@ah_doc_code_result("会在 xcode 控制台输出日志信息，输出 text: Error, 日志包含了 [AppHost] 前缀")
+ah_doc_begin(log_, "在 xcode 控制台输出日志")
+ah_doc_param(logData, "日志字段，通常是json 对象")
+ah_doc_code(window.appHost.invoke("log",{"text":"Error"}))
+ah_doc_code_expect("会在 xcode 控制台输出日志信息，输出 text: Error, 日志包含了 [AppHost] 前缀")
 ah_doc_end
 - (void)log:(NSDictionary *)logData
 {

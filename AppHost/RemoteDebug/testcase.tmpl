@@ -1,12 +1,14 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
-	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-	<meta charset="utf-8">
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
-	<style type="text/css">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta charset="utf-8">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+        content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <style type="text/css">
         fieldset {
             border-width: 1px;
             border-color: #7D5C5C;
@@ -32,10 +34,29 @@
 
         ol li {
             text-align: left;
+            position: relative;
         }
 
+        .passed,
+        .failed {
+            display: none;
+            position: absolute;
+            left: -28px;
+            top: 20px;
+            font-size: 14px;
+        }
+
+        .f-succ .passed {
+            display: block;
+        }
+
+        .f-err .failed {
+            display: block;
+        }
+
+
         ol span {
-            font-size: 12px;
+            font-size: 14px;
             text-align: left;
             display: block;
         }
@@ -56,63 +77,66 @@
         .err {
             color: red;
         }
-    </style>
-	<title>appHost 接口测试</title>
-	<script type="text/javascript">
-        window.onerror = function(msg, url, lineNo, columnNo, error) {
-            var string = msg.toLowerCase();
-            var substring = "script error";
-            if (string.indexOf(substring) > -1) {
-                alert('Script Error: See Browser Console for Detail');
-            } else {
-                var message = [
-                    'Message: ' + msg,
-                    'URL: ' + url,
-                    'Line: ' + lineNo,
-                    'Column: ' + columnNo,
-                    'Error object: ' + JSON.stringify(error)
-                ].join(' - ');
 
-                alert(message);
-            }
-            return false;
-        };
-    </script>
+        .f-manual {
+            color: rgb(65, 5, 5);
+        }
+    </style>
+    <title>AppHost 接口测试</title>
 </head>
 
 <body style="background-color:#f3f3f3;text-align:center;">
-<div style="margin-top:10px;font-size:17px;color:#999999;">
-	<fieldset>
-		<legend>测试webview浏览器</legend>
-		<ol>
-			<li>
-				<input type="text" id="url" style="width:100%;" name="url" value="http://html5test.com" />
-				<br/>
-				<input type="button" id="testURL" name="go" value="Gooo">
-				<span>使用webview页面，加载以上链接</span>
-			</li>
-		</ol>
-    </fieldset>
-    {{ALL_DOCS}}
-</div>
-<script type="text/javascript">
-        (function() {
-            if (window.appHost) {
-                //
-                var testURL = document.getElementById('testURL');
-                testURL.onclick = function() {
-                    var url = document.getElementById('url').value;
-                    window.appHost.invoke('startNewPage', {url: url}); 
-                }
-
-                window.appHost.on('onready', function() {
-                    console.log('dom ready');
-                });
-            } else {
-                alert('appHost 对象不存在');
+    <div style="margin-top:10px;font-size:17px;color:#999999;">
+        <fieldset>
+            <legend>测试webview浏览器</legend>
+            <ol>
+                <li class="f-err">
+                    <input type="text" id="url" style="width:100%;" name="url" value="http://html5test.com" />
+                    <br />
+                    <input type="button" id="testURL" name="go" value="Gooo">
+                    <span>使用webview页面，加载以上链接</span>
+                </li>
+                <li>
+                    <label><input type="checkbox" value="1" id="autoTestBool">关闭自动化测试，选中表示关闭。</label>
+                </li>
+            </ol>
+        </fieldset>
+        {{ALL_DOCS}}
+    </div>
+    <script type="text/javascript">
+        // UI 自动化校验使用
+        window.report = function (_msg, eleId) {
+            // _msg 原样输出，用于给 autotest 框架通讯
+            if (!document.getElementById('autoTestBool').checked) {
+                window.alert(_msg);
             }
+            if (eleId) {
+                var succ = !!_msg;
+                document.getElementById(eleId).className = (succ ? 'f-succ' : 'f-err')
+            }
+        }
 
-        })();
+        var testURL = document.getElementById('testURL');
+        testURL.onclick = function () {
+            window.location.href = document.getElementById('url').value;
+        }
+        // 一开始就设置右侧导航文案，为 UI 自动化加一个把手
+        document.addEventListener('NEJsbridgeReady', function () {
+            NEJsbridge.call("setRightText", "{\"text\": \"测试下一步接口\"}")
+        }, false);
+
+        var idx = 1;
+        window.onRightClick = function () {
+            // 是否有有效返回值，作为是否需要 UITest 来检查；
+            // 具体的逻辑是这样的，如果返回了为空字符串，则弹出 alert 弹出，让 XCtest 去抓确认是正确的表现。
+            var func = window['f_' + idx++];
+            if (typeof func == 'function') {
+                func()
+            } else {
+                // 已经没用测试用例了，让 XCTest 来获知结束。
+                window.alert('finish')
+            }
+        }
     </script>
 </body>
 </html>

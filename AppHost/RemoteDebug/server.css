@@ -55,13 +55,12 @@ body {
     width: 100%;
     box-sizing: border-box;
     font-weight: 200;
-
 }
 
 .m-output-result {
-    /* border-bottom: 1px solid #CCCCCC; */
+    border-bottom: 1px solid #CCCCCC; 
     font-size: 12px;
-    text-indent: 10px;
+    padding-left: 10px;
 }
 
 .m-input {
@@ -148,6 +147,7 @@ pre {
     margin-top: 5px;
     /* text-indent: 5px; */
     text-decoration: underline;
+    font-weight: bold;
 }
 
 .w-help-code {
@@ -209,7 +209,7 @@ pre {
 /* 注释部分 */
 .m-output-doc {
     font-size: 14px;
-    padding: 0 15px
+    padding: 0 15px 10px;
 }
 
 .w-doc-type_title {
@@ -227,8 +227,21 @@ pre {
     font-weight: bold;
 }
 
+.w-doc-discuss{
+    margin: 3px 0;
+}
+
+.w-doc-param{
+    font-size: 12px;
+}
+
+.f-warning-text{
+    margin: 0;
+    font-weight: bold;
+}
+
 .w-doc-code {
-    background-color: black;
+    background-color: #333333;
     padding: 10px 5px;
     color: white;
 }

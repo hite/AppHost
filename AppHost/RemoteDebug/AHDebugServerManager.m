@@ -303,7 +303,7 @@ CGFloat kDebugWinInitHeight = 46.f;
                                           if ([NSThread isMainThread]) {
                                               [strongSelf debugCommand:action param:contentJSON];
                                           } else {
-                                              AHLog(@"Jump to main thread");
+                                              AHLog(@"switch to main thread");
                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                   [strongSelf debugCommand:action param:contentJSON];
                                               });

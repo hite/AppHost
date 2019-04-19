@@ -38,9 +38,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)addCustomResponse:(Class<AppHostProtocol>)cls;
 
-- (id<AppHostProtocol>)responseForAction:(NSString *)action withAppHost:(AppHostViewController * _Nonnull)appHost;
+- (id<AppHostProtocol>)responseForActionSignature:(NSString *)action withAppHost:(AppHostViewController * _Nonnull)appHost;
 
-- (Class)responseForAction:(NSString *)action;
+- (Class)responseForActionSignature:(NSString *)signature;
+
+- (NSString *)actionSignature:(NSString *)action withParam:(BOOL)hasParamDict withCallback:(BOOL)hasCallback;
 @end
 
 NS_ASSUME_NONNULL_END

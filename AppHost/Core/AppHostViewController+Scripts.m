@@ -87,7 +87,10 @@ static NSMutableArray *kAppHostCustomJavscripts = nil;
             // 这里使用异步下载的方式，也可以使用 stringWithContentOfURL 的方法，同步获取字符串
             // 注意1：http 的资源不会被 https 的网站加载 // upgrade-insecure-requests
             // 注意2：stringWithContentOfURL 获取的 weinre文件，需要设置 ServerURL blabla 的东西
-            result = [NSString stringWithFormat:@"(function(e){e.setAttribute('src','%@');document.getElementsByTagName('body')[0].appendChild(e);})(document.createElement('script'));", urlToRequest.absoluteString];
+            result = [NSString stringWithFormat:ah_ml((function(e){
+                e.setAttribute("src",'%@');
+                document.getElementsByTagName('body')[0].appendChild(e);
+            })(document.createElement('script'));), urlToRequest.absoluteString];
             [self _addJavaScript:result when:injectTime forKey:key];
         }
     } else {

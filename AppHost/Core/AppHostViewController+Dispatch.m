@@ -32,19 +32,19 @@
 
 #pragma mark - public
 // 延迟初始化； 短路判断
-
 - (BOOL)callNative:(NSString *)action parameter:(NSDictionary *)paramDict
 {
     return [self callNative:action parameter:paramDict callbackKey:nil];
 }
 
 #pragma mark - private
-
 - (BOOL)callNative:(NSString *)action parameter:(NSDictionary *)paramDict callbackKey:(NSString *)key
 {
-    id<AppHostProtocol> vc = [[AHResponseManager defaultManager] responseForAction:action withAppHost:self];
+    AHResponseManager *rm = [AHResponseManager defaultManager];
+    NSString *actionSig = [rm actionSignature:action withParam:paramDict withCallback:key.length > 0];
+    id<AppHostProtocol> response = [rm responseForActionSignature:actionSig withAppHost:self];
     //
-    if (vc == nil) {
+    if (response == nil || ![response handleAction:action withParam:paramDict callbackKey:key]) {
         NSString *errMsg = [NSString stringWithFormat:@"action (%@) not supported yet.", action];
         AHLog(@"action (%@) not supported yet.", action);
         [self fire:@"NotSupported" param:@{
@@ -52,7 +52,7 @@
                                            }];
         return NO;
     } else {
-        return [vc handleAction:action withParam:paramDict callbackKey:key];;
+        return YES;
     }
 }
 

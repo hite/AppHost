@@ -17,36 +17,32 @@
 {
     return @{
         //增加apphost的supportTypeFunction
-        @"startNewPage" : @"4",
-        @"openUrl" : @"3",
-        @"openExternalUrl" : @"1"
+        @"startNewPage_" : @"4",
+        @"openExternalUrl_" : @"3"
     };
 }
 
 #pragma mark - inner
-
-- (void)openUrl:(NSDictionary *)paramDict
+ah_doc_begin(openExternalUrl_, "打开外部资源链接，可以用 SFSafariViewController 打开，也可以用系统的 Safari 浏览器打开。")
+ah_doc_code(window.appHost.invoke("openExternalUrl",{"url":"https://qian.163.com"}))
+ah_doc_param(url, "字符串，合法的 url 地址，包括http/mailto:/telephone:/https 前缀")
+ah_doc_param(openInSafari, "布尔值，默认是 false，表示在 App 内部用 SFSafariViewController 内部打开；true 表示用系统的 Safari 浏览器打开")
+ah_doc_code_expect("跳出到外部打开或者在内部打开外部链接")
+ah_doc_end
+- (void)openExternalUrl:(NSDictionary *)paramDict
 {
     NSString *urlTxt = [paramDict objectForKey:@"url"];
-    BOOL forceOpenInSafari = [[paramDict objectForKey:@"openInBrowser"] boolValue];
+    BOOL forceOpenInSafari = [[paramDict objectForKey:@"openInSafari"] boolValue];
     if (forceOpenInSafari) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlTxt] options:@{} completionHandler:nil];
     } else {
-        NSURL *actualUrl = [NSURL URLWithString:urlTxt];
-        [[UIApplication sharedApplication] openURL:actualUrl options:@{} completionHandler:nil];
+        SFSafariViewController *safari = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:urlTxt]];
+        [self.navigationController presentViewController:safari animated:YES completion:nil];
     }
-}
-
-- (void)openExternalUrl:(NSDictionary *)paramDict
-{
-    NSString *url = [paramDict objectForKey:@"url"];
-    SFSafariViewController *safari = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
-    [self.navigationController presentViewController:safari animated:YES completion:nil];
 }
 
 - (void)insertShadowView:(NSDictionary *)paramDict
 {
-
     AppHostViewController *freshOne = [[AppHostViewController alloc] init];
     freshOne.url = [paramDict objectForKey:@"url"];
     freshOne.pageTitle = [paramDict objectForKey:@"title"];
@@ -63,7 +59,22 @@
         self.navigationController.viewControllers = newViewControllers;
     }
 }
-
+ah_doc_begin(startNewPage_, "新开一个 webview 页面打开目标 url。有多个参数可以控制 webview 的样式和行为")
+ah_doc_code(window.appHost.invoke('startNewPage', { 'url': 'http://you.163.com/','title': 'title',
+    'type': "push",
+    'backPageParameter': {
+        'url': 'http://qian.163.com',
+        'title': 'title',
+        'type': 'push'
+    }
+}))
+ah_doc_param(url, "字符串，合法的 url 地址，包括http/mailto:/telephone:/https 前缀")
+ah_doc_param(title,"当前页面的标题")
+ah_doc_param(type,"新页面呈现方式，目前有两个参数可选“push”，“replace” ")
+ah_doc_param(actionTitle,"顶栏右边的文字，可以响应点击事件。")
+ah_doc_param(backPageParameter,"完整的一个startNewPage对应的参数； 这个参数代表了页面 c，包含这个参数的跳转执行完毕之后，到达 b 页面，此时点击返回按钮，返回到 c页面，再次点击才返回到 a 页面。即 a -> b , b -> c -> a;")
+ah_doc_code_expect("新开一个 webview 打开目标页面，不同的参数有不同的效果")
+ah_doc_end
 - (void)startNewPage:(NSDictionary *)paramDict
 {
     AppHostViewController *freshOne = [[AppHostViewController alloc] init];

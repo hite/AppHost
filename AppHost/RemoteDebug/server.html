@@ -45,11 +45,11 @@
                     <div class="w-help-code">window.appHost.invoke('startNewPage', {'url': 'http://you.163.com', 'title': 'title', 'type': 'push'});</div>
                     <div class='w-example-title'>2. 查看所有支持的 native 接口，输入如下；</div>
                     <div class="w-help-code">:list</div>
-                    <div class='w-example-title'>3. 查看所有支持的 某个具体的接口，api doc, 如 `log` 接口，输入如下；</div>
-                    <div class="w-help-code">:apropos log</div>
+                    <div class='w-example-title'>3. 查看所有支持的 某个具体的接口，api doc, 如 `log_` 接口，输入如下；</div>
+                    <div class="w-help-code">:apropos log_</div>
                     <div class='w-example-title'>4. 启动内置的 testcase，测试 API 接口实现是否正常，执行后会在手机端打开一个 测试页面；</div>
                     <div class="w-help-code">:testcase</div>
-                    <div class='w-example-title'>5. 注入 weinre 脚本，需要重新打开页面。注入一次，后面打开的页面都会支持，即使是外部页面。如果需要调试 https，你可能需要安装 ngrok，输入类似命令，:weinre https://3c2c9d94.ngrok.io/target/target-script-min.js#anonymous</div>
+                    <div class='w-example-title'>5. 注入 weinre 脚本，需要重新打开页面。注入一次，后面打开的页面都会支持，即使是外部页面。如果需要调试 https，你可能需要安装 ngrok</div>
                     <div class="w-help-code">:weinre http://10.12.0.0:8888/target/target-script-min.js#anonymous</div>
                     <div class='w-example-title'>5.1. 取消注入 weinre 脚本</div>
                     <div class="w-help-code">:weinre disable</div>
@@ -68,28 +68,29 @@
                 </ol>
                 </div>
                 <div v-else-if="item.type === 'list'" class="m-output-result">
+                    <p class="f-warning-text">下面列出可以调用的接口的签名。</p>
                     <template v-for="api in item.apis">
                         <p v-if="api.type === 'group'" class="w-api_list-group">{{api.value}}</p>
                         <span v-else class="w-api_list-api">{{api.value}}</span>
                     </template>
-                    <p class="w-api_list-other">详细的 API 可以输入 `:apropos api`,如 `:apropos log` 查看详细接口说明、示例、描述</p>
+                    <p class="w-api_list-other">注意：<br/>1.实际调用时不需要“_”,“$”符号，接口名 "log" 和 "log_" 表示不同的接口，带下划线_的"log_"表示有一个入参，"log"没有入参<br/>2. 可以输入 `:apropos method`,如 `:apropos log_` 查看详细接口说明、示例、描述；<br/>3.内置的命令如`apropos` 调用时需要前导":"冒号，以和业务命令区分</p>
                 </div>
                 <div v-else-if="item.type === 'apropos_item'" class="m-output-doc">
                         <p v-if="item.doc.discuss" class="w-doc-discuss">{{item.doc.discuss}}</p>
                         <div v-if="item.doc.param" class="w-doc-type_title">参数说明：</div>
                         <ul v-if="item.doc.param" class="w-doc-param-container">
-                            <template v-for="(desc, name) in item.doc.param">
-                                <li class="w-doc-param" ><span>{{name}}</span>: {{desc}}</li>
+                            <template v-for="(field) in item.doc.param">
+                                <li class="w-doc-param" v-for="(desc, name) in field"><span>{{name}}:</span> {{desc}}</li>
                             </template>
                         </ul>
                         <div v-if="item.doc.return" class="w-doc-return">
                             <span  class="w-doc-type_title">参数说明：</span><br/>
                             {{item.doc.return}}
                         </div>
-                        <div v-if="item.doc.code" class="w-doc-type_title">可执行代码示例：</div>
+                        <div v-if="item.doc.code" class="w-doc-type_title">代码示例：</div>
                         <div v-if="item.doc.code" class="w-doc-code">{{item.doc.code}}</div>
                         <div v-if="item.doc.error"class="w-err-code">{{item.doc.error}}</div>
-                        <div v-if="item.doc.codeResult" class="w-doc-codeResult"><span  class="w-doc-type_title">代码执行后期望：</span>{{item.doc.codeResult}}</div>
+                        <div v-if="item.doc.codeResult" class="w-doc-codeResult"><span  class="w-doc-type_title">代码执行后期望：</span>{{item.doc.expect}}</div>
                 </div>
                 <p v-else> 未知参数</p>
             </template>
