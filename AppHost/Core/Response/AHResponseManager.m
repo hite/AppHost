@@ -42,7 +42,7 @@
                                                     @"AHNavigationResponse",
                                                     @"AHNavigationBarResponse",
                                                     @"AHBuiltInResponse",
-#ifdef DEBUG
+#ifdef AH_DEBUG
                                                     @"AHDebugResponse",
 #endif
                                                     @"AHAppLoggerResponse"];
@@ -51,7 +51,7 @@
         }];
         
         //TODO
-#ifdef DEBUG
+#ifdef AH_DEBUG
         NSString *docsdir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
         NSString *file = [docsdir stringByAppendingPathComponent:kAppHostTestCaseFileName];
         
@@ -127,7 +127,7 @@
     return r;
 }
 
-#ifdef DEBUG
+#ifdef AH_DEBUG
 
 /**
  //TODO: 缓存

@@ -25,7 +25,7 @@ static NSString *kAppHostInvokeResponseEvent = @"kAppHostInvokeResponseEvent";
 
 @end
 
-@interface AppHostViewController : AH_VC_BASE_NAME <WKNavigationDelegate>
+@interface AppHostViewController : UIViewController <WKNavigationDelegate>
 
 @property (nonatomic, copy) NSString *pageTitle;
 

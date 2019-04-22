@@ -33,8 +33,7 @@
 {
     if ([keyPath isEqualToString:@"estimatedProgress"]) {
         double progress = [change[@"new"] doubleValue];
-        NSLog(@"[Timing] progress = %f, %f", progress, [[NSDate date] timeIntervalSince1970] * 1000);
-
+        AHLog(@"[Timing] progress = %f, %f", progress, [[NSDate date] timeIntervalSince1970] * 1000);
         if (progress >= 1) {
             // 0.25s 后消失
             [CATransaction begin];
@@ -47,7 +46,6 @@
         } else {
             [self.progressorView setProgress:progress animated:YES];
         }
-        NSLog(@"progress = %f", progress);
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }

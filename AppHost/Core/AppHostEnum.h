@@ -12,7 +12,7 @@
 // 创建一个超级厉害的宏，https://www.jianshu.com/p/cbb6b71d925d
 // 在 debug 模式下打印带前缀的日志，非 debug 模式下，不输出。
 #if !defined(AHLog)
-#ifdef DEBUG
+#ifdef AH_DEBUG
 #define AHLog(format, ...)  do {\
 (NSLog)((@"[AppHost] " format), ##__VA_ARGS__); \
 } while (0)
@@ -89,12 +89,6 @@ NSMutableDictionary *docs = [@{\
 // oc-doc 结束
 
 #endif /* AppHostEnum_h */
-
-#ifdef AH_VIEWCONTROLLER_BASE
-    #define AH_VC_BASE_NAME AH_VIEWCONTROLLER_BASE
-#else
-    #define AH_VC_BASE_NAME UIViewController
-#endif
 
 #define NOW_TIME [[NSDate date] timeIntervalSince1970] * 1000
 

@@ -17,7 +17,7 @@ static NSString *kLastWeinreScript = nil;
 
 + (void)setupDebugger
 {
-#ifdef DEBUG
+#ifdef AH_DEBUG
     NSBundle *bundle = [NSBundle bundleForClass:AppHostViewController.class];
     NSMutableArray *scripts = [NSMutableArray arrayWithObjects:
                          @{// 记录 window.DocumentEnd 的时间
@@ -68,7 +68,7 @@ static NSString *kLastWeinreScript = nil;
 
 - (BOOL)handleAction:(NSString *)action withParam:(NSDictionary *)paramDict callbackKey:(NSString *)callbackKey
 {
-#ifdef DEBUG
+#ifdef AH_DEBUG
     if ([@"eval" isEqualToString:action]) {
         [self.appHost evalExpression:[paramDict objectForKey:@"code"] completion:^(id  _Nonnull result, NSString * _Nonnull error) {
             AHLog(@"%@, error = %@", result, error);
@@ -157,7 +157,7 @@ static NSString *kLastWeinreScript = nil;
 
 + (NSDictionary<NSString *, NSString *> *)supportActionList {
   return @{
-#ifdef DEBUG
+#ifdef AH_DEBUG
     @"eval_" : @"1",
     @"list" : @"1",
     @"apropos_": @"1",

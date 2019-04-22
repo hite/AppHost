@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)defaultManager;
 
-#ifdef DEBUG
+#ifdef AH_DEBUG
 
 /**
  获取所有注册的 Response 的接口
