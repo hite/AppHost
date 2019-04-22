@@ -64,11 +64,11 @@ alpha:alphaValue]
 // 定义 oc-doc，为自动化生成测试代码和自动化注释做准备
 // 凡是可能多行的文字描述都用 @result,传入的数据需要有双引号，而不是@#result
 
-#define ah_doc_begin(log, desc) +(NSDictionary *)ah_concat(ah_doc_for_, log)\
+#define ah_doc_begin(signature, desc) +(NSDictionary *)ah_concat(ah_doc_for_, signature)\
 {\
 NSMutableArray *lst = [NSMutableArray arrayWithCapacity:3];\
 NSMutableDictionary *docs = [@{\
-@"name":@#log,\
+@"name":@#signature,\
 @"discuss":@desc\
 } mutableCopy];
 #define ah_doc_code(code) [docs setObject:@#code forKey:@"code"];

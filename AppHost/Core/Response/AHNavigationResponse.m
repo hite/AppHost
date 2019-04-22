@@ -27,7 +27,7 @@ ah_doc_begin(openExternalUrl_, "打开外部资源链接，可以用 SFSafariVie
 ah_doc_code(window.appHost.invoke("openExternalUrl",{"url":"https://qian.163.com"}))
 ah_doc_param(url, "字符串，合法的 url 地址，包括http/mailto:/telephone:/https 前缀")
 ah_doc_param(openInSafari, "布尔值，默认是 false，表示在 App 内部用 SFSafariViewController 内部打开；true 表示用系统的 Safari 浏览器打开")
-ah_doc_code_expect("跳出到外部打开或者在内部打开外部链接")
+ah_doc_code_expect("在 App 内的浏览器里打开了’qian.163.com‘ 页面")
 ah_doc_end
 - (void)openExternalUrl:(NSDictionary *)paramDict
 {
@@ -43,7 +43,7 @@ ah_doc_end
 
 - (void)insertShadowView:(NSDictionary *)paramDict
 {
-    AppHostViewController *freshOne = [[AppHostViewController alloc] init];
+    AppHostViewController *freshOne = [[self.appHost.class alloc] init];
     freshOne.url = [paramDict objectForKey:@"url"];
     freshOne.pageTitle = [paramDict objectForKey:@"title"];
     freshOne.rightActionBarTitle = [paramDict objectForKey:@"actionTitle"];
@@ -73,11 +73,11 @@ ah_doc_param(title,"当前页面的标题")
 ah_doc_param(type,"新页面呈现方式，目前有两个参数可选“push”，“replace” ")
 ah_doc_param(actionTitle,"顶栏右边的文字，可以响应点击事件。")
 ah_doc_param(backPageParameter,"完整的一个startNewPage对应的参数； 这个参数代表了页面 c，包含这个参数的跳转执行完毕之后，到达 b 页面，此时点击返回按钮，返回到 c页面，再次点击才返回到 a 页面。即 a -> b , b -> c -> a;")
-ah_doc_code_expect("新开一个 webview 打开目标页面，不同的参数有不同的效果")
+ah_doc_code_expect("新开一个 webview 打开’you.163.com‘页面，加载完毕之后，点击返回，返回到 ’qian.163.com‘ 页面")
 ah_doc_end
 - (void)startNewPage:(NSDictionary *)paramDict
 {
-    AppHostViewController *freshOne = [[AppHostViewController alloc] init];
+    AppHostViewController *freshOne = [[self.appHost.class alloc] init];
     freshOne.url = [paramDict objectForKey:@"url"];
     freshOne.pageTitle = [paramDict objectForKey:@"title"];
     freshOne.rightActionBarTitle = [paramDict objectForKey:@"actionTitle"];

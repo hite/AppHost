@@ -84,7 +84,7 @@ body {
     padding: 0;
     margin: 0;
     border: none;
-    border-top: 2px solid #E3EDFF;
+/*    border-top: 2px solid #E3EDFF;*/
     border-bottom: 2px solid #E3EDFF;
     border-right: 100px solid #fff;
     overflow: hidden;

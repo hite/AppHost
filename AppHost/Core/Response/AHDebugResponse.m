@@ -250,7 +250,7 @@ static NSString *kLastWeinreScript = nil;
                                 funcAutoTestBaseIdx += 1;
                                 funcBaseIdx = funcAutoTestBaseIdx;
                             }
-                            NSString *fullFunctionName = [funcName stringByAppendingFormat:@"funcBaseIdx"];
+                            NSString *fullFunctionName = [funcName stringByAppendingFormat:@"%ld", (long)funcBaseIdx];
                             NSString *itemEleId = [@"funcRow_" stringByAppendingString:fullFunctionName];
                             
                             NSString *alertOrNot = @"";
@@ -264,9 +264,9 @@ static NSString *kLastWeinreScript = nil;
                                 var eleId = '%@';%@; %@;\
                              }\
                              </script>\
-                             <a href=\"javascript:void(0);\" onclick=\"%@();return false;\">%@%@, %@</a>\
+                             <a href=\"javascript:void(0);\" onclick=\"%@();return false;\">%@%@, 执行后，%@</a>\
                              <span>%@</span><label class=\"passed\">✅</label><label class=\"failed\">❌</label>\
-                             </li>",itemEleId, fullFunctionName, itemEleId,[doc objectForKey:@"code"],alertOrNot, fullFunctionName, descPrefix, [doc objectForKey:@"name"], [doc objectForKey:@"discuss"], [doc objectForKey:@"expect"]];
+                             </li>",itemEleId, fullFunctionName, itemEleId,[doc objectForKey:@"code"],alertOrNot, fullFunctionName, descPrefix, [doc objectForKey:@"name"], [doc objectForKey:@"expect"], [doc objectForKey:@"discuss"]];
                         }
                     }
                 } else {

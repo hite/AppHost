@@ -127,7 +127,7 @@ function _parseCommand(com) {
     if (com.indexOf(":") == 0) {
         var args;
         if (com == ":testcase") {
-            com = "window.appHost.invoke('testcase', {})";
+            com = "window.appHost.invoke('testcase')";
         } else if (com.indexOf(":list") >= 0) {
             com = "window.appHost.invoke('list')";
         } else if (com.indexOf(":apropos") >= 0) {
