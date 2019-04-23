@@ -77,7 +77,7 @@ ah_doc_end
 
 ## 如何安装
 介绍两种方式，作为静态链接库 framework 或者以子项目的方式引入。
-#### 1. 静态链接库framework
+#### 1. 动态链接库framework
 -  打开`AppHost.xcodeproj`工程
 - 选择 scheme 如图 ![分架构的 framework build 脚本](https://upload-images.jianshu.io/upload_images/277783-6144027c6b7af2d8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 - 运行后会自动打开一个文件夹，选择你需要的架构（模拟器或者 device）将`AppHost.framework` 托到桌面（任何一个容易找到的地方）。
