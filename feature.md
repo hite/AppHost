@@ -1,15 +1,15 @@
-##AppHost：大前端融合下的 Hybird 开发解决方案
+##AppHost：大前端融合下的 Hybrid 开发解决方案
 ![AppHost](https://upload-images.jianshu.io/upload_images/277783-33c33da3e99a070d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 目前移动端开发还处于一个高速发展的阶段，为了应对快速增长业务需求，移动开发需要更高迭代响应速度，从前期涌现出了以 React Native、Weex 为代表的 web 技术栈，到现在的 flutter 为代表的容器栈，这些跨度开发框架试图提高开发效率的同时，也拥有优秀的运行效率，目前看起来正在接近这个目标。
-这些技术，加上 native 开发技术，在不同应用场景下，我们可以选择最合适的技术栈，而最古老的跨端技术方案 - Hybird， 在中小型项目和不复杂的需求中，依然是最合适的选择，目前在网易严选主站，商品详情、促销活动、第三方页面展示还是用 Hybird 实现的。 AppHost 提供的就是传统意义上用 web 技术为 native 开发业务功能的能力。
+这些技术，加上 native 开发技术，在不同应用场景下，我们可以选择最合适的技术栈，而最古老的跨端技术方案 - Hybrid， 在中小型项目和不复杂的需求中，依然是最合适的选择，目前在网易严选主站，商品详情、促销活动、第三方页面展示还是用 Hybrid 实现的。 AppHost 提供的就是传统意义上用 web 技术为 native 开发业务功能的能力。
 
 AppHost 是一套解决 H5 和 native 协作开发的整体框架和服务。试图解决 native 和 H5 目前迭代频繁、时间仓促造成质量不高，业务膨胀后代码混乱，两端联调困难，多端协作彼此割裂等痛点。
 **作为一种 JSBridge 的实现方法，AppHost 像一座桥，将 native 和 H5 开发打通**；
 一边是提供设计良好的 native framework 和相关 protocol ，提高 native 接口的交付能力和开发质量；
 一边是为 H5 开发的页面和 native 联调，提供辅助调试工具和性能调优工具，让前端开发者对 H5 in App 的调试体验像调试原生浏览器一样，从而提高质量和提升开发效率。
 
-### Hybird 的接口开发生命周期
+### Hybrid 的接口开发生命周期
 ![生命周期](https://upload-images.jianshu.io/upload_images/277783-4d429c08fc003f20.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 这是实际工作中 JSBridge 面对的工作，很多是重复、乏味，又容易出错的。常见场景——“新需求里需要增加新的接口”的流程是这样的：
 1.  新增一个文件或者在旧文件上编写代码，新开接口和属性
@@ -74,4 +74,4 @@ AppHost 来自作者近年 webview 开发实践总结，真切的感受到这套
 详细的技术方案和接入方式见以下链接
 1. AppHostExample 项目，https://github.com/hite/AppHostExample
 2. AppHost 项目，https://github.com/hite/AppHost
-希望各位同行也能分享各自解决方案，共同提高行业 Hybird 开发体验。
+希望各位同行也能分享各自解决方案，共同提高行业 Hybrid 开发体验。
