@@ -68,6 +68,8 @@ ah_doc_end
 ## Remote Debugger 演示
 ### 1.如何打开远程调试功能
 工程代码运行之后，按照 XCode 日志里的提示(或者点击 App 里右上角一个 AH 样的图标，展开后的日志了有 url，长按复制或者在浏览器输入)，用电脑浏览器打开调试页面，展现的就是调试 Remote Debugger 的 Console界面。
+
+
 ![Debugger 整体使用](https://upload-images.jianshu.io/upload_images/277783-e520ecf4d92e53da.gif?imageMogr2/auto-orient/strip)
 
 ##  AppHost 的功能总览
