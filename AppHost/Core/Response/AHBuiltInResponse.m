@@ -46,7 +46,7 @@ ah_doc_end
 ah_doc_begin(toast_, "显示居中的提示，过几秒后消失，这里是AppHost默认实现显示。")
 ah_doc_param(text, "字符串，显示的文案，可多行")
 ah_doc_code(window.appHost.invoke("toast",{"text":"请稍等..."}))
-ah_doc_code_expect("在屏幕上出现 loading 动画，多次调用此接口，不应该出现多个")
+ah_doc_code_expect("在屏幕上出现 '请稍等...'，多次调用此接口，不应该出现多个")
 ah_doc_end
 - (void)toast:(NSDictionary *)paramDict
 {

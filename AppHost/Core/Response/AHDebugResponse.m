@@ -101,7 +101,13 @@ static NSString *kLastWeinreScript = nil;
             
             [self fire:funcName param:doc];
         } else {
-            [self fire:funcName param:@{@"error":[NSString stringWithFormat:@"The doc of method (%@) is not found!", signature]}];
+            NSString *err = nil;
+            if (appHostCls) {
+                err = [NSString stringWithFormat:@"The doc of method (%@) is not found!", signature];
+            } else {
+                err = [NSString stringWithFormat:@"The method (%@) doesn't exsit!", signature];
+            }
+            [self fire:funcName param:@{@"error":err}];
         }
     }else if ([@"testcase" isEqualToString:action]) {
         // 检查是否有文件生成，如果没有则遍历
