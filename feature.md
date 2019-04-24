@@ -1,8 +1,4 @@
 ##AppHost：大前端融合下的 Hybrid 开发解决方案
-![AppHost](https://upload-images.jianshu.io/upload_images/277783-33c33da3e99a070d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-目前移动端开发还处于一个高速发展的阶段，为了应对快速增长业务需求，移动开发需要更高迭代响应速度，从前期涌现出了以 React Native、Weex 为代表的 web 技术栈，到现在的 flutter 为代表的容器栈，这些跨度开发框架试图提高开发效率的同时，也拥有优秀的运行效率，目前看起来正在接近这个目标。
-这些技术，加上 native 开发技术，在不同应用场景下，我们可以选择最合适的技术栈，而最古老的跨端技术方案 - Hybrid， 在中小型项目和不复杂的需求中，依然是最合适的选择，目前在网易严选主站，商品详情、促销活动、第三方页面展示还是用 Hybrid 实现的。 AppHost 提供的就是传统意义上用 web 技术为 native 开发业务功能的能力。
 
 AppHost 是一套解决 H5 和 native 协作开发的整体框架和服务。试图解决 native 和 H5 目前迭代频繁、时间仓促造成质量不高，业务膨胀后代码混乱，两端联调困难，多端协作彼此割裂等痛点。
 **作为一种 JSBridge 的实现方法，AppHost 像一座桥，将 native 和 H5 开发打通**；
@@ -62,16 +58,4 @@ Console 提供了左侧快捷命令；内置了命令的历史记忆，实现上
 ![查看当前 H5 页面的 timing 数据](https://upload-images.jianshu.io/upload_images/277783-7b99adf129b64dc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
     6.3 **使用 weinre 调试严选页面**
 ![weinre服务](https://upload-images.jianshu.io/upload_images/277783-d7113e5153fc074b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-###  AppHost 愿景目标
-AppHost 来自作者近年 webview 开发实践总结，真切的感受到这套设计在面对业务快速发展、技术重构需求、多端协作等方面的优越性，特整理分享出来，不仅面向我们以后的业务开发，也希望抛砖引玉，和各位同行共享知识，以
-1.  指导 native 端业务成长、保持 App 可扩展、可维护
-2. 辅助 H5 快速开发、性能调优，提高产品体验
 
-在此，希望 AppHost 能帮你解决在 webview 相关开发过程中遇到的常见问题，让你更多的时间花在如何完善业务逻辑，加快 App 成长上面，为你的开发工作带来切实的帮助，避免 996，享受工作和生活乐趣。
-### 采用AppHost 的 App 有哪些？
-目前 AppHost 只有 iOS 端。其中 AppHost Core 在网易有钱上使用了 3 年多，支持了网易有钱的不断增长的业务需求，期间解决了很多 WKWebView 遇到的通有的问题。 AppHost Debug Service 目前还没有在线上系统中使用，目前正逐步将 AppHost 整体接入网易严选和网易推手。
-### 使用指南
-详细的技术方案和接入方式见以下链接
-1. AppHostExample 项目，https://github.com/hite/AppHostExample
-2. AppHost 项目，https://github.com/hite/AppHost
-希望各位同行也能分享各自解决方案，共同提高行业 Hybrid 开发体验。
