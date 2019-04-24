@@ -75,7 +75,7 @@ ah_doc_end
 ##  AppHost 的功能总览
 ![功能总览](https://upload-images.jianshu.io/upload_images/277783-d30643fad6c62bbd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-更多特性见，[链接](https://github.com/hite/AppHost/edit/master/feature.md)
+更多特性见，[链接](https://github.com/hite/AppHost/blob/master/feature.md)
 
 ## 如何安装
 介绍两种方式，作为静态链接库 framework 或者以子项目的方式引入。
