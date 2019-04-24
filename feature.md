@@ -1,21 +1,4 @@
-##AppHost：大前端融合下的 Hybrid 开发解决方案
 
-AppHost 是一套解决 H5 和 native 协作开发的整体框架和服务。试图解决 native 和 H5 目前迭代频繁、时间仓促造成质量不高，业务膨胀后代码混乱，两端联调困难，多端协作彼此割裂等痛点。
-**作为一种 JSBridge 的实现方法，AppHost 像一座桥，将 native 和 H5 开发打通**；
-一边是提供设计良好的 native framework 和相关 protocol ，提高 native 接口的交付能力和开发质量；
-一边是为 H5 开发的页面和 native 联调，提供辅助调试工具和性能调优工具，让前端开发者对 H5 in App 的调试体验像调试原生浏览器一样，从而提高质量和提升开发效率。
-
-### Hybrid 的接口开发生命周期
-![生命周期](https://upload-images.jianshu.io/upload_images/277783-4d429c08fc003f20.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-这是实际工作中 JSBridge 面对的工作，很多是重复、乏味，又容易出错的。常见场景——“新需求里需要增加新的接口”的流程是这样的：
-1.  新增一个文件或者在旧文件上编写代码，新开接口和属性
-2. 在 Android、native 和 H5 共有的接口文档上补充 API 接口。如果有需要，需要升级 JSBridge 接口的版本号
-3. 将改动通知 Android、H5 等相关方
-4. 增加测试用例（testcase 应该 iOS 、Android、 QA、前端，共建测试用例）
-4. 如果有必要需要告知，QA 增加自动化测试用例
-5. 前端需要考虑版本号升级之后，需不需要对新旧 native App 做兼容实现
-
-AppHost 处理负责 JSBridge 接口从 0 到 N 个、1岁到 5岁、出生到死亡周期，以及 JSBridge 之间的关系管理、对外提供数据支持等工作，所以它是`解决方案`，而不是个技术方案（如`WebViewJavascriptBridge`只是技术方案）。
 ### AppHost 的功能总览
 ![功能总览](https://upload-images.jianshu.io/upload_images/277783-2957bbc40a8287c9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
