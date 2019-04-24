@@ -35,10 +35,13 @@ Console 提供了左侧快捷命令；内置了命令的历史记忆，实现上
 通过`:weinre --` 命令，不需要改动被调试页面的源码，即可提供 weinre 调试服务，而且一次注入当前 App 启动后全程有效，后续页面无需再注入。用这个特性，甚至可以调试第三方页面。
 - 支持 console.log。这个无需赘言，曾经的` [https://jsconsole.com/](https://jsconsole.com/) 是首选的远程调试服务。AppHost 内置此功能。
 6. **演示**
-   6.1  **基本操作演示**
+
+6.1  **基本操作演示**
 ![Debugger 整体使用](https://upload-images.jianshu.io/upload_images/277783-e520ecf4d92e53da.gif?imageMogr2/auto-orient/strip)
-    6.2 **查看严选首页的 onload 事件时间**
+
+6.2 **查看严选首页的 onload 事件时间**
 ![查看当前 H5 页面的 timing 数据](https://upload-images.jianshu.io/upload_images/277783-7b99adf129b64dc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-    6.3 **使用 weinre 调试严选页面**
+
+6.3 **使用 weinre 调试严选页面**
 ![weinre服务](https://upload-images.jianshu.io/upload_images/277783-d7113e5153fc074b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
