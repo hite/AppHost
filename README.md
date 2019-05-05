@@ -68,14 +68,10 @@ ah_doc_end
 ## Remote Debugger 演示
 ### 1.如何打开远程调试功能
 工程代码运行之后，按照 XCode 日志里的提示(或者点击 App 里右上角一个 AH 样的图标，展开后的日志了有 url，长按复制或者在浏览器输入)，用电脑浏览器打开调试页面，展现的就是调试 Remote Debugger 的 Console界面。
-
-
 ![Debugger 整体使用](https://upload-images.jianshu.io/upload_images/277783-e520ecf4d92e53da.gif?imageMogr2/auto-orient/strip)
 
 ##  AppHost 的功能总览
 ![功能总览](https://upload-images.jianshu.io/upload_images/277783-d30643fad6c62bbd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-更多特性见，[链接](https://github.com/hite/AppHost/blob/master/feature.md)
 
 ## 如何安装
 介绍两种方式，作为动态链接库 framework 或者以子项目的方式引入。
@@ -103,5 +99,39 @@ ah_doc_end
 - 在弹出的选择窗口里，下拉到`Products` 文件夹，选择`AppHost.framework` 
   > `AppHost.framework` 会自动添加为 target 依赖。在`build phase\copy files` 的` linked framework` 和 `embedded framework` 也会自动添加`AppHost.framework`，这两个地方是为了能在模拟器和真机上运行
 - 完毕，在工程里即可使用`#import <AppHost/AppHost.h>`
+## H5 端使用示例
+暴露给 h5 的数据有两类，一类是 apphost 的静态属性；一类是接口；
+####  > AppHost 静态属性，包含属性有
+1. appInfo
+2. supportFunctionType
+这两个静态属性可以在 h5 的任意地方调用都是可用的，调用举例，
+```javascript
+// 获取当前是否是 iPhone X 设备（iOS only）
+var name = appHost.appInfo.iPhoneXInfo
+// 获取当前 App 是否支持此某个接口，如 `oepnFinancial`,
+if(apphost.supportFunctionType && parseInt(apphost.supportFunctionType.openFinancial, 10) >0){
+ //支持打开理财界面 
+}
+```
+#### > AppHost 的核心接口
+大部分核心接口需要在 'onready', 内调用，但是如果是一些和 UI 无关的接口，可以在任意地方调用，如 统计接口，`appHost.invoke('log',{})`
+```javascript
+window.appHost.on('onready',function(data){
+                    window.appHost.invoke('sendLogToES', {'content':'XXX' })
+                    // your code go here.
+                });
+```
+**第一个核心接口，`invoke`, 即 `window.appHost.invoke`**，它是 h5 调用 native 的唯一入口，可调用接口和调用用例可以使用 `Remote Debugger`的 console 来查看；
 
-更多用户请查看  [AppHostExample](https://github.com/hite/AppHostExample)源码
+**第二个核心接口，`on`,即`window.appHost.on('onready')`**，它是 h5 接收 native 调用的一种方式，用 on 来接收 native 调用比较适合在 delegate 模式；
+ `window.appHost.invoke` 也是可以接收 native 回调的，也就是在 invoke 的最后一个参数传入一个 function，如
+```
+window.appHost.invoke('alert', {'text': 'text'});
+//如果是callback，支持如下语法
+window.appHost.invoke('alert', {'text': '点击确定后，有回调', 'align': 'left'},function(){
+      appHost.invoke('toast',{'text':'你点击了alet的确定按钮'});
+     });
+});
+```
+
+更多用例请查看  [AppHostExample](https://github.com/hite/AppHostExample) 源码
