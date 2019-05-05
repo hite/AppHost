@@ -123,12 +123,12 @@ window.appHost.on('onready',function(data){
 ```
 **第一个核心接口，`invoke`, 即 `window.appHost.invoke`**，它是 h5 调用 native 的唯一入口，可调用接口和调用用例可以使用 `Remote Debugger`的 console 来查看；
 
-**第二个核心接口，`on`,即`window.appHost.on('onready')`**，它是 h5 接收 native 调用的一种方式，用 on 来接收 native 调用比较适合在 delegate 模式；
+**第二个核心接口，`on`,即`window.appHost.on`**，它是 h5 接收 native 调用的一种方式，用 on 来接收 native 调用比较适合在 delegate 模式；
  `window.appHost.invoke` 也是可以接收 native 回调的，也就是在 invoke 的最后一个参数传入一个 function，如
 ```
 window.appHost.invoke('alert', {'text': 'text'});
 //如果是callback，支持如下语法
-window.appHost.invoke('alert', {'text': '点击确定后，有回调', 'align': 'left'},function(){
+window.appHost.invoke('alert', {'text': '点击确定后，有回调'},function(){
       appHost.invoke('toast',{'text':'你点击了alet的确定按钮'});
      });
 });
