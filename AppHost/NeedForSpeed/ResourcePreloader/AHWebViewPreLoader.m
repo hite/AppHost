@@ -7,7 +7,6 @@
 //
 
 #import "AHWebViewPreLoader.h"
-#import "AHWebViewResourceModel.h"
 #import "AHSimpleWebViewController.h"
 
 

@@ -58,6 +58,13 @@ BOOL kGCDWebServer_logging_enabled = YES;
         // 注意：此时还没有 navigationController。
         self.taskDelegate = [AHSchemeTaskDelegate new];
         [self.view addSubview:self.webView];
+        self.webView.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[
+                                                [self.webView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor],
+                                                [self.webView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+                                                [self.webView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+                                                [self.webView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor]
+         ]];
     }
     return self;
 }
@@ -279,10 +286,12 @@ NSLog(@"[Timing] %@, nowTime = %f", NSStringFromSelector(_cmd), [[NSDate date] t
     }
     NSURL *targetURL = webView.URL;
     // 如果是指明了 kFakeCookieWebPageURLWithQueryString 说明，需要同步此域下 Cookie；
-    if (kFakeCookieWebPageURLWithQueryString.length > 0 && [AppHostCookie loginCookieHasBeenSynced] == NO && targetURL.query.length > 0 && [kFakeCookieWebPageURLWithQueryString containsString:targetURL.query]) {
-        [AppHostCookie setLoginCookieHasBeenSynced:YES];
-        // 加载真正的页面；此时已经有 App 的 cookie 存在了。
-        [webView removeFromSuperview];
+    if (kFakeCookieWebPageURLWithQueryString.length > 0 && targetURL.query.length > 0 && [kFakeCookieWebPageURLWithQueryString containsString:targetURL.query]) {
+        if ([AppHostCookie loginCookieHasBeenSynced] == NO) {
+            [AppHostCookie setLoginCookieHasBeenSynced:YES];
+            // 加载真正的页面；此时已经有 App 的 cookie 存在了。
+            [webView removeFromSuperview];
+        }
         [self loadWebPageWithURL];
         return;
     }
@@ -379,8 +388,9 @@ NSLog(@"[Timing] %@, nowTime = %f", NSStringFromSelector(_cmd), [[NSDate date] t
         [self injectScriptsToUserContent:userContentController];
         [self measure:kAppHostTimingAddUserScript to:kAppHostTimingWebViewInit];
 
-        WKWebView *webview = [[WKWebView alloc] initWithFrame:CGRectMake(0, AH_NAVIGATION_BAR_HEIGHT, AH_SCREEN_WIDTH, AH_SCREEN_HEIGHT - AH_NAVIGATION_BAR_HEIGHT) configuration:webViewConfig];
-        webview.scrollView.contentSize = CGSizeMake(CGRectGetWidth(webview.frame), CGRectGetHeight(webview.frame));
+        WKWebView *webview = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webViewConfig];
+        webview.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+ 
         webview.navigationDelegate = self;
         webview.UIDelegate = self;
         webview.scrollView.delegate = self;

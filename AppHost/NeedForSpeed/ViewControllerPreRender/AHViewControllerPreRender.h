@@ -15,6 +15,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AHViewControllerPreRender : NSObject
 
+#ifdef DEBUG
+/**
+ 预加载的 window，和主屏幕的偏移，默认是 0，widthOffset = 20，表示，可以看到 20px 的预加载 window；
+ */
+@property (nonatomic, assign) CGFloat widthOffset;
+#endif
+
 + (instancetype)defaultRender;
 
 /**
@@ -28,10 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  获取一个为 WebView 加载定制的预加载 VC，在 block 回调中，push 或者 present
 
+ @param viewControllerClass 需求预热的类, 必须是AppHostViewController类或者子类
  @param url 需要加载的 url
  @param block 拿到已经预热好的 VC 后，额外的处理逻辑；
  */
-- (void)getWebViewControllerWithPreloadURL:(NSString *)url completion:(void (^)(AppHostViewController *vc))block;
+- (void)getWebViewController:(Class)viewControllerClass preloadURL:(NSString *)url completion:(void (^)(AppHostViewController *vc))block;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -15,6 +15,7 @@
  已经被渲染过后的 ViewController，池子,在必要时候 purge 掉
  */
 @property (nonatomic, strong) NSMutableDictionary *renderedViewControllers;
+
 @end
 
 static AHViewControllerPreRender *_myRender = nil;
@@ -35,16 +36,7 @@ static AHViewControllerPreRender *_myRender = nil;
     return _myRender;
 }
 
-/**
- 内部方法，用来产生可用的 ViewController，如果第一次使用。
- 直接返回全新创建的对象，同时也预热一个相同类的对象，供下次使用。
- 支持预热多个 ViewController，但是不易过多，容易引起内存紧张
-
- @param viewControllerClass UIViewController 子类
- @param afterBlock 当预渲染对象创建后，对预渲染做进一步处理
- @return UIViewControllerd 实例
- */
-- (UIViewController *)getRendered:(Class)viewControllerClass afterPreRender:(void (^)(UIViewController *vc))afterBlock {
+- (void)setupWindowNO2 {
     if (_windowNO2 == nil) {
         CGRect full = [UIScreen mainScreen].bounds;
         // 对于 no2 的尺寸多少为合适。我自己做了下实验
@@ -53,7 +45,11 @@ static AHViewControllerPreRender *_myRender = nil;
         // 而且对于内存而言，尺寸越小内存占用越少，理论上 （1，1，1，1） 的 no2 有能达到预热 VC 的效果。
         // 但是有些 view 不是被 presented 或者 pushed，而是作为子 ViewController 的子 view 来渲染界面的。这需要 view 有正确的尺寸。
         // 所以这里预先设置将来真正展示时的尺寸，减少 resize、和作为子 ViewController 使用时出错，在本 demo 中，默认大部分的尺寸是全屏。
-        UIWindow *no2 = [[UIWindow alloc] initWithFrame:CGRectOffset(full, CGRectGetWidth(full), 0)];
+        CGFloat gap = 0;
+#ifdef DEBUG
+        gap = self.widthOffset;
+#endif
+        UIWindow *no2 = [[UIWindow alloc] initWithFrame:CGRectOffset(full, CGRectGetWidth(full) - gap, 0)];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[UIViewController new]];
         no2.rootViewController = nav;
         no2.hidden = NO;// 必须是显示的 window，才会触发预热 ViewController，隐藏的 window 不可用。但是和是否在屏幕可见没关系
@@ -61,33 +57,42 @@ static AHViewControllerPreRender *_myRender = nil;
         
         _windowNO2= no2;
     }
+}
+/**
+ 内部方法，用来产生可用的 ViewController，如果第一次使用。
+ 直接返回全新创建的对象，同时也预热一个相同类的对象，供下次使用。
+ 支持预热多个 ViewController，但是不易过多，容易引起内存紧张
+
+ @param viewControllerClass UIViewController 子类
+ @return UIViewControllerd 实例
+ */
+- (UIViewController *)getRendered:(Class)viewControllerClass cacheKey:(NSString *)key afterRender:(void (^)(UIViewController *))afterRender {
+    [self setupWindowNO2];
     
-    NSString *key = NSStringFromClass(viewControllerClass);
-    UIViewController *vc = [self.renderedViewControllers objectForKey:key];
-    if (vc == nil) { // 下次使用缓存
+    UIViewController *cacheVC = [self.renderedViewControllers objectForKey:key];
+    if (cacheVC == nil) { // 下次使用缓存
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            vc = [viewControllerClass new];
-            if (afterBlock) {
-                afterBlock(vc);
+            UIViewController *nextVC = [viewControllerClass new];
+            if (afterRender) {
+                afterRender(nextVC);
             }
             // 解决 Unbalanced calls to begin/end appearance transitions for <UIViewController: 0xa98e050> 关键点
             // 1. 使用 UINavigationController  作为 no2 的 rootViewController
             // 2. 如果使用 UIViewController 作为 no2 的 rootViewController，始终有 Unbalanced calls 的错误
             // 虽然是编译器警告，实际上 Unbalanced calls  会影响被缓存的 vc， 当它被添加到当前活动的 UINavigation stack 时，它的生命周期是错误的
             // 所以这个警告必须解决。
-            UINavigationController *nav = (UINavigationController *)_windowNO2.rootViewController;
-            [nav pushViewController:vc animated:NO];
-            [self.renderedViewControllers setObject:vc forKey:key];
+            UINavigationController *nav = (UINavigationController *)self.windowNO2.rootViewController;
+            [nav pushViewController:nextVC animated:NO];
+            [self.renderedViewControllers setObject:nextVC forKey:key];
         });
         //
         return [viewControllerClass new];
     }  else { // 本次使用缓存，同时储备下次
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             UIViewController *fresh = [viewControllerClass new];
-            if (afterBlock) {
-                afterBlock(fresh);
+            if (afterRender) {
+                afterRender(fresh);
             }
             // 在 setObject to renderedViewControllers 字典时，保证被渲染过
             [self.renderedViewControllers setObject:fresh forKey:key];
@@ -97,7 +102,7 @@ static AHViewControllerPreRender *_myRender = nil;
             NSMutableArray *newStacks = [NSMutableArray arrayWithCapacity:3];
             
             [nav.viewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if (![obj isKindOfClass:viewControllerClass]) {
+                if (obj != cacheVC) {
                     [newStacks addObject:obj];
                 }
             }];
@@ -105,7 +110,7 @@ static AHViewControllerPreRender *_myRender = nil;
             nav.viewControllers = newStacks;
         });
         
-        return vc;
+        return cacheVC;
     }
 }
 
@@ -118,7 +123,7 @@ static AHViewControllerPreRender *_myRender = nil;
 - (void)getRenderedViewController:(Class)viewControllerClass completion:(void (^)(UIViewController *vc))block{
     // CATransaction 为了避免一个 push 动画和另外一个 push 动画同时进行的问题。
     [CATransaction begin];
-    UIViewController *vc1 = [self getRendered:viewControllerClass afterPreRender:nil];
+    UIViewController *vc1 = [self getRendered:viewControllerClass cacheKey:NSStringFromClass(viewControllerClass) afterRender:nil];
     
     // 这里包含一个陷阱—— 必须先渲染将要被 cached 的 ViewController，然后再执行真实的 block
     // 理想情况，应该是先执行 block，然后执行 cache ViewController，因为 block 更重要些。暂时没想到方法
@@ -128,18 +133,24 @@ static AHViewControllerPreRender *_myRender = nil;
     [CATransaction commit];
 }
 
-- (void)getWebViewControllerWithPreloadURL:(NSString *)url completion:(void (^)(AppHostViewController *vc))block{
+
+- (void)getWebViewController:(Class)viewControllerClass preloadURL:(NSString *)url completion:(void (^)(AppHostViewController *vc))block{
     // CATransaction 为了避免一个 push 动画和另外一个 push 动画同时进行的问题。
-    [CATransaction begin];
-    AppHostViewController *vc1 = (AppHostViewController *)[self getRendered:AppHostViewController.class afterPreRender:^(UIViewController *vc) {
-        AppHostViewController *fresh = (AppHostViewController *)vc;
-        fresh.url = url;
+    if (viewControllerClass != AppHostViewController.class && ![viewControllerClass isSubclassOfClass:AppHostViewController.class]) {
+        AHLog(@"Error ClassName = %@", NSStringFromClass(viewControllerClass));
+        block([viewControllerClass new]);
+        return;
+    }
+    
+    NSString *key = [NSStringFromClass(viewControllerClass) stringByAppendingString:url];
+    AppHostViewController *cached = (AppHostViewController *)[self getRendered:viewControllerClass cacheKey:key afterRender:^(UIViewController *obj) {
+        AppHostViewController *nextVC = (AppHostViewController *)obj;
+        nextVC.url = url;
     }];
     
-    // 这里包含一个陷阱—— 必须先渲染将要被 cached 的 ViewController，然后再执行真实的 block
-    // 理想情况，应该是先执行 block，然后执行 cache ViewController，因为 block 更重要些。暂时没想到方法
+    [CATransaction begin];
     [CATransaction setCompletionBlock:^{
-        block(vc1);
+        block(cached);
     }];
     [CATransaction commit];
 }
