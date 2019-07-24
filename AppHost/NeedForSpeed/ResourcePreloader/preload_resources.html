@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2">
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <div id="container"></div>
+    <script type="text/javascript">
+    // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/template_strings
+  
+        const dataSource = #{CONF};
+        //  解析数据，形成最后的 HTML
+        var baseURL = dataSource.baseURL
+        var templates = [];
+        for (key in dataSource) {
+            if (key === 'domain' || key === 'baseURL') {
+                continue
+            }
+
+            if (key === 'styles') {
+                let styles = dataSource[key].map(function(val, idx){
+                    if(!val.startsWith('http')){
+                        val = baseURL + val
+                    }
+                    return styleTag(val)
+                })
+                templates.push(...styles)
+            }
+            if (key === 'scripts') {
+                let scripts = dataSource[key].map(function(val, idx){
+                    if(!val.startsWith('http')){
+                        val = baseURL + val
+                    }
+                    return scriptTag(val)
+                })
+                templates.push(...scripts)
+            }
+            if (key === 'images') {
+                let images = dataSource[key].map(function(val, idx){
+                    if(!val.startsWith('http')){
+                        val = baseURL + val
+                    }
+                    return imgTag(val)
+                })
+                templates.push(...images)
+            }
+            if (key === 'fonts') {
+                let fonts = dataSource[key].map(function(val, idx){
+                    if(!val.startsWith('http')){
+                        val = baseURL + val
+                    }
+                    return val
+                })
+                templates.push(...fontTag(fonts))
+            }
+            if (key === 'html') {
+                let url = dataSource[key]
+                if (url && url.length > 0) {
+                    if(!url.startsWith('http')){
+                        url = baseURL + url
+                    }
+                    templates.push(htmlTag(url))
+                }
+            }
+        }
+        // 渲染
+        const container = document.getElementById('container')
+        container.innerHTML = templates.join('')
+
+        function imgTag(_src) {
+            return `<img src="${_src}">`
+        }
+        function scriptTag(_src) {
+            let frag = 'scri'
+            return `<${frag}pt src="${_src}" type="text/javascript"></${frag}pt>`
+        }
+        function styleTag(_src) {
+            return `<link rel="stylesheet" href="${_src}">`
+        }
+        function fontTag(_fonts) {
+            if (_fonts.length == 0 )
+                return ''
+
+            let fontSrcs = _fonts.map( src => `url('${src}') format('truetype')`)
+            let srcStr = fontSrcs.join(',')
+            return `<style type="text/css">
+                /* 定义字体 */
+                @font-face {
+                    font-family: 'Hard Stones Sans Strip';
+                    src: ${srcStr};
+                }
+                .custom-font {
+                    font-family: 'Hard Stones Sans Strip'; /* 使用 @font-face 自定义的字体 */
+                    font-size: 80px;
+                }
+            </style>`
+        }
+        function htmlTag(_src) {
+            return `<iframe src="${_src}"></iframe>`
+        }
+    </script>
+</body>
+
+</html>
