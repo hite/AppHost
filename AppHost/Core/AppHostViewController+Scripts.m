@@ -70,14 +70,9 @@
                                                                  }];
 }
 
-static NSMutableArray *kAppHostCustomJavscripts = nil;
+
 + (void)prepareJavaScript:(id)script when:(WKUserScriptInjectionTime)injectTime key:(NSString *)key
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        kAppHostCustomJavscripts = [NSMutableArray arrayWithCapacity:4];
-    });
-    
     if ([script isKindOfClass:NSString.class]) {
         [self _addJavaScript:script when:injectTime forKey:key];
     } else if ([script isKindOfClass:NSURL.class]){
@@ -98,8 +93,14 @@ static NSMutableArray *kAppHostCustomJavscripts = nil;
     }
 }
 
+static NSMutableArray *kAppHostCustomJavscripts = nil;
 + (void)_addJavaScript:(NSString *)script when:(WKUserScriptInjectionTime)injectTime forKey:(NSString *)key
 {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        kAppHostCustomJavscripts = [NSMutableArray arrayWithCapacity:4];
+    });
+    
     @synchronized (kAppHostCustomJavscripts) {
         [kAppHostCustomJavscripts addObject:@{
                                               @"script": script,
