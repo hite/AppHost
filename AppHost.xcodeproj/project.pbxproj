@@ -38,11 +38,7 @@
 		4837FFC621FA237900D2FE9C /* vue.js in Resources */ = {isa = PBXBuildFile; fileRef = 4837FFC321FA237800D2FE9C /* vue.js */; };
 		4839FE0121D746BE008EB0DF /* AHSchemeTaskDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */; };
 		4839FE0221D746BE008EB0DF /* AHSchemeTaskDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		483E884922028FAD00066375 /* HTMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 483E884522028FAD00066375 /* HTMLParser.m */; };
-		483E884A22028FAD00066375 /* HTMLNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 483E884622028FAD00066375 /* HTMLNode.h */; };
-		483E884B22028FAD00066375 /* HTMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 483E884722028FAD00066375 /* HTMLParser.h */; };
-		483E884C22028FAD00066375 /* HTMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 483E884822028FAD00066375 /* HTMLNode.m */; };
-		483E884F22028FD500066375 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 483E884E22028FD500066375 /* libxml2.tbd */; };
+		48528D6C2317F7C100F944A6 /* HTMLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48528D632317F78200F944A6 /* HTMLKit.framework */; };
 		48551BB92245E2BA00CAC76C /* AppHostViewController+Scripts.h in Headers */ = {isa = PBXBuildFile; fileRef = 48551BB72245E2BA00CAC76C /* AppHostViewController+Scripts.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48551BBA2245E2BA00CAC76C /* AppHostViewController+Scripts.m in Sources */ = {isa = PBXBuildFile; fileRef = 48551BB82245E2BA00CAC76C /* AppHostViewController+Scripts.m */; };
 		48551BC12246083C00CAC76C /* AppHostViewController+Dispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 48551BBF2246083C00CAC76C /* AppHostViewController+Dispatch.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -133,6 +129,58 @@
 		8476B1AD21E7678000E97B54 /* renderjson.css in Resources */ = {isa = PBXBuildFile; fileRef = 8476B1AB21E7678000E97B54 /* renderjson.css */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		48528D5E2317F78200F944A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48528D542317F78200F944A6 /* HTMLKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 625A14AC19C7829400AD0C32;
+			remoteInfo = "HTMLKit-macOS";
+		};
+		48528D602317F78200F944A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48528D542317F78200F944A6 /* HTMLKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 625A14C319C7829400AD0C32;
+			remoteInfo = "HTMLKitTests-macOS";
+		};
+		48528D622317F78200F944A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48528D542317F78200F944A6 /* HTMLKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 62ECBF4D1C0B6C7600AF847B;
+			remoteInfo = "HTMLKit-iOS";
+		};
+		48528D642317F78200F944A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48528D542317F78200F944A6 /* HTMLKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 62ECBF561C0B6C7600AF847B;
+			remoteInfo = "HTMLKitTests-iOS";
+		};
+		48528D662317F78200F944A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48528D542317F78200F944A6 /* HTMLKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 62857CEA1D39A262008DC254;
+			remoteInfo = "HTMLKit-tvOS";
+		};
+		48528D682317F78200F944A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48528D542317F78200F944A6 /* HTMLKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 62857CF31D39A262008DC254;
+			remoteInfo = "HTMLKit-tvOSTests";
+		};
+		48528D6A2317F78200F944A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48528D542317F78200F944A6 /* HTMLKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 62857C4E1D398642008DC254;
+			remoteInfo = "HTMLKit-watchOS";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		4805C81021D4D4D000C058D1 /* AHNavigationBarResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHNavigationBarResponse.m; sourceTree = "<group>"; };
 		481A064E225C9B9E00DD57BB /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
@@ -151,11 +199,7 @@
 		4837FFC321FA237800D2FE9C /* vue.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = vue.js; sourceTree = "<group>"; };
 		4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHSchemeTaskDelegate.m; sourceTree = "<group>"; };
 		4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHSchemeTaskDelegate.h; sourceTree = "<group>"; };
-		483E884522028FAD00066375 /* HTMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HTMLParser.m; path = "Objective-C-HMTL-Parser/HTMLParser.m"; sourceTree = "<group>"; };
-		483E884622028FAD00066375 /* HTMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HTMLNode.h; path = "Objective-C-HMTL-Parser/HTMLNode.h"; sourceTree = "<group>"; };
-		483E884722028FAD00066375 /* HTMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HTMLParser.h; path = "Objective-C-HMTL-Parser/HTMLParser.h"; sourceTree = "<group>"; };
-		483E884822028FAD00066375 /* HTMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HTMLNode.m; path = "Objective-C-HMTL-Parser/HTMLNode.m"; sourceTree = "<group>"; };
-		483E884E22028FD500066375 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		48528D542317F78200F944A6 /* HTMLKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = HTMLKit.xcodeproj; path = HTMLKit/HTMLKit.xcodeproj; sourceTree = "<group>"; };
 		48551BB72245E2BA00CAC76C /* AppHostViewController+Scripts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppHostViewController+Scripts.h"; sourceTree = "<group>"; };
 		48551BB82245E2BA00CAC76C /* AppHostViewController+Scripts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppHostViewController+Scripts.m"; sourceTree = "<group>"; };
 		48551BBF2246083C00CAC76C /* AppHostViewController+Dispatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppHostViewController+Dispatch.h"; sourceTree = "<group>"; };
@@ -254,7 +298,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				483E884F22028FD500066375 /* libxml2.tbd in Frameworks */,
+				48528D6C2317F7C100F944A6 /* HTMLKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,23 +336,25 @@
 			path = Response;
 			sourceTree = "<group>";
 		};
-		483E884422028F9500066375 /* Objective-C-HMTL-Parser */ = {
-			isa = PBXGroup;
-			children = (
-				483E884622028FAD00066375 /* HTMLNode.h */,
-				483E884822028FAD00066375 /* HTMLNode.m */,
-				483E884722028FAD00066375 /* HTMLParser.h */,
-				483E884522028FAD00066375 /* HTMLParser.m */,
-			);
-			name = "Objective-C-HMTL-Parser";
-			sourceTree = "<group>";
-		};
 		483E884D22028FD500066375 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				483E884E22028FD500066375 /* libxml2.tbd */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		48528D552317F78200F944A6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				48528D5F2317F78200F944A6 /* HTMLKit.framework */,
+				48528D612317F78200F944A6 /* HTMLKitTests-macOS.xctest */,
+				48528D632317F78200F944A6 /* HTMLKit.framework */,
+				48528D652317F78200F944A6 /* HTMLKitTests-iOS.xctest */,
+				48528D672317F78200F944A6 /* HTMLKit.framework */,
+				48528D692317F78200F944A6 /* HTMLKit-tvOSTests.xctest */,
+				48528D6B2317F78200F944A6 /* HTMLKit.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		4885E98321D77B0C0036B1C6 /* RemoteDebug */ = {
@@ -347,7 +393,6 @@
 		48B00FF121D4DA380037FABF /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
-				483E884422028F9500066375 /* Objective-C-HMTL-Parser */,
 				48B00FF221D4DA6E0037FABF /* Reachability */,
 				48D888F921D4D0AD006E4279 /* GCDWebServer */,
 			);
@@ -405,6 +450,7 @@
 		48D888A021D4CF08006E4279 = {
 			isa = PBXGroup;
 			children = (
+				48528D542317F78200F944A6 /* HTMLKit.xcodeproj */,
 				48D888AC21D4CF08006E4279 /* AppHost */,
 				48D888AB21D4CF08006E4279 /* Products */,
 				483E884D22028FD500066375 /* Frameworks */,
@@ -568,7 +614,6 @@
 				48D888F121D4D031006E4279 /* AHScriptMessageDelegate.h in Headers */,
 				48D888E421D4D031006E4279 /* AHNavigationBarResponse.h in Headers */,
 				48CE9FBC2253816E00F3F7B7 /* AppHostViewController+Timing.h in Headers */,
-				483E884B22028FAD00066375 /* HTMLParser.h in Headers */,
 				48D8891A21D4D0AD006E4279 /* GCDWebServerPrivate.h in Headers */,
 				48D8892421D4D0AD006E4279 /* GCDWebServerRequest.h in Headers */,
 				48D8892521D4D0AD006E4279 /* GCDWebServerFileResponse.h in Headers */,
@@ -578,7 +623,6 @@
 				48D888EA21D4D031006E4279 /* AHBuiltInResponse.h in Headers */,
 				48D8892B21D4D0AD006E4279 /* GCDWebServerErrorResponse.h in Headers */,
 				48D8893421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h in Headers */,
-				483E884A22028FAD00066375 /* HTMLNode.h in Headers */,
 				48C8AEA821D5F3B800A6B426 /* AHURLChecker.h in Headers */,
 				48D8892021D4D0AD006E4279 /* GCDWebServerResponse.h in Headers */,
 				4888F1DB2244D59700A933E8 /* AHUtil.h in Headers */,
@@ -646,6 +690,12 @@
 			mainGroup = 48D888A021D4CF08006E4279;
 			productRefGroup = 48D888AB21D4CF08006E4279 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 48528D552317F78200F944A6 /* Products */;
+					ProjectRef = 48528D542317F78200F944A6 /* HTMLKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				48D888A921D4CF08006E4279 /* AppHost */,
@@ -653,6 +703,58 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		48528D5F2317F78200F944A6 /* HTMLKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HTMLKit.framework;
+			remoteRef = 48528D5E2317F78200F944A6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		48528D612317F78200F944A6 /* HTMLKitTests-macOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "HTMLKitTests-macOS.xctest";
+			remoteRef = 48528D602317F78200F944A6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		48528D632317F78200F944A6 /* HTMLKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HTMLKit.framework;
+			remoteRef = 48528D622317F78200F944A6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		48528D652317F78200F944A6 /* HTMLKitTests-iOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "HTMLKitTests-iOS.xctest";
+			remoteRef = 48528D642317F78200F944A6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		48528D672317F78200F944A6 /* HTMLKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HTMLKit.framework;
+			remoteRef = 48528D662317F78200F944A6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		48528D692317F78200F944A6 /* HTMLKit-tvOSTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "HTMLKit-tvOSTests.xctest";
+			remoteRef = 48528D682317F78200F944A6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		48528D6B2317F78200F944A6 /* HTMLKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HTMLKit.framework;
+			remoteRef = 48528D6A2317F78200F944A6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		48D888A821D4CF08006E4279 /* Resources */ = {
@@ -706,7 +808,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				483E884C22028FAD00066375 /* HTMLNode.m in Sources */,
 				48D8892C21D4D0AD006E4279 /* GCDWebServerStreamedResponse.m in Sources */,
 				481A06E32265C37600DD57BB /* AppHostViewController+Extend.m in Sources */,
 				48D888F021D4D031006E4279 /* AHWebViewScrollPositionManager.m in Sources */,
@@ -725,7 +826,6 @@
 				486C3EEA21F6F2E800BE582F /* AHDebugResponse.m in Sources */,
 				48D8892221D4D0AD006E4279 /* GCDWebServer.m in Sources */,
 				48D888E121D4D031006E4279 /* AHNavigationResponse.m in Sources */,
-				483E884922028FAD00066375 /* HTMLParser.m in Sources */,
 				48A42E2D22E832740005A930 /* AHViewControllerPreRender.m in Sources */,
 				48C751E022E801A700947911 /* AHWebViewPreLoader.m in Sources */,
 				482FF50821F6BBB8005FCD7A /* AHResponseManager.m in Sources */,

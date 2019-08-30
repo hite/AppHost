@@ -8,9 +8,9 @@
 
 #import "AHRequestMediate.h"
 #import "AppHostProtocol.h"
-#import "HTMLParser.h"
 #import "AHUtil.h"
 #import "AppHostEnum.h"
+#import <HTMLKit/HTMLKit.h>
 
 static NSString *kFilePrefix = @"file://";
 @implementation AHRequestMediate
@@ -40,26 +40,20 @@ static NSString *kFilePrefix = @"file://";
     }
     // 先从 HTML 里拿到对应的字符串
     // 不用正则来替换文件名和内容，而是使用先计算要替换的位置和替换内容，最后一起替换
-    HTMLParser *parser = [[HTMLParser alloc] initWithString:htmlContent error:&error];
-    
-    if (error) {
-        NSLog(@"Error: %@", error);
-        return -1;
-    }
-    
+    HTMLDocument *document = [HTMLDocument documentWithString:htmlContent];
+
     NSMutableDictionary *replacements = [NSMutableDictionary dictionaryWithCapacity:10];
     
     // 处理 style 引入的文件
     NSError *err = nil;
-    HTMLNode *bodyNode = [parser html];
-    NSArray *inputNodes = [bodyNode findChildTags:@"link"];
-    for (HTMLNode *inputNode in inputNodes) {
-        NSString *linkedCss = [inputNode getAttributeNamed:@"href"];
+    NSArray<HTMLElement *> *linkNodes = [document querySelectorAll:@"link"];
+    for (HTMLElement *inputNode in linkNodes) {
+        NSString *linkedCss = [inputNode objectForKeyedSubscript:@"href"];
         if ([AHUtil isNetworkUrl:linkedCss]) {
             continue;
         }
         
-        NSString *originalStyle = inputNode.rawContents;
+        NSString *originalStyle = inputNode.outerHTML;
         AHLog(@"style src = %@, rawContents = %@", linkedCss, originalStyle);
         if (originalStyle.length > 0) {
             NSString *path = [[[directory URLByAppendingPathComponent:linkedCss] absoluteString] stringByReplacingOccurrencesOfString:kFilePrefix withString:AppHostURLStyleServer];
@@ -67,19 +61,19 @@ static NSString *kFilePrefix = @"file://";
             [replacements setObject:styleTxt forKey:originalStyle];
         } else {
             ext = -2;
-            AHLog(@"Replace linked css error, originalStyle = %@", originalStyle);
+            AHLog(@"Replace linked css error, originalStyle = %@", linkedCss);
         }
     }
     
     // 处理 script
-    NSArray *spanNodes = [bodyNode findChildTags:@"script"];
-    for (HTMLNode *spanNode in spanNodes) {
-        NSString *linkedScript = [spanNode getAttributeNamed:@"src"];
+    NSArray *spanNodes = [document querySelectorAll:@"script"];
+    for (HTMLElement *spanNode in spanNodes) {
+        NSString *linkedScript = [spanNode objectForKeyedSubscript:@"src"];
         if ([AHUtil isNetworkUrl:linkedScript]) {
             continue;
         }
         if (linkedScript.length > 0) {
-            NSString *originalScript = spanNode.rawContents;
+            NSString *originalScript = spanNode.outerHTML;
             AHLog(@"script src = %@, rawContents = %@", linkedScript, originalScript);
             if (originalScript.length > 0) {
                 NSString *path = [[[directory URLByAppendingPathComponent:linkedScript] absoluteString] stringByReplacingOccurrencesOfString:kFilePrefix withString:AppHostURLScriptServer];
@@ -93,21 +87,21 @@ static NSString *kFilePrefix = @"file://";
     }
     
     // 处理图片, 只处理 img 标签。
-    NSArray *imgNode = [bodyNode findChildTags:@"img"];
-    for (HTMLNode *spanNode in imgNode) {
-        NSString *imgSrc = [spanNode getAttributeNamed:@"src"];
+    NSArray *imgNode = [document querySelectorAll:@"img"];
+    for (HTMLElement *spanNode in imgNode) {
+        NSString *imgSrc = [spanNode objectForKeyedSubscript:@"src"];
         if ([AHUtil isNetworkUrl:imgSrc]) {
             continue;
         }
         if (imgSrc.length > 0) {
-            NSString *originalSrc = spanNode.rawContents;
+            NSString *originalSrc = spanNode.outerHTML;
             AHLog(@"image src = %@, rawContents = %@", imgSrc,originalSrc);
             if (imgSrc.length > 0) {
                 NSError *error = nil;
                 NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"src=['\"](.)+['\"]" options:NSRegularExpressionCaseInsensitive error:&error];
                 NSString *path = [[[directory URLByAppendingPathComponent:imgSrc] absoluteString] stringByReplacingOccurrencesOfString:kFilePrefix withString:AppHostURLImageServer];
                 NSString *modifiedString = [regex stringByReplacingMatchesInString:originalSrc options:0 range:NSMakeRange(0, [originalSrc length]) withTemplate:[NSString stringWithFormat:@"src=\"%@\"", path]];
-                
+
                 [replacements setObject:modifiedString forKey:originalSrc];
             } else {
                 ext = -4;
@@ -115,11 +109,11 @@ static NSString *kFilePrefix = @"file://";
             }
         }
     }
-    
+
     // 遍历 replacements，执行替换动作
     [replacements enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL * _Nonnull stop) {
         if (![htmlContent containsString:key]) {
-            // 如果遇到对写 htmlContent 不和规范，如在末位加 /,<link href="//www.cnbeta.com/css/style.css" rel="stylesheet"/>
+            // 如果遇到对写 htmlContent 不合规范，如在末位加 /,<link href="//www.cnbeta.com/css/style.css" rel="stylesheet"/>
             // 这样的模式，需要把 key 处理下，加上 / 符号。然后再替换
             key = [key stringByReplacingOccurrencesOfString:@">" withString:@"/>"];
         }
@@ -144,29 +138,22 @@ static NSString *kFilePrefix = @"file://";
     }
     // 先从 HTML 里拿到对应的字符串
     // 不用正则来替换文件名和内容，而是使用先计算要替换的位置和替换内容，最后一起替换
+    HTMLDocument *document = [HTMLDocument documentWithString:htmlContent];
 
-    HTMLParser *parser = [[HTMLParser alloc] initWithString:htmlContent error:&error];
-    
-    if (error) {
-        NSLog(@"Error: %@", error);
-        return -1;
-    }
-    
     NSMutableDictionary *replacements = [NSMutableDictionary dictionaryWithCapacity:10];
-    
+
     // 处理 style 引入的文件
     NSError *err = nil;
-    HTMLNode *bodyNode = [parser html];
-    NSArray *inputNodes = [bodyNode findChildTags:@"link"];
-    for (HTMLNode *inputNode in inputNodes) {
-        NSString *linkedCss = [inputNode getAttributeNamed:@"href"];
+    NSArray *inputNodes = [document querySelectorAll:@"link"];
+    for (HTMLElement *inputNode in inputNodes) {
+        NSString *linkedCss = [inputNode objectForKeyedSubscript:@"href"];
         if ([AHUtil isNetworkUrl:linkedCss]) {
             continue;
         }
-        
+
         NSString *content = [NSString stringWithContentsOfURL:[directory URLByAppendingPathComponent:linkedCss] usedEncoding:&encoding error:&err];
-        
-        NSString *originalStyle = inputNode.rawContents;
+
+        NSString *originalStyle = inputNode.outerHTML;
         AHLog(@"style src = %@, rawContents = %@", linkedCss, originalStyle);
         if (err == nil && originalStyle.length > 0 && content.length > 0) {
             NSString *styleTxt = [NSString stringWithFormat:@"<style type='text/css'>%@</style>", content];
@@ -176,19 +163,19 @@ static NSString *kFilePrefix = @"file://";
             AHLog(@"Replace linked css error = %@ , originalStyle = %@, content = %@", err, originalStyle, content);
         }
     }
-    
+
     // 处理 script
-    NSArray *spanNodes = [bodyNode findChildTags:@"script"];
-    for (HTMLNode *spanNode in spanNodes) {
-        NSString *linkedScript = [spanNode getAttributeNamed:@"src"];
+    NSArray *spanNodes = [document querySelectorAll:@"script"];
+    for (HTMLElement *spanNode in spanNodes) {
+        NSString *linkedScript = [spanNode objectForKeyedSubscript:@"src"];
         if ([AHUtil isNetworkUrl:linkedScript]) {
             continue;
         }
-        
+
         if (linkedScript.length > 0) {
             NSString *content = [NSString stringWithContentsOfURL:[directory URLByAppendingPathComponent:linkedScript] usedEncoding:&encoding error:&err];
-            
-            NSString *originalScript = spanNode.rawContents;
+
+            NSString *originalScript = spanNode.outerHTML;
             AHLog(@"script src = %@, rawContents = %@", linkedScript, originalScript);
             if (err == nil && originalScript.length > 0 && content.length > 0) {
                 NSString *scriptTxt = [NSString stringWithFormat:@"<script type='text/javascript'>%@</script>", content];
@@ -199,33 +186,33 @@ static NSString *kFilePrefix = @"file://";
             }
         }
     }
-    
+
     // 处理图片, 将图片实现为 base64字符串, 只处理 img 标签。
-    NSArray *imgNode = [bodyNode findChildTags:@"img"];
-    for (HTMLNode *spanNode in imgNode) {
-        NSString *imgSrc = [spanNode getAttributeNamed:@"src"];
+    NSArray *imgNode = [document querySelectorAll:@"img"];
+    for (HTMLElement *spanNode in imgNode) {
+        NSString *imgSrc = [spanNode objectForKeyedSubscript:@"src"];
         if ([AHUtil isNetworkUrl:imgSrc]) {
             continue;
         }
         if (imgSrc.length > 0) {
-            NSString *originalSrc = spanNode.rawContents;
+            NSString *originalSrc = spanNode.outerHTML;
             AHLog(@"image src = %@, rawContents = %@", imgSrc,originalSrc);
             if (imgSrc.length > 0) {
                 NSURL *imgURL = [directory URLByAppendingPathComponent:imgSrc];
                 // 把文件转成 base64
                 NSData *imageData = [NSData dataWithContentsOfURL:imgURL];
                 NSString *encodedImageStr = [imageData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
-                
+
                 NSError *error = nil;
                 NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"src=['\"](.)+['\"]" options:NSRegularExpressionCaseInsensitive error:&error];
-                
+
                 NSString *imageType = @"image/jpeg";
                 if ([imgSrc hasSuffix:@".png"]){
                     imageType = @"image/png";
                 }
-                
+
                 NSString *modifiedString = [regex stringByReplacingMatchesInString:originalSrc options:0 range:NSMakeRange(0, [originalSrc length]) withTemplate:[NSString stringWithFormat:@"src='data:%@;base64,%@'", imageType,encodedImageStr]];
-                
+
                 [replacements setObject:modifiedString forKey:originalSrc];
             } else {
                 ext = -4;
