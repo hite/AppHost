@@ -23,6 +23,7 @@
 #import "AppHostViewController+Dispatch.h"
 #import "AppHostViewController+Progressor.h"
 #import "AppHostViewController+Timing.h"
+#import "AHHTTPSchemeTaskDelegate.h"
 
 @interface AppHostViewController () <UIScrollViewDelegate, WKUIDelegate, WKScriptMessageHandler>
 
@@ -385,6 +386,7 @@ NSLog(@"[Timing] %@, nowTime = %f", NSStringFromSelector(_cmd), [[NSDate date] t
         webViewConfig.allowsInlineMediaPlayback = YES;
         webViewConfig.processPool = [AppHostCookie sharedPoolManager];
         [webViewConfig setURLSchemeHandler:self.taskDelegate forURLScheme:kAppHostURLScheme];
+        [webViewConfig setURLSchemeHandler:[AHHTTPSchemeTaskDelegate new] forURLScheme:@"https"];
         [self injectScriptsToUserContent:userContentController];
         [self measure:kAppHostTimingAddUserScript to:kAppHostTimingWebViewInit];
 

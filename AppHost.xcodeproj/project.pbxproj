@@ -127,6 +127,10 @@
 		48D8893321D4D0AD006E4279 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D8891721D4D0AD006E4279 /* GCDWebServerFileRequest.m */; };
 		48D8893421D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 48D8891821D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h */; };
 		48EF7DEA2269BDAF00BBBD76 /* favicon.ico in Resources */ = {isa = PBXBuildFile; fileRef = 48EF7DE92269BDAE00BBBD76 /* favicon.ico */; };
+		48F6A1F725FA3AB400E45F83 /* WKWebView+HandleURLScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F6A1F525FA3AB400E45F83 /* WKWebView+HandleURLScheme.h */; };
+		48F6A1F825FA3AB400E45F83 /* WKWebView+HandleURLScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F6A1F625FA3AB400E45F83 /* WKWebView+HandleURLScheme.m */; };
+		48F6A1FD25FA3D2C00E45F83 /* AHHTTPSchemeTaskDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F6A1FB25FA3D2C00E45F83 /* AHHTTPSchemeTaskDelegate.h */; };
+		48F6A1FE25FA3D2C00E45F83 /* AHHTTPSchemeTaskDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F6A1FC25FA3D2C00E45F83 /* AHHTTPSchemeTaskDelegate.m */; };
 		8415243F21EC578700203C2D /* AHDebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8415243D21EC578700203C2D /* AHDebugViewController.h */; };
 		8415244021EC578700203C2D /* AHDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8415243E21EC578700203C2D /* AHDebugViewController.m */; };
 		8476B1AC21E7678000E97B54 /* renderjson.js in Resources */ = {isa = PBXBuildFile; fileRef = 8476B1AA21E7677F00E97B54 /* renderjson.js */; };
@@ -243,6 +247,10 @@
 		48D8891721D4D0AD006E4279 /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileRequest.m; sourceTree = "<group>"; };
 		48D8891821D4D0AD006E4279 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
 		48EF7DE92269BDAE00BBBD76 /* favicon.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = favicon.ico; sourceTree = "<group>"; };
+		48F6A1F525FA3AB400E45F83 /* WKWebView+HandleURLScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WKWebView+HandleURLScheme.h"; sourceTree = "<group>"; };
+		48F6A1F625FA3AB400E45F83 /* WKWebView+HandleURLScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+HandleURLScheme.m"; sourceTree = "<group>"; };
+		48F6A1FB25FA3D2C00E45F83 /* AHHTTPSchemeTaskDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHHTTPSchemeTaskDelegate.h; sourceTree = "<group>"; };
+		48F6A1FC25FA3D2C00E45F83 /* AHHTTPSchemeTaskDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHHTTPSchemeTaskDelegate.m; sourceTree = "<group>"; };
 		8415243D21EC578700203C2D /* AHDebugViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDebugViewController.h; sourceTree = "<group>"; };
 		8415243E21EC578700203C2D /* AHDebugViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHDebugViewController.m; sourceTree = "<group>"; };
 		8476B1AA21E7677F00E97B54 /* renderjson.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = renderjson.js; sourceTree = "<group>"; };
@@ -363,13 +371,13 @@
 			path = Reachability;
 			sourceTree = "<group>";
 		};
-		48C751CD22E801A700947911 /* NeedForSpeed */ = {
+		48C751CD22E801A700947911 /* Boost */ = {
 			isa = PBXGroup;
 			children = (
 				48C751CE22E801A700947911 /* ViewControllerPreRender */,
 				48C751D122E801A700947911 /* ResourcePreloader */,
 			);
-			path = NeedForSpeed;
+			path = Boost;
 			sourceTree = "<group>";
 		};
 		48C751CE22E801A700947911 /* ViewControllerPreRender */ = {
@@ -426,7 +434,8 @@
 				48D888AE21D4CF08006E4279 /* Info.plist */,
 				48D888B521D4CF80006E4279 /* Core */,
 				4885E98321D77B0C0036B1C6 /* RemoteDebug */,
-				48C751CD22E801A700947911 /* NeedForSpeed */,
+				48C751CD22E801A700947911 /* Boost */,
+				48F6A1F425FA3A7400E45F83 /* NetworkCapture */,
 				48B00FF121D4DA380037FABF /* ThirdParty */,
 			);
 			path = AppHost;
@@ -455,6 +464,8 @@
 				48CE9FBB2253816E00F3F7B7 /* AppHostViewController+Timing.m */,
 				4839FE0021D746BE008EB0DF /* AHSchemeTaskDelegate.h */,
 				4839FDFF21D746BE008EB0DF /* AHSchemeTaskDelegate.m */,
+				48F6A1FB25FA3D2C00E45F83 /* AHHTTPSchemeTaskDelegate.h */,
+				48F6A1FC25FA3D2C00E45F83 /* AHHTTPSchemeTaskDelegate.m */,
 				481A0657225F15C300DD57BB /* AHJSCoreManager.h */,
 				481A0658225F15C300DD57BB /* AHJSCoreManager.m */,
 				4888F1D42244C91700A933E8 /* Intermediate */,
@@ -540,6 +551,15 @@
 			path = Requests;
 			sourceTree = "<group>";
 		};
+		48F6A1F425FA3A7400E45F83 /* NetworkCapture */ = {
+			isa = PBXGroup;
+			children = (
+				48F6A1F525FA3AB400E45F83 /* WKWebView+HandleURLScheme.h */,
+				48F6A1F625FA3AB400E45F83 /* WKWebView+HandleURLScheme.m */,
+			);
+			path = NetworkCapture;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -548,6 +568,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48C8AEDE21D6293500A6B426 /* AppHostEnum.h in Headers */,
+				48F6A1F725FA3AB400E45F83 /* WKWebView+HandleURLScheme.h in Headers */,
 				48C751DE22E801A700947911 /* AHSimpleWebViewController.h in Headers */,
 				48D888AF21D4CF08006E4279 /* AppHost.h in Headers */,
 				48D888F421D4D031006E4279 /* AppHostProtocol.h in Headers */,
@@ -594,6 +615,7 @@
 				48D8891C21D4D0AD006E4279 /* GCDWebServerConnection.h in Headers */,
 				48D8892D21D4D0AD006E4279 /* GCDWebServerDataRequest.h in Headers */,
 				48D888D721D4D031006E4279 /* AHAppWhiteListParser.h in Headers */,
+				48F6A1FD25FA3D2C00E45F83 /* AHHTTPSchemeTaskDelegate.h in Headers */,
 				48D888DB21D4D031006E4279 /* AHNavigationResponse.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -706,6 +728,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48F6A1F825FA3AB400E45F83 /* WKWebView+HandleURLScheme.m in Sources */,
 				483E884C22028FAD00066375 /* HTMLNode.m in Sources */,
 				48D8892C21D4D0AD006E4279 /* GCDWebServerStreamedResponse.m in Sources */,
 				481A06E32265C37600DD57BB /* AppHostViewController+Extend.m in Sources */,
@@ -714,6 +737,7 @@
 				48D888F621D4D031006E4279 /* AppHostResponse.m in Sources */,
 				48B00FF521D4DA6E0037FABF /* Reachability.m in Sources */,
 				48D8892321D4D0AD006E4279 /* GCDWebServerConnection.m in Sources */,
+				48F6A1FE25FA3D2C00E45F83 /* AHHTTPSchemeTaskDelegate.m in Sources */,
 				48C8AEA721D5F3B800A6B426 /* AHURLChecker.m in Sources */,
 				48D8891B21D4D0AD006E4279 /* GCDWebServerResponse.m in Sources */,
 				48D8892921D4D0AD006E4279 /* GCDWebServerFileResponse.m in Sources */,
