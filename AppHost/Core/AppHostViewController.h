@@ -11,6 +11,8 @@
 #import "AHSchemeTaskDelegate.h"
 #import "AppHostEnum.h"
 
+#import "AHPrefetchLoaderProtocol.h"
+
 static NSString *kAppHostInvokeRequestEvent = @"kAppHostInvokeRequestEvent";
 static NSString *kAppHostInvokeResponseEvent = @"kAppHostInvokeResponseEvent";
 
@@ -26,6 +28,9 @@ static NSString *kAppHostInvokeResponseEvent = @"kAppHostInvokeResponseEvent";
 @end
 
 @interface AppHostViewController : UIViewController <WKNavigationDelegate>
+
+/// 预加载的加载器
+@property (nonatomic, strong, readwrite) id<AHPrefetchLoaderProtocol> prefetchLoader;
 
 @property (nonatomic, copy) NSString *pageTitle;
 
@@ -69,6 +74,12 @@ static NSString *kAppHostInvokeResponseEvent = @"kAppHostInvokeResponseEvent";
 @property (nonatomic, assign) BOOL fromPresented;
 
 @property (nonatomic, strong, readonly) AHSchemeTaskDelegate *taskDelegate;
+
+#pragma mark - class
+
+/// 设置全局的 preLoader，需要遵循 AHPrefetchLoaderProtocol 协议
+/// @param prefetchLoaderClass 实现 AHPrefetchLoaderProtocol 的类
++ (void)setPrefetchLoader:(Class)prefetchLoaderClass;
 
 #pragma mark - 使用缓存渲染界面
 /**

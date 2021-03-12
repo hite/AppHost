@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AHPrefetchLoaderProtocol.h"
+#import "AHLogProviderProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,15 +29,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface AHPrefechLoader : NSObject
+@interface AHPrefechLoader : NSObject<AHPrefetchLoaderProtocol>
 
-+ (instancetype)sharedInstance;
+@property (nonatomic, strong) NSString *prefetchUrl;
 
-- (void)prepareDataForUrl:(NSString *)url;
-
-- (void)clearCacheDataForUrl:(NSString *)url;
-
-- (NSDictionary *)cacheForHash:(int32_t)hash;
+- (void)setLogger:(id<AHLogProviderProtocol>)logger;
 
 @end
 

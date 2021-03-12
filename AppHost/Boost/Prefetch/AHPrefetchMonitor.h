@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AHLogProviderProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 //int TYPE_MISS = 1; //当前接口未命中配置表
@@ -44,6 +45,10 @@ typedef NS_ENUM(NSInteger, AHPrefetchStatus) {
 
 @interface AHPrefetchMonitor : NSObject
 + (instancetype)sharedInstance;
+
+/// 设置统计日志上传接口，可由外部定义
+/// @param logger 自定义 log 系统接口
+- (void)setLogger:(id<AHLogProviderProtocol>)logger;
 
 - (void)markLoadTime:(NSInteger)realTime forHash:(int32_t)hash url:(NSString *)url api:(NSString *)api;
 

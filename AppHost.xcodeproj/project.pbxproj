@@ -135,6 +135,9 @@
 		48F6A20C25FB133C00E45F83 /* AHPrefechLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F6A20A25FB133C00E45F83 /* AHPrefechLoader.m */; };
 		48F6A21125FB400400E45F83 /* AHPrefetchMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F6A20F25FB400400E45F83 /* AHPrefetchMonitor.h */; };
 		48F6A21225FB400400E45F83 /* AHPrefetchMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F6A21025FB400400E45F83 /* AHPrefetchMonitor.m */; };
+		48F6A21825FB47C700E45F83 /* AHLogProviderProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F6A21625FB47C700E45F83 /* AHLogProviderProtocol.h */; };
+		48F6A22A25FB50A000E45F83 /* AHPrefetchResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F6A22825FB50A000E45F83 /* AHPrefetchResponse.h */; };
+		48F6A22B25FB50A000E45F83 /* AHPrefetchResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F6A22925FB50A000E45F83 /* AHPrefetchResponse.m */; };
 		8415243F21EC578700203C2D /* AHDebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8415243D21EC578700203C2D /* AHDebugViewController.h */; };
 		8415244021EC578700203C2D /* AHDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8415243E21EC578700203C2D /* AHDebugViewController.m */; };
 		8476B1AC21E7678000E97B54 /* renderjson.js in Resources */ = {isa = PBXBuildFile; fileRef = 8476B1AA21E7677F00E97B54 /* renderjson.js */; };
@@ -259,6 +262,10 @@
 		48F6A20A25FB133C00E45F83 /* AHPrefechLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHPrefechLoader.m; sourceTree = "<group>"; };
 		48F6A20F25FB400400E45F83 /* AHPrefetchMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHPrefetchMonitor.h; sourceTree = "<group>"; };
 		48F6A21025FB400400E45F83 /* AHPrefetchMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHPrefetchMonitor.m; sourceTree = "<group>"; };
+		48F6A21525FB474700E45F83 /* AHPrefetchLoaderProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHPrefetchLoaderProtocol.h; sourceTree = "<group>"; };
+		48F6A21625FB47C700E45F83 /* AHLogProviderProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHLogProviderProtocol.h; sourceTree = "<group>"; };
+		48F6A22825FB50A000E45F83 /* AHPrefetchResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHPrefetchResponse.h; sourceTree = "<group>"; };
+		48F6A22925FB50A000E45F83 /* AHPrefetchResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHPrefetchResponse.m; sourceTree = "<group>"; };
 		8415243D21EC578700203C2D /* AHDebugViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDebugViewController.h; sourceTree = "<group>"; };
 		8415243E21EC578700203C2D /* AHDebugViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHDebugViewController.m; sourceTree = "<group>"; };
 		8476B1AA21E7677F00E97B54 /* renderjson.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = renderjson.js; sourceTree = "<group>"; };
@@ -304,6 +311,8 @@
 				48D888C021D4D030006E4279 /* AHNavigationResponse.m */,
 				482FF50521F6BBB8005FCD7A /* AHResponseManager.h */,
 				482FF50621F6BBB8005FCD7A /* AHResponseManager.m */,
+				48F6A22825FB50A000E45F83 /* AHPrefetchResponse.h */,
+				48F6A22925FB50A000E45F83 /* AHPrefetchResponse.m */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -576,6 +585,8 @@
 				48F6A20A25FB133C00E45F83 /* AHPrefechLoader.m */,
 				48F6A20F25FB400400E45F83 /* AHPrefetchMonitor.h */,
 				48F6A21025FB400400E45F83 /* AHPrefetchMonitor.m */,
+				48F6A21625FB47C700E45F83 /* AHLogProviderProtocol.h */,
+				48F6A21525FB474700E45F83 /* AHPrefetchLoaderProtocol.h */,
 			);
 			path = Prefetch;
 			sourceTree = "<group>";
@@ -616,6 +627,7 @@
 				48D8892521D4D0AD006E4279 /* GCDWebServerFileResponse.h in Headers */,
 				8415243F21EC578700203C2D /* AHDebugViewController.h in Headers */,
 				481A0659225F15C300DD57BB /* AHJSCoreManager.h in Headers */,
+				48F6A22A25FB50A000E45F83 /* AHPrefetchResponse.h in Headers */,
 				48D888EF21D4D031006E4279 /* AHWebViewScrollPositionManager.h in Headers */,
 				48D888EA21D4D031006E4279 /* AHBuiltInResponse.h in Headers */,
 				48D8892B21D4D0AD006E4279 /* GCDWebServerErrorResponse.h in Headers */,
@@ -627,6 +639,7 @@
 				48D8891921D4D0AD006E4279 /* GCDWebServerFunctions.h in Headers */,
 				48D888DD21D4D031006E4279 /* AHAppLoggerResponse.h in Headers */,
 				48D8891F21D4D0AD006E4279 /* GCDWebServerHTTPStatusCodes.h in Headers */,
+				48F6A21825FB47C700E45F83 /* AHLogProviderProtocol.h in Headers */,
 				48D8892621D4D0AD006E4279 /* GCDWebServerStreamedResponse.h in Headers */,
 				48D8892F21D4D0AD006E4279 /* GCDWebServerFileRequest.h in Headers */,
 				48F6A20B25FB133C00E45F83 /* AHPrefechLoader.h in Headers */,
@@ -783,6 +796,7 @@
 				4805C81121D4D4D000C058D1 /* AHNavigationBarResponse.m in Sources */,
 				48F6A20C25FB133C00E45F83 /* AHPrefechLoader.m in Sources */,
 				48D8892721D4D0AD006E4279 /* GCDWebServerErrorResponse.m in Sources */,
+				48F6A22B25FB50A000E45F83 /* AHPrefetchResponse.m in Sources */,
 				48D888ED21D4D031006E4279 /* AHScriptMessageDelegate.m in Sources */,
 				4885E98721D77CAE0036B1C6 /* AHDebugServerManager.m in Sources */,
 				48D8893121D4D0AD006E4279 /* GCDWebServerMultiPartFormRequest.m in Sources */,

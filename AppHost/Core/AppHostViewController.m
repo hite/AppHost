@@ -31,6 +31,8 @@
 
 @property (nonatomic, strong) AHSchemeTaskDelegate *taskDelegate;
 
+@property (nonatomic, strong, readwrite) id<AHPrefetchLoaderProtocol> prefetchLoader
+
 @end
 
 static NSString *const kAHScriptHandlerName = @"kAHScriptHandlerName";
@@ -52,12 +54,23 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 @implementation AppHostViewController
 
+static id<AHPrefetchLoaderProtocol> _prefetchLoaderClass;
++ (void)setPrefetchLoader:(Class)prefetchLoaderClass{
+    if ([prefetchLoaderClass isSubclassOfClass:AHPrefetchLoaderProtocol.class]) {
+        _prefetchLoaderClass = prefetchLoaderClass;
+    }
+}
+
+
 - (instancetype)init
 {
     self = [super init];
     if (self) {
         // 注意：此时还没有 navigationController。
         self.taskDelegate = [AHSchemeTaskDelegate new];
+        if (_prefetchLoaderClass) {
+            _prefetchLoader = [_prefetchLoaderClass new];
+        }
         [self.view addSubview:self.webView];
         self.webView.translatesAutoresizingMaskIntoConstraints = NO;
         [NSLayoutConstraint activateConstraints:@[
@@ -119,6 +132,8 @@ BOOL kGCDWebServer_logging_enabled = YES;
     } else {
         [self loadWebPageWithURL];
     }
+    // 同时设置 preloader
+    [_prefetchLoader prepareDataForUrl:_url];
 }
 
 - (void)didReceiveMemoryWarning

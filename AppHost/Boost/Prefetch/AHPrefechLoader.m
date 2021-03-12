@@ -17,11 +17,20 @@
 
 @end
 
+#ifdef DEBUG
+@interface AHPrefechLoader() <NSURLSessionDelegate>
+
+@end
+#else
+
+#endif
 
 @implementation AHPrefechLoader{
     NSArray<AHPrefetchfigItemModel *> *_configs;
     NSCache *_responseCache;
     dispatch_queue_t _queue;
+    
+    id<AHLogProviderProtocol> _log;
 }
 
 + (instancetype)sharedInstance {
@@ -37,12 +46,17 @@
     return instance;
 }
 
+- (void)setLogger:(id<AHLogProviderProtocol>)logger{
+    _log = logger;
+}
+
 - (void)loadConfigFile{
 
-    NSString *jsonUrl = @"<real api>";
+    NSString *jsonUrl = self.prefetchUrl;
 
     NSURL *URL = [NSURL URLWithString:jsonUrl];
 
+    NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970] * 1000;
     [[[NSURLSession sharedSession] dataTaskWithURL:URL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable err) {
         NSString *errorType = nil;
         if (data && !err) {
@@ -78,7 +92,15 @@
         }
         // 发送统计数据
         if (errorType) {
-            //
+            NSTimeInterval errorTime = [[NSDate date] timeIntervalSince1970] * 1000;
+            [self->_log logAction:@"h5_prefetch_configError"
+                                                                  tags:@{
+                                                                      @"errorType":errorType,
+                                                                  } fields:@{
+                                                                      @"url": jsonUrl,
+                                                                      @"costTime": @(errorTime - startTime),
+                                                                      @"error":err?[err description]:@""
+                                                                  }];
         }
         
         }] resume];
@@ -164,18 +186,6 @@
     return hash;
 }
 
-#pragma mark -  public
--  (NSString *)getCSRFTokenFromCookie{
-    NSArray<NSHTTPCookie *> *cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies;
-    __block NSString *csrfToken = nil;
-    [cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj.name isEqualToString:@"yx_csrf"]) {
-            csrfToken = obj.value;
-            *stop = YES;
-        }
-    }];
-    return csrfToken;
-}
 
 #ifdef DEBUG
 // 这里回调是为了解决在测试环境下 SSL 证书报错存在的；

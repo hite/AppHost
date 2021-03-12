@@ -15,6 +15,7 @@
 @implementation AHPrefetchMonitor{
 //    线程安全
     NSCache *_metricsCache;
+    id<AHLogProviderProtocol> _log;
 }
 
 + (instancetype)sharedInstance {
@@ -25,6 +26,10 @@
         instance->_metricsCache = [[NSCache alloc] init];
     });
     return instance;
+}
+
+- (void)setLogger:(id<AHLogProviderProtocol>)logger{
+    _log = logger;
 }
 
 - (void)markLoadTime:(NSInteger)realTime forHash:(int32_t)hash url:(NSString *)url api:(NSString *)api{
@@ -79,16 +84,16 @@
         status = AHPrefetchStatusUnHit;
     }
     // 发送统计埋点
-//    [[CSManager sharedManager] collectMetricDataWithName:@"h5_prefetch_status"
-//                                                          tags:@{
-//                                                              @"status":[NSString stringWithFormat:@"status_%@", @(status)],
-//                                                          } fields:@{
-//                                                              @"url": metric.url?:@"",
-//                                                              @"api": metric.api?:@"",
-//                                                              @"hashFromH5": @(hash), //  用来排查错误
-//                                                              @"loadCostTime": @(metric.readyTime - metric.loadTime),
-//                                                              @"ready2fetchTime": @(metric.fetchTime - metric.readyTime)
-//                                                          }];
+    [_log logAction:@"h5_prefetch_status"
+                                                          tags:@{
+                                                              @"status":[NSString stringWithFormat:@"status_%@", @(status)],
+                                                          } fields:@{
+                                                              @"url": metric.url?:@"",
+                                                              @"api": metric.api?:@"",
+                                                              @"hashFromH5": @(hash), //  用来排查错误
+                                                              @"loadCostTime": @(metric.readyTime - metric.loadTime),
+                                                              @"ready2fetchTime": @(metric.fetchTime - metric.readyTime)
+                                                          }];
     [self->_metricsCache removeObjectForKey:@(hash)];
 }
 
