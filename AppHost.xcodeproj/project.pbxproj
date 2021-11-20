@@ -54,6 +54,7 @@
 		485614A022684DD400E9BB89 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4856149F22684DD400E9BB89 /* logo.png */; };
 		486C3EE921F6F2E800BE582F /* AHDebugResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 486C3EE721F6F2E800BE582F /* AHDebugResponse.h */; };
 		486C3EEA21F6F2E800BE582F /* AHDebugResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 486C3EE821F6F2E800BE582F /* AHDebugResponse.m */; };
+		48849B122748010F00F0D656 /* AHPrefetchLoaderProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F6A21525FB474700E45F83 /* AHPrefetchLoaderProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4885E98621D77CAE0036B1C6 /* AHDebugServerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4885E98421D77CAE0036B1C6 /* AHDebugServerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4885E98721D77CAE0036B1C6 /* AHDebugServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4885E98521D77CAE0036B1C6 /* AHDebugServerManager.m */; };
 		4885E98921D885F60036B1C6 /* server.html in Resources */ = {isa = PBXBuildFile; fileRef = 4885E98821D885F60036B1C6 /* server.html */; };
@@ -135,7 +136,7 @@
 		48F6A20C25FB133C00E45F83 /* AHPrefechLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F6A20A25FB133C00E45F83 /* AHPrefechLoader.m */; };
 		48F6A21125FB400400E45F83 /* AHPrefetchMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F6A20F25FB400400E45F83 /* AHPrefetchMonitor.h */; };
 		48F6A21225FB400400E45F83 /* AHPrefetchMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F6A21025FB400400E45F83 /* AHPrefetchMonitor.m */; };
-		48F6A21825FB47C700E45F83 /* AHLogProviderProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F6A21625FB47C700E45F83 /* AHLogProviderProtocol.h */; };
+		48F6A21825FB47C700E45F83 /* AHLogProviderProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F6A21625FB47C700E45F83 /* AHLogProviderProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48F6A22A25FB50A000E45F83 /* AHPrefetchResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F6A22825FB50A000E45F83 /* AHPrefetchResponse.h */; };
 		48F6A22B25FB50A000E45F83 /* AHPrefetchResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F6A22925FB50A000E45F83 /* AHPrefetchResponse.m */; };
 		8415243F21EC578700203C2D /* AHDebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8415243D21EC578700203C2D /* AHDebugViewController.h */; };
@@ -625,6 +626,7 @@
 				48D8891A21D4D0AD006E4279 /* GCDWebServerPrivate.h in Headers */,
 				48D8892421D4D0AD006E4279 /* GCDWebServerRequest.h in Headers */,
 				48D8892521D4D0AD006E4279 /* GCDWebServerFileResponse.h in Headers */,
+				48849B122748010F00F0D656 /* AHPrefetchLoaderProtocol.h in Headers */,
 				8415243F21EC578700203C2D /* AHDebugViewController.h in Headers */,
 				481A0659225F15C300DD57BB /* AHJSCoreManager.h in Headers */,
 				48F6A22A25FB50A000E45F83 /* AHPrefetchResponse.h in Headers */,

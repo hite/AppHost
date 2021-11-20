@@ -25,13 +25,12 @@
 #import "AppHostViewController+Timing.h"
 #import "AHHTTPSchemeTaskDelegate.h"
 
+
 @interface AppHostViewController () <UIScrollViewDelegate, WKUIDelegate, WKScriptMessageHandler>
 
 @property (nonatomic, strong) WKWebView *webView;
 
 @property (nonatomic, strong) AHSchemeTaskDelegate *taskDelegate;
-
-@property (nonatomic, strong, readwrite) id<AHPrefetchLoaderProtocol> prefetchLoader
 
 @end
 
@@ -54,23 +53,13 @@ BOOL kGCDWebServer_logging_enabled = YES;
 
 @implementation AppHostViewController
 
-static id<AHPrefetchLoaderProtocol> _prefetchLoaderClass;
-+ (void)setPrefetchLoader:(Class)prefetchLoaderClass{
-    if ([prefetchLoaderClass isSubclassOfClass:AHPrefetchLoaderProtocol.class]) {
-        _prefetchLoaderClass = prefetchLoaderClass;
-    }
-}
-
-
 - (instancetype)init
 {
     self = [super init];
     if (self) {
         // 注意：此时还没有 navigationController。
         self.taskDelegate = [AHSchemeTaskDelegate new];
-        if (_prefetchLoaderClass) {
-            _prefetchLoader = [_prefetchLoaderClass new];
-        }
+
         [self.view addSubview:self.webView];
         self.webView.translatesAutoresizingMaskIntoConstraints = NO;
         [NSLayoutConstraint activateConstraints:@[
@@ -133,7 +122,7 @@ static id<AHPrefetchLoaderProtocol> _prefetchLoaderClass;
         [self loadWebPageWithURL];
     }
     // 同时设置 preloader
-    [_prefetchLoader prepareDataForUrl:_url];
+    [_prefetchLoaderDelegate prepareDataForUrl:_url];
 }
 
 - (void)didReceiveMemoryWarning
@@ -346,6 +335,8 @@ NSLog(@"[Timing] %@, nowTime = %f", NSStringFromSelector(_cmd), [[NSDate date] t
 #pragma mark -
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
 {
+    NSLog(@"[WebView] self.webView.url = %@", self.webView.URL);
+    NSLog(@"[WebView] self.frameInfo.url = %@", message.frameInfo.request.URL);
     if ([message.name isEqualToString:kAHScriptHandlerName]) {
         NSURL *actualUrl = [NSURL URLWithString:self.url];
         if (![[AHURLChecker sharedManager] checkURL:actualUrl forAuthorizationType:AHAuthorizationTypeAppHost]) {
@@ -401,7 +392,7 @@ NSLog(@"[Timing] %@, nowTime = %f", NSStringFromSelector(_cmd), [[NSDate date] t
         webViewConfig.allowsInlineMediaPlayback = YES;
         webViewConfig.processPool = [AppHostCookie sharedPoolManager];
         [webViewConfig setURLSchemeHandler:self.taskDelegate forURLScheme:kAppHostURLScheme];
-        [webViewConfig setURLSchemeHandler:[AHHTTPSchemeTaskDelegate new] forURLScheme:@"https"];
+//        [webViewConfig setURLSchemeHandler:[AHHTTPSchemeTaskDelegate new] forURLScheme:@"https"];
         [self injectScriptsToUserContent:userContentController];
         [self measure:kAppHostTimingAddUserScript to:kAppHostTimingWebViewInit];
 
