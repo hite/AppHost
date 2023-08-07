@@ -88,6 +88,7 @@ BOOL kGCDWebServer_logging_enabled = YES;
     if (self.webView.estimatedProgress >= 1.f) {
         [self stopProgressor];
     }
+    self.webView.scrollView.contentInset = UIEdgeInsetsMake(self.view.safeAreaInsets.top, 0, 0, 0);
 }
 
 - (void)viewDidDisappear:(BOOL)animated

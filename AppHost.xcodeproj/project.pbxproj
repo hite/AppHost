@@ -63,10 +63,8 @@
 		4888F1DB2244D59700A933E8 /* AHUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 4888F1D92244D59700A933E8 /* AHUtil.h */; };
 		4888F1DC2244D59700A933E8 /* AHUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4888F1DA2244D59700A933E8 /* AHUtil.m */; };
 		4888F1DE22453E1D00A933E8 /* profile in Resources */ = {isa = PBXBuildFile; fileRef = 4888F1DD22453E1D00A933E8 /* profile */; };
-		48A42E2D22E832740005A930 /* AHViewControllerPreRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A42E2C22E832740005A930 /* AHViewControllerPreRender.m */; };
 		48B00FF521D4DA6E0037FABF /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B00FF321D4DA6E0037FABF /* Reachability.m */; };
 		48B00FF621D4DA6E0037FABF /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 48B00FF421D4DA6E0037FABF /* Reachability.h */; };
-		48C751DB22E801A700947911 /* AHViewControllerPreRender.h in Headers */ = {isa = PBXBuildFile; fileRef = 48C751CF22E801A700947911 /* AHViewControllerPreRender.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48C751DE22E801A700947911 /* AHSimpleWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 48C751D322E801A700947911 /* AHSimpleWebViewController.h */; };
 		48C751E022E801A700947911 /* AHWebViewPreLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C751D522E801A700947911 /* AHWebViewPreLoader.m */; };
 		48C751E222E801A700947911 /* AHSimpleWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C751D722E801A700947911 /* AHSimpleWebViewController.m */; };
@@ -187,10 +185,8 @@
 		4888F1D92244D59700A933E8 /* AHUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHUtil.h; sourceTree = "<group>"; };
 		4888F1DA2244D59700A933E8 /* AHUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHUtil.m; sourceTree = "<group>"; };
 		4888F1DD22453E1D00A933E8 /* profile */ = {isa = PBXFileReference; lastKnownFileType = folder; path = profile; sourceTree = "<group>"; };
-		48A42E2C22E832740005A930 /* AHViewControllerPreRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHViewControllerPreRender.m; sourceTree = "<group>"; };
 		48B00FF321D4DA6E0037FABF /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		48B00FF421D4DA6E0037FABF /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		48C751CF22E801A700947911 /* AHViewControllerPreRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHViewControllerPreRender.h; sourceTree = "<group>"; };
 		48C751D322E801A700947911 /* AHSimpleWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHSimpleWebViewController.h; sourceTree = "<group>"; };
 		48C751D522E801A700947911 /* AHWebViewPreLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHWebViewPreLoader.m; sourceTree = "<group>"; };
 		48C751D722E801A700947911 /* AHSimpleWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHSimpleWebViewController.m; sourceTree = "<group>"; };
@@ -393,19 +389,9 @@
 			isa = PBXGroup;
 			children = (
 				48F6A20825FB131A00E45F83 /* Prefetch */,
-				48C751CE22E801A700947911 /* PreRender */,
 				48C751D122E801A700947911 /* Preloader */,
 			);
 			path = Boost;
-			sourceTree = "<group>";
-		};
-		48C751CE22E801A700947911 /* PreRender */ = {
-			isa = PBXGroup;
-			children = (
-				48C751CF22E801A700947911 /* AHViewControllerPreRender.h */,
-				48A42E2C22E832740005A930 /* AHViewControllerPreRender.m */,
-			);
-			path = PreRender;
 			sourceTree = "<group>";
 		};
 		48C751D122E801A700947911 /* Preloader */ = {
@@ -612,7 +598,6 @@
 				4839FE0221D746BE008EB0DF /* AHSchemeTaskDelegate.h in Headers */,
 				48C751E422E801A700947911 /* AHWebViewPreLoader.h in Headers */,
 				4885E98621D77CAE0036B1C6 /* AHDebugServerManager.h in Headers */,
-				48C751DB22E801A700947911 /* AHViewControllerPreRender.h in Headers */,
 				4888F1D72244CA2900A933E8 /* AHRequestMediate.h in Headers */,
 				48551BC12246083C00CAC76C /* AppHostViewController+Dispatch.h in Headers */,
 				48551BB92245E2BA00CAC76C /* AppHostViewController+Scripts.h in Headers */,
@@ -788,7 +773,6 @@
 				48D8892221D4D0AD006E4279 /* GCDWebServer.m in Sources */,
 				48D888E121D4D031006E4279 /* AHNavigationResponse.m in Sources */,
 				483E884922028FAD00066375 /* HTMLParser.m in Sources */,
-				48A42E2D22E832740005A930 /* AHViewControllerPreRender.m in Sources */,
 				48C751E022E801A700947911 /* AHWebViewPreLoader.m in Sources */,
 				482FF50821F6BBB8005FCD7A /* AHResponseManager.m in Sources */,
 				48C751E222E801A700947911 /* AHSimpleWebViewController.m in Sources */,
