@@ -393,16 +393,20 @@ NSLog(@"[Timing] %@, nowTime = %f", NSStringFromSelector(_cmd), [[NSDate date] t
         webViewConfig.allowsInlineMediaPlayback = YES;
         webViewConfig.processPool = [AppHostCookie sharedPoolManager];
         [webViewConfig setURLSchemeHandler:self.taskDelegate forURLScheme:kAppHostURLScheme];
-//        [webViewConfig setURLSchemeHandler:[AHHTTPSchemeTaskDelegate new] forURLScheme:@"https"];
+        //        [webViewConfig setURLSchemeHandler:[AHHTTPSchemeTaskDelegate new] forURLScheme:@"https"];
         [self injectScriptsToUserContent:userContentController];
         [self measure:kAppHostTimingAddUserScript to:kAppHostTimingWebViewInit];
-
+        
         WKWebView *webview = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webViewConfig];
         webview.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
- 
+        
         webview.navigationDelegate = self;
         webview.UIDelegate = self;
         webview.scrollView.delegate = self;
+        
+        if (@available(macOS 13.3, iOS 16.4, tvOS 16.4, *)){
+            webview.inspectable = YES;
+        }
    
         _webView = webview;
     }

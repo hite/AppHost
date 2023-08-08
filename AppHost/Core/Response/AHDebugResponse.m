@@ -31,7 +31,7 @@ static NSString *kLastWeinreScript = nil;
                              @"key": @"documentStartTime.js"
                              },
                            @{// 重写 console.log 方法
-                             @"code": @"window.__ah_consolelog = console.log; console.log = function(_msg){window.__ah_consolelog(_msg);appHost.invoke('console.log', {'text':_msg})}",
+                             @"code": @"window.__ah_consolelog = console.log; console.log = function(_msg){window.__ah_consolelog(_msg);appHost.invoke('console.log', {'text':String(_msg)})}",
                              @"when": @(WKUserScriptInjectionTimeAtDocumentStart),
                              @"key": @"console.log.js"
                              },
